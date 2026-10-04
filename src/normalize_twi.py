@@ -42,7 +42,7 @@ _UNITS_CMP = ["", "baako", "mmienu", "mmiɛnsa", "nan", "num", "nsia", "nson", "
 # tens indexed by the tens DIGIT (1 = ten, 2 = twenty, ...)
 _TENS = ["", "du", "aduonu", "aduasa", "aduanan", "aduonum", "aduosia", "aduɔson",
          "aduɔwɔtwe", "aduɔnkron"]
-_TEENS = [f"du{_UNITS_CMP[u]}" for u in range(1, 10)]  # dubaako, dumienu, ...
+_TEENS = ["du"] + [f"du{_UNITS_CMP[u]}" for u in range(1, 10)]  # du, dubaako, ..., dunkron (10 entries for 10..19)
 
 def _hundreds_word(h: int) -> str:
     return "ɔha" if h == 1 else f"aha {_ONES[h]}"
