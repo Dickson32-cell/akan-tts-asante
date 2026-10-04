@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+import normalize_twi as _nt
 from normalize_twi import ALLOWED, expand_numbers, normalize_twi, chat_to_orthography, get_unknown_letters  # noqa: E402
 
 CASES = [
@@ -53,10 +54,10 @@ def test_chat_orthography():
     assert normalize_twi("Mmaakyi, 3ti s3n, Ejumamu ti s3n").startswith("mmaakyi ɛti sɛn")
 
 def test_unknown_letters_logged():
-    get_unknown_letters().clear()
-    normalize_twi("Ejumamu")          # j not in aka alphabet
+    _nt._UNKNOWN_WARN.clear()          # clear the module set (getter returns a copy!)
+    normalize_twi("Ejumamu")           # j not in aka alphabet
     assert "j" in get_unknown_letters()
-    get_unknown_letters().clear()
+    _nt._UNKNOWN_WARN.clear()
     normalize_twi("Mema wo akye")
     assert "j" not in get_unknown_letters()
 
