@@ -95,16 +95,17 @@ def main():
                 eval_ids.add(rng.choice(by_book[b])["id"])
     train_hours = sum(r["duration"] for r in kept if r["id"] not in eval_ids) / 3600
     if train_hours > args.max_train_hours:
-        # proportional subsample per book to keep book mix, every k-th row by seeded order
+        # proportional subsample per book to keep book mix (eval rows are PROTECTED)
         keep_prob = args.max_train_hours / train_hours
         rng2 = random.Random(999)
         subsampled = []
+        train_ids_all = set()
         for b in books:
-            rows_b = by_book[b][:]
+            rows_b = [r0 for r0 in by_book[b] if r0["id"] not in eval_ids]
             rng2.shuffle(rows_b)
             take = max(50, int(len(rows_b) * keep_prob))
-            ids_b = {r0["id"] for r0 in rows_b[:take]}
-            subsampled.extend(r for r in kept if r["id"] in ids_b)
+            train_ids_all.update(r0["id"] for r0 in rows_b[:take])
+        subsampled = [r for r in kept if r["id"] in eval_ids or r["id"] in train_ids_all]
         kept = subsampled
         book_counts = Counter(r["source_file"].split(".")[0] for r in kept)
     for r in kept:
