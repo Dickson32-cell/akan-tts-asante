@@ -35,8 +35,10 @@ def main():
     outdir = REPO.parent / "06_samples" / args.tag
     outdir.mkdir(parents=True, exist_ok=True)
 
-    tok = VitsTokenizer.from_pretrained("facebook/mms-tts-aka")
-    model = VitsModel.from_pretrained("facebook/mms-tts-aka")
+    local_dir = REPO.parent / "05_models" / "mms-tts-aka"
+    src = str(local_dir) if (local_dir / "model.safetensors").exists() else "facebook/mms-tts-aka"
+    tok = VitsTokenizer.from_pretrained(src)
+    model = VitsModel.from_pretrained(src)
     model.eval()
 
     def synth(text: str, path: Path):
