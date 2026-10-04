@@ -1,6 +1,8 @@
 torch>=2.1
 transformers>=4.33
-datasets[audio]>=2.14
+# datasets pinned to 3.x on purpose: 4.x/5.x decode audio via torchcodec-FFmpeg
+# (fragile on Windows/Colab); 3.x uses soundfile directly for WAV. Match Colab!
+datasets[audio]>=3.2,<4.0
 accelerate>=0.24
 soundfile>=0.12
 numpy

@@ -32,10 +32,12 @@ def main():
     import datasets as hfds
     from huggingface_hub import HfFileSystem
 
-    sel = [json.loads(l) for l in Path(args.manifest).read_text(encoding="utf-8").open()]
-    sel_by_shard = {}
-    for r in sel:
-        shard = r["source_file"].rsplit("/", 1)  # not used: we map by row index below
+    raw = Path(args.manifest).read_text(encoding="utf-8")
+    first = json.loads(raw.splitlines()[0])
+    if isinstance(first, list):          # JSON array file
+        sel = first
+    else:                                # JSONL (one object per line)
+        sel = [json.loads(l) for l in raw.splitlines() if l.strip()]
     # rows are identified by (id) — we stream shards and keep matching ids
     want = {r["id"]: r for r in sel}
     print(f"manifest rows wanted: {len(want)}")
