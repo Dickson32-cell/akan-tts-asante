@@ -48,8 +48,8 @@ def _hundreds_word(h: int) -> str:
     return "ɔha" if h == 1 else f"aha {_ONES[h]}"
 
 def _num_word_fix(n: int) -> str:
-    """Cardinal 0..1999 -> Asante Twi spoken words. Verse numbers stay < 200;
-    census counts up to 1999 supported. (Style: units after tens lose the ɛ-
+    """Cardinal 0..999999 -> Asante Twi spoken words. Verse numbers < 200;
+    years (2026 -> mpem mmieenu ne aduonu nsia) and counts supported. (Style: units after tens lose the ɛ-
     prefix, teens are glued compounds - dubaako. Consistency is what the
     acoustic model needs.)"""
     if n == 0:
@@ -68,22 +68,25 @@ def _num_word_fix(n: int) -> str:
             words.append("ne")
             words.append(_num_word_fix(rest))
         return " ".join(words)
-    th, rest = divmod(n, 1000)
-    words = ["apem" if th == 1 else f"apem {_num_word_fix(th)}"]
-    if rest:
-        words.append(_num_word_fix(rest))
-    return " ".join(words)
+    if n < 1000000:
+        th, rest = divmod(n, 1000)
+        words = ["apem" if th == 1 else "mpem " + _num_word_fix(th)]
+        if rest:
+            words.append("ne" if rest < 100 else "")
+            words.append(_num_word_fix(rest))
+        return " ".join(w for w in words if w)
+    raise ValueError(f"number too large for Twi expansion: {n}")
 
 def expand_numbers(text: str) -> str:
-    """Expand cardinal numbers 0..1999 to Twi words. The corpus uses verse numbers
-    up to ~1999 (e.g. '1 BERƐSOSƐM 1.') and occasional large counts."""
+    """Expand cardinal numbers 0..999999 to spoken Twi words."""
     def repl(m):
         raw = m.group(0)
         val = int(raw.replace(",", ""))
-        if val > 1999:  # out of coverage: spell digits as counts of ten/tens word? keep simple cardinal up to 1999; else drop
+        if val > 999999:  # beyond Twi cardinal coverage: leave as space (logged in stats)
             return " "
         return _num_word_fix(val)
-    return re.sub(r"\b\d{1,4}(?:,\d{3})?\b", lambda m: repl(m), text)
+    # full comma-groups first ('1,500', '25,500'), else plain digit runs up to 6 digits
+    return re.sub(r"\b\d{1,3}(?:,\d{3})+\b|\b\d{1,6}\b", lambda m: repl(m), text)
 
 def _strip_tone_marks(s: str) -> str:
     """NFKD + drop combining marks EXCEPT the ones we must keep none of (Twi corpus is untone-marked).
@@ -113,8 +116,8 @@ def normalize_twi(text: str, *, debug: bool = False) -> str:
     if text is None:
         return ""
     s = unicodedata.normalize("NFC", text)
-    s = re.sub(_DROP_TO_SPACE, " ", s)          # strip punctuation early
-    s = expand_numbers(s)                       # numbers -> Twi words
+    s = expand_numbers(s)                       # numbers FIRST (so '1,500' stays one token)
+    s = re.sub(_DROP_TO_SPACE, " ", s)          # then strip punctuation
     s = _strip_tone_marks(s)                    # NFKD, drop tone marks, fold quotes/dashes
     s = s.lower()                               # Ɛ->ɛ, Ɔ->ɔ included
     s = re.sub(r"[\s]+", " ", s)
