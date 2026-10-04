@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from normalize_twi import ALLOWED, expand_numbers, normalize_twi  # noqa: E402
+from normalize_twi import ALLOWED, expand_numbers, normalize_twi, chat_to_orthography, get_unknown_letters  # noqa: E402
 
 CASES = [
     # (input, expected)
@@ -44,6 +44,21 @@ def test_idempotent():
         once = normalize_twi(inp)
         twice = normalize_twi(once)
         assert once == twice, f"not idempotent: {inp!r} -> {once!r} -> {twice!r}"
+
+def test_chat_orthography():
+    assert chat_to_orthography("3ti s3n") == "ɛti sɛn"
+    assert chat_to_orthography("We didi de3") == "We didi deɛ"
+    assert chat_to_orthography("w0 fa w0 ho") == "wɔ fa wɔ ho"
+    assert chat_to_orthography("Afe 2026") == "Afe 2026"      # standalone numbers untouched
+    assert normalize_twi("Mmaakyi, 3ti s3n, Ejumamu ti s3n").startswith("mmaakyi ɛti sɛn")
+
+def test_unknown_letters_logged():
+    get_unknown_letters().clear()
+    normalize_twi("Ejumamu")          # j not in aka alphabet
+    assert "j" in get_unknown_letters()
+    get_unknown_letters().clear()
+    normalize_twi("Mema wo akye")
+    assert "j" not in get_unknown_letters()
 
 def test_number_expansion():
     assert expand_numbers("1") != "1"

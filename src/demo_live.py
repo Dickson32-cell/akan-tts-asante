@@ -25,7 +25,7 @@ from transformers import VitsModel, VitsTokenizer
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
-from normalize_twi import normalize_twi  # noqa: E402
+from normalize_twi import normalize_twi, get_unknown_letters  # noqa: E402
 
 FINETUNED_CANDIDATES = [
     REPO.parent / "05_models" / "akan-finetuned",       # post-training home
@@ -79,6 +79,12 @@ def main():
         else:
             text = raw
         norm = normalize_twi(text)
+        unknown = get_unknown_letters()
+        if unknown:
+            print("  ⚠ letters outside the model's Akan alphabet (dropped by the model):",
+                  ", ".join(sorted(unknown)))
+            print("    (type them in Ghana chat style, e.g. 'j' is written '3' nowhere —"
+                  " rewrite the word in standard Twi orthography)")
         print("  speaking:", text)
         print("  model gets:", norm)
         try:

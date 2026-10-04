@@ -111,15 +111,41 @@ def _strip_tone_marks(s: str) -> str:
         out.append(ch)
     return "".join(out)
 
-def normalize_twi(text: str, *, debug: bool = False) -> str:
-    """Full normalizer: string -> string the MMS-aka tokenizer can render 1:1."""
+# Chat-orthography layer (Ghana SMS/WhatsApp conventions): digits used as vowels
+# INSIDE words -- '3ti s3n' -> 'ɛti sɛn', 'w0' -> 'wɔ'. Standalone digit tokens
+# are NOT touched here (they remain numbers for expand_numbers).
+# A mixed token = contains BOTH letters and digits (e.g. 's3n', 'de3', '3ti').
+_CHAT_VOWELS = str.maketrans({"3": "ɛ", "0": "ɔ"})
+
+def chat_to_orthography(text: str) -> str:
+    """Ghana chat register -> standard Akan orthography (digit-vowels only)."""
+    if not text:
+        return text
+    out = []
+    for tok in re.split(r"(\s+)", text):
+        if tok and re.search(r"[A-Za-z]", tok) and re.search(r"[30]", tok):
+            out.append(tok.translate(_CHAT_VOWELS))
+        else:
+            out.append(tok)
+    return "".join(out)
+
+def normalize_twi(text: str, *, debug: bool = False, chat_input: bool = True) -> str:
+    """Full normalizer: string -> string the MMS-aka tokenizer can render 1:1.
+    chat_input=True (default) first maps Ghana chat digit-vowels to standard
+    orthography; numbers expand to words; output alphabet is locked to the
+    MMS-aka vocab. Letters outside the inventory are NOT silently dropped —
+    they are logged (get_unknown_letters) so caller UIs can warn the user."""
     if text is None:
         return ""
     s = unicodedata.normalize("NFC", text)
+    if chat_input:
+        s = chat_to_orthography(s)
     s = expand_numbers(s)                       # numbers FIRST (so '1,500' stays one token)
     s = re.sub(_DROP_TO_SPACE, " ", s)          # then strip punctuation
     s = _strip_tone_marks(s)                    # NFKD, drop tone marks, fold quotes/dashes
     s = s.lower()                               # Ɛ->ɛ, Ɔ->ɔ included
+    for ch in set(s) - ALLOWED - {" "}:
+        _UNKNOWN_WARN.add(ch)
     s = re.sub(r"[\s]+", " ", s)
     # final whitelist filter (catches anything left, e.g. '2' '3' stray tokens, foreign letters)
     s2 = "".join(ch if (ch.isalpha() and unicodedata.is_normalized("NFC", ch) or ch in ALLOWED) and ch in ALLOWED else (" " if not ch.isspace() else " ") for ch in s)
@@ -127,6 +153,15 @@ def normalize_twi(text: str, *, debug: bool = False) -> str:
     if debug and set(s2) - ALLOWED:
         raise AssertionError(f"illegal chars survived: {set(s2) - ALLOWED}")
     return s2
+
+# Letters outside the MMS-aka inventory (j q v x z etc.): we never silently drop
+# them. normalize_twi collects them; UIs surface them so a panelist typing
+# 'Ejumamu' SEES the warning instead of hearing a mangled word.
+_UNKNOWN_WARN: set = set()
+
+def get_unknown_letters() -> set:
+    """Letters seen in inputs but absent from the MMS-aka alphabet (session log)."""
+    return set(_UNKNOWN_WARN)
 
 def coverage_report(texts) -> dict:
     """Char inventory BEFORE vs AFTER normalization over an iterable of texts.
