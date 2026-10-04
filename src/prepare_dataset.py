@@ -53,6 +53,19 @@ def main():
 
     kept, drop = [], Counter()
     seen_text = set()
+
+    # Recording-tradition priority: .1461/.1861 are the SAME audio (verified:
+    # 454/460 shared texts bit-identical durations); .2094 is a separate
+    # recording (durations differ) -> likely a different narrator. To keep one
+    # voice: collect unique texts from the old tradition FIRST, then fill any
+    # verses only present in .2094 (coverage completeness beats purity loss on
+    # the small remainder, which is quantified in selected_stats.json).
+    def tradition(src):
+        suf = src.rsplit(".", 1)[-1]
+        return 0 if suf in ("1461", "1861") else 1
+
+    rows.sort(key=lambda r: tradition(r["source_file"]))
+    traditions_used = Counter()
     for r in rows:
         text = (r.get("text") or "").strip()
         dur = r.get("duration") or 0.0
@@ -72,9 +85,24 @@ def main():
             drop["dup-text"] += 1
             continue
         seen_text.add(key)
+        traditions_used[tradition(r["source_file"])] += 1
         kept.append({"id": r["id"], "norm": norm, "raw": text, "duration": dur, "source_file": r["source_file"]})
 
     print(f"kept {len(kept)} | dropped: {dict(drop)}")
+    print(f"traditions: old(1461/1861)={traditions_used[0]} rows, filled-from-2094={traditions_used[1]} rows")
+
+    # Single-recording purity FIRST (so eval clips share the same recording):
+    # if the old tradition alone covers the hour budget, drop the .2094 fill
+    # entirely (one recording -> strongest single-narrator claim).
+    old_rows = [r for r in kept if tradition(r["source_file"]) == 0]
+    old_hours = sum(r["duration"] for r in old_rows) / 3600
+    if old_hours >= args.max_train_hours + 0.5:
+        drop["fill-2094-excluded"] = traditions_used[1]
+        kept = old_rows
+        print(f"PURITY: old tradition alone = {old_hours:.2f}h >= budget -> corpus restricted to .1461/.1861 audio")
+    else:
+        print(f"PURITY: old tradition only {old_hours:.2f}h < budget -> .2094 fill retained (documented)")
+
     book_counts = Counter(r["source_file"].split(".")[0] for r in kept)
     suf_counts = Counter(r["source_file"].rsplit(".", 1)[-1] for r in kept)
     hours = sum(r["duration"] for r in kept) / 3600

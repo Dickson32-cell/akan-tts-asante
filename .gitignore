@@ -10,4 +10,4 @@ ckpt*/
 wandb/
 .DS_Store
 *.safetensors
-*.bin
+*.binnotebooks/finetune-hf-vits/
