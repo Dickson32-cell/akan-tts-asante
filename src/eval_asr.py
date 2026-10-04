@@ -52,20 +52,41 @@ def main():
     ap.add_argument("--samples", required=True, help="dir of demo_XX.wav")
     ap.add_argument("--prompts", default=str(REPO / "scripts" / "demo_prompts.txt"))
     ap.add_argument("--asr-model", default="base")
+    ap.add_argument("--engine", default="faster_whisper", choices=["faster_whisper", "hf"])
+    ap.add_argument("--lang", default=None, help="language hint for faster-whisper (e.g. 'tw' if the judge supports it; omit for HF fine-tunes)")
     ap.add_argument("--out-eval", default=None)
     args = ap.parse_args()
 
-    from faster_whisper import WhisperModel
+    import contextlib, io as _io
+    if args.engine == "faster_whisper":
+        from faster_whisper import WhisperModel
+
+        model = WhisperModel(args.asr_model, device="cpu", compute_type="int8")
+
+        def transcribe(path, beam=5):
+            kw = {"language": args.lang} if args.lang else {}
+            segs, _ = model.transcribe(str(path), beam_size=beam, **kw)
+            return " ".join(s.text for s in segs).strip()
+    else:
+        from transformers import pipeline
+        asr = pipeline("automatic-speech-recognition", model=args.asr_model, device=-1)
+
+        def transcribe(path, beam=None):
+            with contextlib.redirect_stdout(_io.StringIO()):
+                return asr(str(path)).get("text", "").strip()
 
     prompts = [l.strip() for l in Path(args.prompts).read_text(encoding="utf-8").splitlines()
                if l.strip() and not l.startswith("#")]
-    wavs = sorted(Path(args.samples).glob("*.wav"))
-    model = WhisperModel(args.asr_model, device="cpu", compute_type="int8")
 
     results = []
-    for wav, ref_raw in zip(wavs, prompts):
-        segs, info = model.transcribe(str(wav), language="tw", beam_size=5)
-        hyp = " ".join(s.text for s in segs).strip()
+    for wav in wavs:
+        m = re.search(r"(\d+)", wav.stem)
+        idx = int(m.group(1)) - 1 if m else None
+        if idx is None or idx >= len(prompts):
+            print(f"SKIP {wav.name}: no prompt index mapping")
+            continue
+        ref_raw = prompts[idx]
+        hyp = transcribe(str(wav))
         ref = normalize_twi(ref_raw)          # same normalization at eval time
         norm_hyp = normalize_twi(hyp)         # forgiving: fold punctuation/case
         w = wer(ref, norm_hyp)
