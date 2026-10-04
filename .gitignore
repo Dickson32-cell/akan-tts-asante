@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+scratch/
+_ref/
+*.wav
+!06_samples/**/*.wav
+tts_data/
+ckpt*/
+wandb/
+.DS_Store
+*.safetensors
+*.bin

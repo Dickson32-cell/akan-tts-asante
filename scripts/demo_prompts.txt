@@ -1,0 +1,15 @@
+# Demo prompts: UNSEEN Asante Twi text for inference (NOT from the training data).
+# Rules: everyday conversational domain (training data is Bible prose), includes
+# each challenge class in the report: ɛ/ɔ orthography, vowel harmony, numbers,
+# apostrophe words, long/prosodic sentences.
+# Lines are prompts; '#' comments only.
+Mema wo akye, me nuanom. Wo ho te sɛn?
+Yɛfrɛ wo sɛ aba awurom na adidi nna na wɔkɔɔ adwuma.
+Ɛda bɔne! Ɛnyɛ nea mɛsɔ hwɛ, na mɛbɔ mmɔden ara.
+Sukuu no mu suani no bɔɔ mfomsoɔ, enti ne kyereɛ gyinaa hɔ.
+Ɔkraman no suro wia na ɛnnyɛ nea ɔhunu no.
+Mɛtoa so ara na mempam wo; fa wo ho so na dwenso.
+Afe 2026 mu no, sika a yɛde bɛboa mpɔtam hɔfoɔ bɛyɛ aduonu num sɛdeɛ ɛbɛyɛ mɛ.
+Ɔpanyin no ka kyerɛɛ wɔn sɛ: "Monnye mo ho mfie, na yɛnkɔ yɛn adwuma no nyinaa yie."
+Adwuma pa, akoma pa — na ɛno na ɛkyerɛ obi mu nimdeɛ.
+Ankasa, sɛ wohyira wo dwuma a, kwaaman na wɔbɛka wo ho asɛm.
