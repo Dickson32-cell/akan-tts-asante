@@ -209,6 +209,40 @@ P("Acknowledgments. Meta AI: MMS checkpoints and the Akan training discriminator
   "(MIT). SYSTRAN: faster-whisper (MIT). All third-party licenses and usage are documented in the repository "
   "(ATTRIBUTION.md). The fine-tuned checkpoint inherits CC BY-NC 4.0 and is released for non-commercial use.")
 
+H("References", level=1)
+refs = [
+ "Jaeyong Sung, et al. (Meta AI). \"Scaling Speech Technology to 1,000+ Languages\" (Massively Multilingual "
+ "Speech, MMS). arXiv:2305.13516, 2023. http://arxiv.org/abs/2305.13516 - MMS-TTS program; source of the "
+ "facebook/mms-tts-aka checkpoint and the Akan training discriminator (CC BY-NC 4.0).",
+ "Jaeweon Kim, et al. \"Conditional Variational Autoencoder with Adversarial Learning for End-to-End "
+ "Text-to-Speech\" (VITS). arXiv:2106.06103, 2021. http://arxiv.org/abs/2106.06103 - the base architecture.",
+ "Jungil Kong, et al. \"HiFi-GAN: Generative Adversarial Networks for Efficient and Syggent Speech Synthesis\". "
+ "arXiv:2010.05646, 2020. http://arxiv.org/abs/2010.05646 - decoder/vocoder principle inside VITS.",
+ "Yannic Lacombe. \"Fine-tune VITS and MMS using HuggingFace's tools\" (finetune-hf-vits). GitHub, 2023. "
+ "https://github.com/ylacombe/finetune-hf-vits (MIT) - training harness; discriminator-conversion procedure.",
+ "GhanaNLP Community. \"ghana-speech\" dataset card (2,247h across 42 languages; Asante_Twi_twi config "
+ "143,383 segments / 200.02h). Hugging Face, 2026. "
+ "https://huggingface.co/datasets/ghananlpcommunity/ghana-speech (CC BY-NC 4.0).",
+ "Daniel van Strien / Mozilla Foundation. \"Common Voice - Twi\" dataset (0.29 validated hours). "
+ "https://commonvoice.mozilla.org/en/datasets (CC0) - evaluated and rejected for scale.",
+ "SYSTRAN. \"faster-whisper\" (CTranslate2 reimplementation of Whisper). GitHub, 2023. "
+ "https://github.com/SYSTRAN/faster-whisper (MIT) - evaluation-side tooling.",
+ "Alec Radford, et al. \"Robust Speech Recognition via Large-Scale Weak Supervision\" (Whisper). arXiv:2212.04356, "
+ "2022. http://arxiv.org/abs/2212.04356 - basis of the evaluated ASR judges; no native Twi token (verified).",
+ "Hugging Face. \"Transformers\" library (VITS/VitsTokenizer/VitsModel docs). "
+ "https://huggingface.co/docs/transformers/model_doc/vits (Apache 2.0).",
+ "Kofi A. Busia / Orthography committee. \"Twii Nkyerɛwee - Akan Orthography\" (Akan spelling rules; ɛ/ɔ letters, "
+ "vowel-harmony register - the linguistic basis for the normalizer's grapheme policy). Accra: Bureau of Ghana "
+ "Languages (original publication 1949, revised editions).",
+ "Abdul Rashid Dickson. \"akan-tts-asante\" code repository (all own code cited: normalize_twi, prepare_dataset, "
+ "scan_asante, infer, eval_asr, one-cell notebook). GitHub, 2026. "
+ "https://github.com/Dickson32-cell/akan-tts-asante.",
+ "Abdul Rashid Dickson. \"akan-twi-mms\" fine-tuned model checkpoint (81M params VITS). Hugging Face, 2026. "
+ "https://huggingface.co/Dickson32-cell/akan-twi-mms (CC BY-NC 4.0, inherited).",
+]
+for r in refs:
+    doc.add_paragraph(r, style='List Number')
+
 doc.save(str(PROJ / "99_SUBMISSION_PACKAGE/04_report/Twi_TTS_Technical_Report.docx"))
 print("DOCX SAVED:", PROJ / "99_SUBMISSION_PACKAGE/04_report/Twi_TTS_Technical_Report.docx")
 stats = Path(str(PROJ / "99_SUBMISSION_PACKAGE/04_report/Twi_TTS_Technical_Report.docx")).stat()
