@@ -33,14 +33,17 @@ def main():
     ap.add_argument("--prompts", default=None, help="file with one prompt per line")
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--out", default=None)
-    ap.add_argument("--seed", type=int, default=None, help="seed for stochastic VITS sampling")
+    ap.add_argument("--seed", type=int, default=33, help="prosody-expressiveness seed (best f0-range in A/B vs human)")
+    ap.add_argument("--noise-scale", type=float, default=1.0, help="1.0 widens pitch contour toward human narrator (v. default 0.667)")
+    ap.add_argument("--speaking-rate", type=float, default=1.0)
     args = ap.parse_args()
 
     tok = VitsTokenizer.from_pretrained(args.model)
     model = VitsModel.from_pretrained(args.model)
     model.eval()
-    if args.seed is not None:
-        torch.manual_seed(args.seed)
+    model.config.noise_scale = args.noise_scale
+    model.config.speaking_rate = args.speaking_rate
+    torch.manual_seed(args.seed)
 
     if args.prompts:
         outdir = Path(args.outdir or (REPO.parent / "06_samples" / "final"))
