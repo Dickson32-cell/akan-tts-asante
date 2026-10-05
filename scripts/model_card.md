@@ -42,6 +42,10 @@ base_model:
 
 Single-voice Asante Twi TTS: text in (standard orthography, chat-register digit-vowels accepted, numerals auto-expanded to spoken Twi), speech out at 16 kHz. Non-commercial use (license inheritance). Intended for Ghanaian-language accessibility, educational content, and Twi speech research.
 
+### Downstream Use [optional]
+
+Further fine-tuning on additional single-speaker Akan/Twi corpora — the repository documents the complete recipe plus a 43-hour single-recording expansion reserve. The model also serves as the synthesis backend for Ghanaian-language document-readers or IVR tools (a text-layer Twi PDF→speech reader is part of the project roadmap). When re-using, keep the input normalization contract (the 30-symbol vocabulary invariant) — bypassing it silently drops characters.
+
 ### Out-of-Scope Use
 
 - Commercial deployment (CC-BY-NC-4.0 inheritance — see license section)
