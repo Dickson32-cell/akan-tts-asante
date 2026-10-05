@@ -69,7 +69,9 @@ def main():
             return " ".join(s.text for s in segs).strip()
     else:
         from transformers import pipeline
-        asr = pipeline("automatic-speech-recognition", model=args.asr_model, device=-1)
+        import torch as _t
+        _dev = 0 if _t.cuda.is_available() else -1
+        asr = pipeline("automatic-speech-recognition", model=args.asr_model, device=_dev)
 
         def transcribe(path, beam=None):
             with contextlib.redirect_stdout(_io.StringIO()):
@@ -77,6 +79,7 @@ def main():
 
     prompts = [l.strip() for l in Path(args.prompts).read_text(encoding="utf-8").splitlines()
                if l.strip() and not l.startswith("#")]
+    wavs = sorted(Path(args.samples).glob("*.wav"))
 
     results = []
     for wav in wavs:
