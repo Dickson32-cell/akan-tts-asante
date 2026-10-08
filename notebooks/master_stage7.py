@@ -79,28 +79,48 @@ if 'tostring_rgb' in _ps:
 else:
     print('plot.py already modern')
 
-# PATCH 4 (env drift Oct 2026): datasets 3.6 features/video.py top-level
-# `from torchvision.io import VideoReader`; torchvision >= 0.20 removed the class,
-# so `import datasets` crashes before training starts (tonight's VideoReader error).
-import datasets as _ds
-_dsdir = os.path.dirname(_ds.__file__)
-_vid = os.path.join(_dsdir, "features", "video.py")
-if os.path.exists(_vid) and "from torchvision.io import VideoReader" in open(_vid, encoding="utf-8", errors="replace").read():
-    _vs = open(_vid, encoding="utf-8", errors="replace").read()
-    _vs = _vs.replace("from torchvision.io import VideoReader",
-                      "try:\n    from torchvision.io import VideoReader\nexcept ImportError:\n    VideoReader = None", 1)
-    open(_vid, "w", encoding="utf-8").write(_vs)
-    print("harness PATCHED: torchvision VideoReader import made optional (env-drift fix)")
+# PATCH 4 (env-drift, Oct 2026): datasets 3.6 features/video.py imports
+# torchvision.io.VideoReader at top level; newer torchvision removed that class,
+# so a FRESH python (the training subprocess) crashes on `import datasets`.
+# Fix: line-splice a try/except (restores the file's own fallback), COMPILE-CHECKED.
+import sys as _sys
+_vid_candidates = sorted(
+    glob.glob("/usr/local/lib/python3*/dist-packages/datasets/features/video.py")
+    + glob.glob("/usr/lib/python3*/site-packages/datasets/features/video.py")
+)
+_vid = _vid_candidates[0] if _vid_candidates else None
+if _vid is None:
+    print("video.py not found - skip patch 4 (datasets may be a fixed version)")
 else:
-    print("video.py already free of top-level VideoReader import (fixed earlier)")
-import importlib
-importlib.reload_path if False else None
-for _m in list(sys.modules):
-    if _m == "datasets" or _m.startswith("datasets."):
-        del sys.modules[_m]
-import importlib as _il
-_ds2 = _il.import_module("datasets")
-print("datasets re-imports OK after video.py patch")
+    _cur = open(_vid, encoding="utf-8", errors="replace").read()
+    if "except ImportError" in _cur and "VideoReader = None" in _cur:
+        print("video.py already patched (idempotent skip)")
+    else:
+        _out, _done = [], False
+        for _l in _cur.splitlines(keepends=True):
+            if not _done and _l.strip() == "from torchvision.io import VideoReader":
+                _ind = _l[: len(_l) - len(_l.lstrip())]
+                _out.append(_ind + "try:")
+                _out.append(_ind + "    from torchvision.io import VideoReader")
+                _out.append(_ind + "except ImportError:")
+                _out.append(_ind + "    VideoReader = None")
+                _done = True
+            else:
+                _out.append(_l)
+        assert _done, "VideoReader import line not found in " + _vid
+        _new = "\n".join(_out).replace("\n\n", "\n\n") + ("\n" if not _cur.endswith("\n") else "")
+        _new = "\n".join([l.rstrip() for l in _new.splitlines()])
+        compile(_new, _vid, "exec")          # MUST parse before we dare write it
+        open(_vid, "w", encoding="utf-8").write(_new + "\n")
+        print("harness PATCHED: torchvision VideoReader import made optional (compile-verified)")
+    # subprocess probe: a FRESH python must import datasets cleanly now
+    _r = subprocess.run([_sys.executable, "-c", "import datasets; print('REIMPORT-OK', datasets.__version__)"],
+                        capture_output=True, text=True)
+    _msg = (_r.stdout or _r.stderr).strip().splitlines()
+    print("probe:", _msg[-1][:120] if _msg else "(no output)")
+    if _r.returncode != 0:
+        print("STILL FAILING - send the probe line + the 20 lines above to Hermes")
+        raise SystemExit(0)
 
 # ── training ──
 stage(7, "Training")
