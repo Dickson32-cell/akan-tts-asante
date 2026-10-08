@@ -1,7 +1,7 @@
 # Akan TTS - FINAL CELL v3 (heal-on-contact + drift-guard for ALL lazy VideoReader imports
 # + truncating monitor + true-error labels + tfevents convergence + push)
 # Two-line URL loader runs this. Self-contained; works in any kernel state.
-import os, sys, json, glob, subprocess, time, urllib.request
+import os, sys, re, json, glob, subprocess, time, urllib.request
 from pathlib import Path
 
 print("═══ AKAN TTS FINAL CELL v3 ═══", flush=True)
