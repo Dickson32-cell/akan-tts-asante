@@ -43,6 +43,42 @@ else:
 Path("/content/finetune_akan.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 print("config written: LR 1e-4, 20 epochs, repo Dickson32-cell/akan-twi-mms")
 
+# --- HARNESS PATCHES (verbatim from the verified TRAIN-ONE-CELL run) ---
+stage("6b", "Patching harness (3 verified fixes)")
+_h = '/content/finetune-hf-vits/run_vits_finetuning.py'
+_s = open(_h, encoding='utf-8').read()
+if 'load_from_disk(data_args.dataset_name)' not in _s:
+    import re as _re
+    _pat_train = r'raw_datasets\[.train.\] = load_dataset\((?:.|\n)*?\)\n'
+    _s = _re.sub(_pat_train, 'raw_datasets["train"] = load_from_disk(data_args.dataset_name)[data_args.train_split_name]\n', _s, count=1)
+    _pat_eval = r'raw_datasets\[.eval.\] = load_dataset\((?:.|\n)*?\)\n'
+    _s = _re.sub(_pat_eval, 'raw_datasets["eval"] = load_from_disk(data_args.dataset_name)[data_args.eval_split_name]\n', _s, count=1)
+    if 'from datasets import DatasetDict, load_dataset' in _s:
+        _s = _s.replace('from datasets import DatasetDict, load_dataset',
+                        'from datasets import DatasetDict, load_dataset, load_from_disk')
+    open(_h, 'w', encoding='utf-8').write(_s)
+    print('harness PATCHED: load_from_disk')
+_s = open(_h, encoding='utf-8').read()
+_slice_old = 'batch[model_input_name] = string_inputs.get("input_ids")[: max_tokens_length + 1]'
+if _slice_old in _s:
+    _s = _s.replace(_slice_old,
+        'batch[model_input_name] = string_inputs.get("input_ids")[: int(max_tokens_length) + 1]')
+    open(_h, 'w', encoding='utf-8').write(_s)
+    print('harness PATCHED: float-slice int cast')
+else:
+    print('harness slice already patched')
+_plot = '/content/finetune-hf-vits/utils/plot.py'
+_ps = open(_plot, encoding='utf-8').read()
+if 'tostring_rgb' in _ps:
+    _ps = _ps.replace('data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)',
+                      'data = np.asarray(fig.canvas.buffer_rgba(), dtype=np.uint8)[..., :3].copy()')
+    _ps = _ps.replace('np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).astype(np.uint8)',
+                      'np.asarray(fig.canvas.buffer_rgba(), dtype=np.uint8)[..., :3].copy()')
+    open(_plot, 'w', encoding='utf-8').write(_ps)
+    print('harness PATCHED: modern matplotlib buffer_rgba')
+else:
+    print('plot.py already modern')
+
 # ── training ──
 stage(7, "Training")
 LOG = "/content/train_akan.log"
