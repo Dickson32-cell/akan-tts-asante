@@ -4,7 +4,7 @@
 # Copy this ENTIRE cell into a fresh Colab cell, press play, follow its prompts.
 import urllib.request, sys
 
-BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/8b9cc0e/notebooks/"
+BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/8bf6e45/notebooks/"
 def pull(name):
     url = BASE + name
     code = urllib.request.urlopen(url, timeout=60).read().decode("utf-8")
