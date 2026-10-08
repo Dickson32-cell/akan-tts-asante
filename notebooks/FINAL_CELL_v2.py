@@ -1,10 +1,10 @@
-# Akan TTS - FINAL CELL v2 (self-contained: heal-check, truncating monitor, true-error report)
-# Run via the 2-line URL loader. Works in ANY kernel state (fresh or poisoned) because
-# nothing ever imports the datasets package in-kernel — subprocess probes only.
+# Akan TTS - FINAL CELL v3 (heal-on-contact + drift-guard for ALL lazy VideoReader imports
+# + truncating monitor + true-error labels + tfevents convergence + push)
+# Two-line URL loader runs this. Self-contained; works in any kernel state.
 import os, sys, json, glob, subprocess, time, urllib.request
 from pathlib import Path
 
-print("═══ AKAN TTS FINAL CELL v2 ═══", flush=True)
+print("═══ AKAN TTS FINAL CELL v3 ═══", flush=True)
 
 def stage(n, t): print("\n" + "="*14 + f"  STAGE {n}: {t}  " + "="*14, flush=True)
 
@@ -14,11 +14,10 @@ def shell(cmd, must=True, cwd=None, timeout=None):
         print("COMMAND FAILED:", cmd)
         print((r.stdout or "")[-1200:]); print((r.stderr or "")[-1200:])
         print(">>> paste the lines above to Hermes in Telegram, then re-run this cell.")
-        return r
+        raise SystemExit("STOPPED after failed command")
     return r
 
-stage(0, "Kernel-state + file heal-check (defensive, subprocess-only)")
-# heal-on-contact for the video.py wound (compile-gated; idempotent)
+stage(0, "Kernel-state + file heal-check")
 _vids = glob.glob("/usr/local/lib/python3*/dist-packages/datasets/features/video.py")
 if _vids:
     _vid = _vids[0]
@@ -27,47 +26,36 @@ if _vids:
         try: compile(t, v, "exec"); return True
         except Exception: return False
     if _ok(_src):
-        print("datasets file state: compiles OK (healed or healthy)")
+        print("video.py compiles OK (healed or healthy)")
     else:
-        print("datasets video.py does not compile - healing TYPE_CHECKING span...")
+        print("video.py wounded - healing TYPE_CHECKING span (v4)...")
         _lines = _src.splitlines(keepends=True)
-        try:
-            _ti = next(i for i, l in enumerate(_lines) if l.strip() == "if TYPE_CHECKING:")
-            _fi = next(i for i in range(_ti, min(_ti + 14, len(_lines)))
-                       if "from .features import FeatureType" in _lines[i])
-            _canon = ["if TYPE_CHECKING:\n", "    try:\n",
-                      "        from torchvision.io import VideoReader\n",
-                      "    except ImportError:\n", "        VideoReader = None\n",
-                      "\n", "    from .features import FeatureType\n"]
-            _new = "".join(_lines[:_ti] + _canon + _lines[_fi + 1:])
-        except StopIteration:
-            _new = _src.replace("from torchvision.io import VideoReader",
-                                "try:\n    from torchvision.io import VideoReader\nexcept ImportError:\n    VideoReader = None")
-        assert _ok(_new), "heal failed - paste this output to Hermes"
+        _ti = next(i for i, l in enumerate(_lines) if l.strip() == "if TYPE_CHECKING:")
+        _fi = next(i for i in range(_ti, min(_ti + 14, len(_lines)))
+                   if "from .features import FeatureType" in _lines[i])
+        _canon = ["if TYPE_CHECKING:\n", "    try:\n",
+                  "        from torchvision.io import VideoReader\n",
+                  "    except ImportError:\n", "        VideoReader = None\n",
+                  "\n", "    from .features import FeatureType\n"]
+        _new = "".join(_lines[:_ti] + _canon + _lines[_fi + 1:])
+        assert _ok(_new), "heal failed - paste output to Hermes"
         open(_vid, "w", encoding="utf-8").write(_new)
         print("HEALED + compile-verified")
-_r = shell('python -c "import datasets; print(\'REIMPORT-OK\', datasets.__version__)"', must=False)
-_p = (( _r.stdout or _r.stderr) or "").strip().splitlines()
-print("fresh-python probe:", (_p[-1] if _p else "(none)"))
-if _r.returncode != 0:
-    print("STILL POISONED for fresh python - the 25-line tail follows this message; paste it whole to Hermes.")
-    _tail = (_r.stdout or "") + (_r.stderr or "")
-    print("\n".join(_tail.splitlines()[-25:]))
+_r = shell('python -c "import datasets; print(\'REIMPORT-OK\', datasets.__version__)"')
+_rn = ((_r.stdout or "") + (_r.stderr or "")).strip().splitlines()
+print("fresh-python probe:", (_rn[-1] if _rn else "(none)"))
 
-# stages 1-3 (fast, idempotent)
 stage(1, "GPU")
 import torch
 if not torch.cuda.is_available():
-    print("NO GPU: Runtime > Change runtime type > T4 GPU > save > run again")
-    raise SystemExit('NO GPU - rerun after GPU set')
+    raise SystemExit("NO GPU - Runtime menu > Change runtime type > T4 GPU, then re-run this cell")
 print("GPU OK:", torch.cuda.get_device_name(0))
 
-stage(2, "Versions (metadata) + harness")
+stage(2, "Versions (metadata) + harness present")
 import importlib.metadata as md
 _vt, _vd = md.version("transformers"), md.version("datasets")
-print("pins:", _vt, "| datasets", _vd, "| harness:",
-      Path("/content/finetune-hf-vits/run_vits_finetuning.py").exists())
-assert Path("/content/finetune-hf-vits/run_vits_finetuning.py").exists(), "harness missing - rerun the long loader first"
+print("pins:", _vt, "| datasets", _vd)
+assert Path("/content/finetune-hf-vits/run_vits_finetuning.py").exists(), "harness missing - run the long loader once first"
 
 stage(3, "HF login")
 from huggingface_hub import HfApi
@@ -79,13 +67,11 @@ except Exception:
     notebook_login()
 
 stage(4, "Corpus + base present?")
-assert Path("/content/tts_data").exists(), "tts_data missing - rerun the long loader first"
-assert glob.glob("/content/aka_train_base/*.safetensors"), "aka_train_base missing - rerun the long loader first"
+assert Path("/content/tts_data").exists(), "tts_data missing - run the long loader once first"
+assert glob.glob("/content/aka_train_base/*.safetensors"), "aka_train_base missing - run the long loader once first"
 print("tts_data OK | base OK")
 
-
-
-stage(6, "Config (gentle run, repo fixed)")
+stage(6, "Config (gentle run)")
 cfg = {
   "project_name": "akan_twi_tts", "push_to_hub": True,
   "hub_model_id": "Dickson32-cell/akan-twi-mms",
@@ -114,66 +100,87 @@ cfg = {
 _resume = bool(glob.glob("/content/akan-vits-finetuned/checkpoint-*"))
 if _resume:
     cfg["resume_from_checkpoint"] = True
-    print("checkpoints present -> RESUME via config")
+    print("checkpoints present -> RESUME")
 else:
     cfg.pop("resume_from_checkpoint", None)
     print("no checkpoints -> FRESH RUN")
 Path("/content/finetune_akan.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 
-stage(6.5, "Harness patch verification (4 fixes present?)")
+stage(6.5, "Harness harness patches verified")
 _H = "/content/finetune-hf-vits/run_vits_finetuning.py"
 _hs = open(_H, encoding="utf-8").read()
 print("load_from_disk patched:", "load_from_disk(data_args.dataset_name)" in _hs)
 print("int-cast patched:", "int(max_tokens_length)" in _hs)
-if "load_from_disk(data_args.dataset_name)" not in _hs:
-    print("PATCHES MISSING - rerun the long loader first (it applies all 4)")
-    print(">>> paste this line to Hermes")
+assert "load_from_disk(data_args.dataset_name)" in _hs, "harness patches missing - run the long loader first"
 
-stage(7, "Training (TRUNCATING monitor - only THIS run's output shows)")
+stage(6.7, "DRIFT-GUARD: patch ALL lazy VideoReader imports (dataset formatters)")
+_fixed = False
+_formatters = glob.glob("/usr/local/lib/python3*/dist-packages/datasets/formatting/*.py") \
+            + glob.glob("/usr/lib/python3*/dist-packages/datasets/formatting/*.py")
+for _fp in _formatters:
+    _t = open(_fp, encoding="utf-8", errors="replace").read()
+    if "from torchvision.io import VideoReader" in _t:
+        _L = _t.splitlines(keepends=True)
+        _out = []
+        for _l in _L:
+            if "from torchvision.io import VideoReader" in _l:
+                _ind = _l[:len(_l) - len(_l.lstrip())]
+                _out += [_ind + "try:", _ind + "    from torchvision.io import VideoReader",
+                         _ind + "except ImportError:", _ind + "    VideoReader = None"]
+            elif "isinstance(value, VideoReader)" in _l and "VideoReader is not None" not in _l:
+                _out.append(_l.replace("isinstance(value, VideoReader)",
+                                       "VideoReader is not None and isinstance(value, VideoReader)"))
+            else:
+                _out.append(_l)
+        _new = "".join(_out)
+        compile(_new, _fp, "exec")
+        open(_fp, "w", encoding="utf-8").write(_new)
+        print("drift-guard PATCHED:", os.path.basename(_fp))
+        _fixed = True
+if not _fixed:
+    print("formatters already drift-free")
+# TRUE reproduction probe: fresh python WITH torchvision loaded + tensorize (the exact crash path)
+_pr = shell('python -c "import torchvision; import datasets.formatting.np_formatter as m; f=m.NumpyFormatter(); f._tensorize([1,2,3]); print(\'TENSORIZE-OK\')"', must=False)
+_ln = ((_pr.stdout or "") + (_pr.stderr or "")).strip().splitlines()
+print("formatter probe:", (_ln[-1][:110] if _ln else "(none)"))
+if _pr.returncode != 0:
+    print("\n".join(_ln[-12:]))
+    raise SystemExit("formatter probe failed - paste lines above to Hermes")
+
+stage(7, "Training (truncating monitor: only THIS attempt shows)")
 LOG = "/content/train_akan.log"
-MARK = len(Path(LOG).read_text(errors="replace").splitlines()) if Path(LOG).exists() else 0
+_MARK = "@@@@@@ ATTEMPT-MARKER %d @@@@@@" % time.time()
+with open(LOG, "a") as lf: lf.write("\n" + _MARK + "\n")
 cmd = ["python", "-m", "accelerate.commands.launch",
        "/content/finetune-hf-vits/run_vits_finetuning.py",
        "/content/finetune_akan.json"]
 print("launch args:", cmd)
-with open(LOG, "a") as lf:
-    lf.write("\n@@@@@@@@ NEW-ATTEMPT-MARKER %d @@@@@@@@\n" % time.time())
 proc = subprocess.Popen(cmd, stdout=open(LOG, "a"), stderr=subprocess.STDOUT,
-                        bufsize=1, universal_newlines=True,
-                        cwd="/content/finetune-hf-vits")
+                        bufsize=1, universal_newlines=True, cwd="/content/finetune-hf-vits")
 Path("/content/train_pid.txt").write_text(str(proc.pid))
-print("launched pid:", proc.pid, "- losses appear in a few minutes; this runs for hours")
+print("launched pid:", proc.pid, "- loss lines appear in a few minutes; runs for hours")
 
-_last = MARK
-_seen_marker = False
+_lines_all, _seen, _last = Path(LOG).read_text(errors="replace").splitlines(), False, 0
 while proc.poll() is None:
     time.sleep(30)
-    try:
-        _lines = Path(LOG).read_text(errors="replace").splitlines()
-    except FileNotFoundError:
-        continue
-    if not _seen_marker:
-        _skip_to = next((i for i, l in enumerate(_lines) if l.startswith("@@@@@@@@ NEW-ATTEMPT-MARKER")), None)
-        if _skip_to is None:
-            continue
-        _last = _skip_to + 1
-        _seen_marker = True
-    for l in _lines[_last:]:
+    _lines_all = Path(LOG).read_text(errors="replace").splitlines()
+    if not _seen:
+        _skip = next((i for i, l in enumerate(_lines_all) if l.startswith("@@@@@@ ATTEMPT-MARKER")), None)
+        if _skip is None: continue
+        _last, _seen = _skip + 1, True
+    for l in _lines_all[_last:]:
         _ll = l.lower()
         if any(k in _ll for k in ("loss", "eval_", "epoch", "it/s", "error", "traceback")):
             print(l[:170], flush=True)
-    _last = len(_lines)
+    _last = len(_lines_all)
 rc = proc.returncode
 print("\n=== TRAINING EXITED rc=%s ===" % rc, flush=True)
 if rc != 0:
-    _fresh = Path(LOG).read_text(errors="replace").splitlines()
-    _midx = [i for i, l in enumerate(_fresh) if l.startswith("@@@@@@@@ NEW-ATTEMPT-MARKER")]
-    _seg = _fresh[(_midx[-1] + 1) if _midx else max(0, len(_fresh) - 40):]
-    print("THIS ATTEMPT's last 25 lines (the true error):")
-    for l in _seg[-25:]:
-        print("   ", l[:170])
-    print(">>> paste ALL lines from 'THIS ATTEMPT' to Hermes")
-    raise SystemExit('NO GPU - set T4 GPU in Runtime menu, then re-run this cell')
+    _m = [i for i, l in enumerate(_lines_all) if l.startswith("@@@@@@ ATTEMPT-MARKER")]
+    _seg = _lines_all[(_m[-1] + 1) if _m else max(0, len(_lines_all) - 40):]
+    print("THIS ATTEMPT's LAST 25 LINES (the true error):")
+    for l in _seg[-25:]: print("   ", l[:170])
+    raise SystemExit("TRAINING FAILED - paste the THIS ATTEMPT block to Hermes")
 
 stage(8, "Convergence report (tfevents + CSV)")
 import matplotlib
@@ -181,52 +188,46 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 _ev = sorted(glob.glob("/content/akan-vits-finetuned/**/events.out.tfevents.*", recursive=True))
 if not _ev:
-    print("no tfevents found - check training output above")
+    print("no tfevents found - inspect training output")
 else:
-    try:
-        from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
-        acc = EventAccumulator(os.path.dirname(_ev[-1])); acc.Reload()
-        tags = acc.Tags().get("scalars", [])
-        print("tags:", tags)
-        CURVES = ["train_summed_losses", "train_loss_mel", "train_loss_kl",
-                  "train_loss_gen", "train_loss_disc", "train_loss_duration", "train_loss_fmaps"]
-        _use = [t for t in CURVES if t in tags] or tags[:5]
-        fig, ax = plt.subplots(figsize=(10, 5))
-        for t in _use:
-            pts = [(e.step, e.value) for e in acc.Scalars(t)]
-            ax.plot([p[0] for p in pts], [p[1] for p in pts], lw=1.2, label=t.replace("train_loss_", ""))
-        try: ax.set_yscale("log")
-        except Exception: pass
-        ax.set_xlabel("step"); ax.grid(alpha=.3); ax.legend()
-        ax.set_title("Akan TTS fine-tune - convergence")
-        fig.tight_layout(); fig.savefig("/content/akan-vits-finetuned/loss_curve.png", dpi=130)
-        import csv
-        with open("/content/akan-vits-finetuned/losses.csv", "w", newline="", encoding="utf-8") as fh:
-            w = csv.writer(fh); w.writerow(["step"] + _use)
-            _d = [dict((e.step, e.value) for e in acc.Scalars(t)) for t in _use]
-            _maps = [dict(p) for p in _d]
-            for s_ in sorted({p[0] for p in _maps[0]} if _maps else []):
-                w.writerow([s_] + [m.get(s_) for m in _maps])
-        _t0 = _use[0]
-        vals = [e.value for e in acc.Scalars(_t0)]
-        verdict = "CHECK CURVE MANUALLY"
-        if len(vals) >= 20:
-            k = max(2, len(vals)//10)
-            first, last = sum(vals[:k])/k, sum(vals[-k:])/k
-            drop = first - last
-            span = max(vals[-k:]) - min(vals[-k:])
-            if span > 0.35 * max(first, 1e-9): verdict = "NOT STABLE YET - oscillating"
-            elif drop <= 0.02 * first: verdict = "CONVERGED - plateau (drop %.4f)" % drop
-            else: verdict = "CONVERGING - drop %.4f (%.1f%%)" % (drop, 100*drop/max(first, 1e-9))
-        print("VERDICT:", verdict)
-        json.dump({"verdict": verdict}, open("/content/akan-vits-finetuned/convergence_summary.json", "w"), indent=2)
-    except Exception:
-        import traceback; traceback.print_exc()
-        print("(convergence parse failed - send the trace above)")
+    from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+    acc = EventAccumulator(os.path.dirname(_ev[-1])); acc.Reload()
+    tags = acc.Tags().get("scalars", [])
+    CURVES = ["train_summed_losses", "train_loss_mel", "train_loss_kl",
+              "train_loss_gen", "train_loss_disc", "train_loss_duration", "train_loss_fmaps"]
+    _use = [t for t in CURVES if t in tags] or tags[:5]
+    print("tags:", _use)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for t in _use:
+        pts = [(e.step, e.value) for e in acc.Scalars(t)]
+        ax.plot([p[0] for p in pts], [p[1] for p in pts], lw=1.2, label=t.replace("train_loss_", ""))
+    try: ax.set_yscale("log")
+    except Exception: pass
+    ax.set_xlabel("step"); ax.grid(alpha=.3); ax.legend()
+    fig.tight_layout(); fig.savefig("/content/akan-vits-finetuned/loss_curve.png", dpi=130)
+    import csv
+    _maps = [dict((e.step, e.value) for e in acc.Scalars(t)) for t in _use]
+    with open("/content/akan-vits-finetuned/losses.csv", "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh); w.writerow(["step"] + _use)
+        for s_ in sorted(_maps[0]):
+            w.writerow([s_] + [m.get(s_) for m in _maps])
+    vals = [e.value for e in acc.Scalars(_use[0])]
+    verdict = "CHECK CURVE MANUALLY"
+    if len(vals) >= 20:
+        k = max(2, len(vals)//10)
+        first, last = sum(vals[:k])/k, sum(vals[-k:])/k
+        drop = first - last
+        span = max(vals[-k:]) - min(vals[-k:])
+        if span > 0.35 * max(first, 1e-9): verdict = "NOT STABLE YET - oscillating"
+        elif drop <= 0.02 * first: verdict = "CONVERGED - plateau (drop %.4f)" % drop
+        else: verdict = "CONVERGING - drop %.4f (%.1f%%)" % (drop, 100*drop/max(first, 1e-9))
+    print("VERDICT:", verdict)
+    json.dump({"verdict": verdict}, open("/content/akan-vits-finetuned/convergence_summary.json", "w"), indent=2)
 
-stage(9, "Save to Drive + push artifacts")
-os.makedirs("/content/drive/MyDrive/UG_TTS", exist_ok=True) if os.path.exists("/content/drive/MyDrive") else None
-shell("zip -qr '/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_new.zip' /content/akan-vits-finetuned || true", must=False)
+stage(9, "Save + push")
+if os.path.exists("/content/drive/MyDrive"):
+    os.makedirs("/content/drive/MyDrive/UG_TTS", exist_ok=True)
+    subprocess.run("zip -qr '/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_new.zip' /content/akan-vits-finetuned || true", shell=True)
 from huggingface_hub import upload_file
 for f in ["/content/akan-vits-finetuned/loss_curve.png",
           "/content/akan-vits-finetuned/losses.csv",
@@ -240,3 +241,4 @@ for f in ["/content/akan-vits-finetuned/loss_curve.png",
         except Exception as e:
             print("upload failed:", os.path.basename(f), str(e)[:100])
 print("\n\u2705 DONE - https://huggingface.co/Dickson32-cell/akan-twi-mms")
+print("Send the VERDICT line to Hermes.")
