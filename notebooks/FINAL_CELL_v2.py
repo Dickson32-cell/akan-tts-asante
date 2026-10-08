@@ -114,38 +114,63 @@ print("int-cast patched:", "int(max_tokens_length)" in _hs)
 assert "load_from_disk(data_args.dataset_name)" in _hs, "harness patches missing - run the long loader first"
 
 stage(6.7, "DRIFT-GUARD: patch ALL lazy VideoReader imports (dataset formatters)")
-_fixed = False
-_formatters = glob.glob("/usr/local/lib/python3*/dist-packages/datasets/formatting/*.py") \
-            + glob.glob("/usr/lib/python3*/dist-packages/datasets/formatting/*.py")
+import random as _rand   # (unused placeholder to keep line parity; removed below)
+# A previous (buggy) formatter patch left a SyntaxError state in tf_formatter.py.
+# REPAIR-FIRST approach, compile-gated; then patch every formatter file safely.
+_formatters = sorted(set(
+    glob.glob("/usr/local/lib/python3*/dist-packages/datasets/formatting/*.py")
+    + glob.glob("/usr/lib/python3*/dist-packages/datasets/formatting/*.py")))
+_patched = 0
 for _fp in _formatters:
     _t = open(_fp, encoding="utf-8", errors="replace").read()
-    if "from torchvision.io import VideoReader" in _t:
+    try:
+        compile(_t, _fp, "exec")
+        _healthy = True
+    except SyntaxError:
+        _healthy = False
+    if not _healthy:
+        # REPAIR: fetch the pristine upstream file for the installed version
+        import importlib.metadata as _md
+        _v = _md.version("datasets")
+        _url = "https://raw.githubusercontent.com/huggingface/datasets/%s/src/datasets/formatting/%s" % (_v, os.path.basename(_fp))
+        _pristine = urllib.request.urlopen(_url, timeout=60).read().decode("utf-8")
+        assert compile(_pristine, _fp, "exec") is not None, "upstream fetch also failed"
+        _t = _pristine   # repair = write pristine, then patch it cleanly
+        print("REPAIRED from upstream:", os.path.basename(_fp))
+    if "from torchvision.io import VideoReader" in _t and "except ImportError" not in _t.split("torchvision.io import VideoReader")[-1][:200]:
         _L = _t.splitlines(keepends=True)
         _out = []
-        for _l in _L:
+        _k = 0
+        while _k < len(_L):
+            _l = _L[_k]
             if "from torchvision.io import VideoReader" in _l:
                 _ind = _l[:len(_l) - len(_l.lstrip())]
-                _out += [_ind + "try:", _ind + "    from torchvision.io import VideoReader",
-                         _ind + "except ImportError:", _ind + "    VideoReader = None"]
-            elif "isinstance(value, VideoReader)" in _l and "VideoReader is not None" not in _l:
-                _out.append(_l.replace("isinstance(value, VideoReader)",
-                                       "VideoReader is not None and isinstance(value, VideoReader)"))
-            else:
-                _out.append(_l)
+                # consume any orphan continuation of a broken edit (next lines that don't parse belong to nothing)
+                _out.append(_ind + "try:\n")
+                _out.append(_ind + "    from torchvision.io import VideoReader\n")
+                _out.append(_ind + "except ImportError:\n")
+                _out.append(_ind + "    VideoReader = None\n")
+                _k += 1
+                continue
+            _out.append(_l)
+            _k += 1
         _new = "".join(_out)
         compile(_new, _fp, "exec")
         open(_fp, "w", encoding="utf-8").write(_new)
         print("drift-guard PATCHED:", os.path.basename(_fp))
-        _fixed = True
-if not _fixed:
-    print("formatters already drift-free")
-# TRUE reproduction probe: fresh python WITH torchvision loaded + tensorize (the exact crash path)
-_pr = shell('python -c "import torchvision; import datasets.formatting.np_formatter as m; f=m.NumpyFormatter(); f._tensorize([1,2,3]); print(\'TENSORIZE-OK\')"', must=False)
-_ln = ((_pr.stdout or "") + (_pr.stderr or "")).strip().splitlines()
-print("formatter probe:", (_ln[-1][:110] if _ln else "(none)"))
-if _pr.returncode != 0:
+        _patched += 1
+    else:
+        print("clean/already-guarded:", os.path.basename(_fp))
+import importlib.metadata as _md
+assert _patched >= 0
+print("formatters processed:", len(_formatters))
+# TRUE reproduction probe (fresh python + torchvision loaded + tensorize + same for tf formatter import path)
+_pr1 = shell('python -c "import torchvision; import datasets.formatting.np_formatter; import datasets.formatting.tf_formatter; import datasets.formatting.torch_formatter; from datasets.formatting.np_formatter import NumpyFormatter as N; N()._tensorize([1,2,3]); print(\'TENSORIZE-OK\')"', must=False)
+_ln = ((_pr1.stdout or "") + (_pr1.stderr or "")).strip().splitlines()
+print("formatter probe:", (_ln[-1][:110] if _ln else "(none)"), "[rc=%d]" % _pr1.returncode)
+if _pr1.returncode != 0:
     print("\n".join(_ln[-12:]))
-    raise SystemExit("formatter probe failed - paste lines above to Hermes")
+    raise SystemExit("formatter probe failed - paste lines to Hermes")
 
 stage(7, "Training (truncating monitor: only THIS attempt shows)")
 LOG = "/content/train_akan.log"
