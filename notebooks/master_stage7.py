@@ -79,6 +79,29 @@ if 'tostring_rgb' in _ps:
 else:
     print('plot.py already modern')
 
+# PATCH 4 (env drift Oct 2026): datasets 3.6 features/video.py top-level
+# `from torchvision.io import VideoReader`; torchvision >= 0.20 removed the class,
+# so `import datasets` crashes before training starts (tonight's VideoReader error).
+import datasets as _ds
+_dsdir = os.path.dirname(_ds.__file__)
+_vid = os.path.join(_dsdir, "features", "video.py")
+if os.path.exists(_vid) and "from torchvision.io import VideoReader" in open(_vid, encoding="utf-8", errors="replace").read():
+    _vs = open(_vid, encoding="utf-8", errors="replace").read()
+    _vs = _vs.replace("from torchvision.io import VideoReader",
+                      "try:\n    from torchvision.io import VideoReader\nexcept ImportError:\n    VideoReader = None", 1)
+    open(_vid, "w", encoding="utf-8").write(_vs)
+    print("harness PATCHED: torchvision VideoReader import made optional (env-drift fix)")
+else:
+    print("video.py already free of top-level VideoReader import (fixed earlier)")
+import importlib
+importlib.reload_path if False else None
+for _m in list(sys.modules):
+    if _m == "datasets" or _m.startswith("datasets."):
+        del sys.modules[_m]
+import importlib as _il
+_ds2 = _il.import_module("datasets")
+print("datasets re-imports OK after video.py patch")
+
 # ── training ──
 stage(7, "Training")
 LOG = "/content/train_akan.log"
@@ -117,53 +140,63 @@ if proc.returncode != 0:
         print("   ", l[:180])
     raise SystemExit("Send the lines above to Hermes.")
 
-# ── convergence report ──
-stage(8, "Convergence report")
+# ── convergence report (tfevents — the harness's real log; not trainer_state.json) ──
+stage(8, "Convergence report from tfevents")
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-cks = sorted(glob.glob("/content/akan-vits-finetuned/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[1]))
-state_file = None
-if cks and Path(cks[-1], "trainer_state.json").exists():
-    state_file = os.path.join(cks[-1], "trainer_state.json")
-if not state_file:
-    alt = sorted(glob.glob("/content/drive/MyDrive/**/trainer_state.json", recursive=True))
-    if alt: state_file = alt[0]
-if not state_file:
-    print("convergence report skipped \u2014 no checkpoints found")
+
+ev_files = sorted(glob.glob("/content/akan-vits-finetuned/**/events.out.tfevents.*", recursive=True))
+if not ev_files:
+    print("no tfevents yet — training produced none (check stage 7 output)")
 else:
-    st = json.load(open(state_file))
-    hist = st.get("log_history", [])
-    train = [(h["step"], h["loss"]) for h in hist if "loss" in h]
-    evals = [(h["step"], v) for h in hist for k, v in h.items()
-             if k.startswith("eval_") and isinstance(v, (int, float)) and not k.endswith("runtime")]
-    print("steps trained:", st.get("global_step"), "| train pts:", len(train), "| eval pts:", len(evals))
-    fig, ax = plt.subplots(figsize=(9, 4.5))
-    if train: xs, ys = zip(*train); ax.plot(xs, ys, lw=1.5, label="train loss")
-    if evals:
-        k0 = "eval_loss" if any(k == "eval_loss" for _, k in evals) else evals[0][1]
-        ax.plot([s for s, k in evals if k == k0], [v for s, k in evals if k == k0], "o-", label=k0)
-    ax.set_xlabel("step"); ax.set_ylabel("loss"); ax.grid(alpha=0.3); ax.legend()
-    ax.set_title("Akan TTS fine-tune \u2014 convergence")
+    from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+    acc = EventAccumulator(os.path.dirname(ev_files[-1]))
+    acc.Reload()
+    tags = [t for t in acc.Tags().get("scalars", [])]
+    print("tfevent scalar tags:", tags)
+    CURVES = ["train_summed_losses", "train_loss_mel", "train_loss_kl",
+              "train_loss_gen", "train_loss_disc", "train_loss_duration", "train_loss_fmaps"]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    all_curves = []
+    for tag in [t for t in CURVES if t in tags]:
+        pts = [(e.step, e.value) for e in acc.Scalars(tag)]
+        all_curves.append((tag, pts))
+        ax.plot([p[0] for p in pts], [p[1] for p in pts], lw=1.3, label=tag.replace("train_loss_", ""))
+    try:
+        ax.set_yscale("log")
+    except Exception:
+        pass
+    ax.set_xlabel("step"); ax.grid(alpha=0.3); ax.legend()
+    ax.set_title("Akan TTS fine-tune — convergence (tfevents)")
     fig.tight_layout()
     fig.savefig("/content/akan-vits-finetuned/loss_curve.png", dpi=130)
+    import csv as _csv
+    with open("/content/akan-vits-finetuned/losses.csv", "w", newline="", encoding="utf-8") as fh:
+        w = _csv.writer(fh)
+        w.writerow(["step"] + [t for t, _ in all_curves])
+        dicts = [{p[0]: p[1] for p in pts} for _, pts in all_curves]
+        for st_ in sorted({p[0] for _, pts in all_curves for p in pts}):
+            w.writerow([st_] + [d.get(st_) for d in dicts])
+    print("saved losses.csv + loss_curve.png")
+    main_tag = "train_summed_losses" if "train_summed_losses" in tags else (tags[0] if tags else None)
     verdict = "CHECK CURVE MANUALLY"
-    if len(train) >= 5:
-        n5 = max(1, len(train) // 10)
-        first10 = sum(y for _, y in train[:n5]) / n5
-        last10 = sum(y for _, y in train[-n5:]) / n5
-        drop = first10 - last10
-        tail = [y for _, y in train[-max(1, len(hist) // 5):]]
-        flat = (max(tail) - min(tail)) if tail else 0.0
-        if drop <= 0 and flat > 0.2 * first10:
-            verdict = "NOT CONVERGING \u2014 loss rising/oscillating"
-        elif drop <= 0.02 * first10 and flat < 0.02 * last10:
-            verdict = "CONVERGED \u2014 plateau reached"
-        elif drop > 0:
-            verdict = "CONVERGING \u2014 total drop %.4f (%.1f%%); tail osc \u00b1%.4f" % (drop, drop / first10 * 100.0, flat)
+    if main_tag:
+        vals = [p[1] for p in [(e.step, e.value) for e in acc.Scalars(main_tag)]]
+        if len(vals) >= 20:
+            k = max(2, len(vals) // 10)
+            first = sum(vals[:k]) / k
+            last = sum(vals[-k:]) / k
+            drop = first - last
+            tailspan = max(vals[-k:]) - min(vals[-k:])
+            if tailspan > 0.35 * max(first, 1e-9):
+                verdict = "NOT STABLE YET — high oscillation"
+            elif drop <= 0.02 * first:
+                verdict = "CONVERGED — plateau reached (drop %.4f)" % drop
+            else:
+                verdict = "CONVERGING — drop %.4f (%.1f%%)" % (drop, 100 * drop / max(first, 1e-9))
     print("VERDICT:", verdict)
-    json.dump({"global_step": st.get("global_step"), "verdict": verdict,
-               "state_file": state_file, "n_train_points": len(train)},
+    json.dump({"verdict": verdict, "tags": tags, "event_dir": os.path.dirname(ev_files[-1])},
               open("/content/akan-vits-finetuned/convergence_summary.json", "w"), indent=2)
 
 # ── save + push ──
@@ -174,7 +207,8 @@ subprocess.run("zip -qr '/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_new.zip' /c
 from huggingface_hub import upload_file
 for f in ["/content/akan-vits-finetuned/loss_curve.png",
           "/content/akan-vits-finetuned/convergence_summary.json",
-          "/content/train_akan.log"]:
+          "/content/train_akan.log",
+          "/content/akan-vits-finetuned/losses.csv"]:
     if os.path.exists(f):
         try:
             upload_file(path_or_fileobj=f, path_in_repo=os.path.basename(f),
