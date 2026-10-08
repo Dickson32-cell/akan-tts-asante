@@ -113,57 +113,54 @@ print("load_from_disk patched:", "load_from_disk(data_args.dataset_name)" in _hs
 print("int-cast patched:", "int(max_tokens_length)" in _hs)
 assert "load_from_disk(data_args.dataset_name)" in _hs, "harness patches missing - run the long loader first"
 
-stage(6.7, "DRIFT-GUARD: patch ALL lazy VideoReader imports (dataset formatters)")
-import random as _rand   # (unused placeholder to keep line parity; removed below)
-# A previous (buggy) formatter patch left a SyntaxError state in tf_formatter.py.
-# REPAIR-FIRST approach, compile-gated; then patch every formatter file safely.
+stage(6.7, "DRIFT-GUARD: patch ALL lazy VideoReader imports + isinstance guards")
+# Two layers must be safe when torchvision>=0.20 (= VideoReader is None):
+#  1) the lazy import  -> try/except fallback
+#  2) isinstance(value, VideoReader)  -> guarded, because isinstance(x, None) TypeErrors
 _formatters = sorted(set(
     glob.glob("/usr/local/lib/python3*/dist-packages/datasets/formatting/*.py")
     + glob.glob("/usr/lib/python3*/dist-packages/datasets/formatting/*.py")))
 _patched = 0
+_import_pat = "from torchvision.io import VideoReader"
+_isinstance_pat = re.compile(r"\bisinstance\((\w+), VideoReader\)")
 for _fp in _formatters:
     _t = open(_fp, encoding="utf-8", errors="replace").read()
     try:
-        compile(_t, _fp, "exec")
-        _healthy = True
+        compile(_t, _fp, "exec"); _healthy = True
     except SyntaxError:
         _healthy = False
     if not _healthy:
-        # REPAIR: fetch the pristine upstream file for the installed version
         import importlib.metadata as _md
         _v = _md.version("datasets")
         _url = "https://raw.githubusercontent.com/huggingface/datasets/%s/src/datasets/formatting/%s" % (_v, os.path.basename(_fp))
-        _pristine = urllib.request.urlopen(_url, timeout=60).read().decode("utf-8")
-        assert compile(_pristine, _fp, "exec") is not None, "upstream fetch also failed"
-        _t = _pristine   # repair = write pristine, then patch it cleanly
+        _t = urllib.request.urlopen(_url, timeout=60).read().decode("utf-8")
+        compile(_t, _fp, "exec")
         print("REPAIRED from upstream:", os.path.basename(_fp))
-    if "from torchvision.io import VideoReader" in _t and "except ImportError" not in _t.split("torchvision.io import VideoReader")[-1][:200]:
+    _changed = False
+    if _import_pat in _t and "except ImportError" not in _t:
         _L = _t.splitlines(keepends=True)
         _out = []
-        _k = 0
-        while _k < len(_L):
-            _l = _L[_k]
-            if "from torchvision.io import VideoReader" in _l:
+        for _l in _L:
+            if _import_pat in _l:
                 _ind = _l[:len(_l) - len(_l.lstrip())]
-                # consume any orphan continuation of a broken edit (next lines that don't parse belong to nothing)
-                _out.append(_ind + "try:\n")
-                _out.append(_ind + "    from torchvision.io import VideoReader\n")
-                _out.append(_ind + "except ImportError:\n")
-                _out.append(_ind + "    VideoReader = None\n")
-                _k += 1
-                continue
-            _out.append(_l)
-            _k += 1
-        _new = "".join(_out)
-        compile(_new, _fp, "exec")
-        open(_fp, "w", encoding="utf-8").write(_new)
-        print("drift-guard PATCHED:", os.path.basename(_fp))
+                _out += [_ind + "try:\n", _ind + "    from torchvision.io import VideoReader\n",
+                         _ind + "except ImportError:\n", _ind + "    VideoReader = None\n"]
+            else:
+                _out.append(_l)
+        _t = "".join(_out); _changed = True
+        print("guarded import:", os.path.basename(_fp))
+    if _isinstance_pat.search(_t):
+        _t2 = _isinstance_pat.sub(r"VideoReader is not None and isinstance(\1, VideoReader)", _t)
+        if _t2 != _t:
+            _t = _t2; _changed = True
+            print("guarded isinstance:", os.path.basename(_fp))
+    if _changed:
+        compile(_t, _fp, "exec")
+        open(_fp, "w", encoding="utf-8").write(_t)
         _patched += 1
     else:
-        print("clean/already-guarded:", os.path.basename(_fp))
-import importlib.metadata as _md
-assert _patched >= 0
-print("formatters processed:", len(_formatters))
+        print("clean:", os.path.basename(_fp))
+print("formatters touched this run:", _patched)
 # TRUE reproduction probe (fresh python + torchvision loaded + tensorize + same for tf formatter import path)
 _pr1 = shell('python -c "import torchvision; import datasets.formatting.np_formatter; import datasets.formatting.tf_formatter; import datasets.formatting.torch_formatter; from datasets.formatting.np_formatter import NumpyFormatter as N; N()._tensorize([1,2,3]); print(\'TENSORIZE-OK\')"', must=False)
 _ln = ((_pr1.stdout or "") + (_pr1.stderr or "")).strip().splitlines()
