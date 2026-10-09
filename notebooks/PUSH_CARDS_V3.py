@@ -2,7 +2,18 @@
 # Fetches canonical cards from the pinned GitHub commit, asserts, uploads.
 import urllib.request, os
 from huggingface_hub import HfApi, upload_file
-api = HfApi(); print("as:", api.whoami()["name"])
+api = HfApi()
+try:
+    print("token status:", (api.whoami())["name"])
+except Exception:
+    # fresh session (old kernel died) - widget login, then re-verify
+    from huggingface_hub import notebook_login
+    notebook_login()
+    api = HfApi()
+    try:
+        print("logged in as:", api.whoami()["name"])
+    except Exception:
+        raise SystemExit("Login did not complete - run this cell again and finish the sign-in.")
 
 SHA = "2335ba1"   # pinned: cards v3 + all fixes
 def pull(name):
