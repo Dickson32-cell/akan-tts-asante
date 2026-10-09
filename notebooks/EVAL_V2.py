@@ -17,24 +17,29 @@ def shell(cmd, must=True, timeout=None):
         raise SystemExit("STOPPED - paste lines above to Hermes")
     return r
 
-stage(0, "Locate models (NEW local, OLD from Drive, BASE from Hub)")
+stage(0, "Build OLD model dir (Drive weights + base tokenizer/config)")
 NEW = "/content/akan-vits-finetuned"
-assert glob.glob(os.path.join(NEW, "*.safetensors")), "NEW weights missing - rerun the training loader first"
-
-import glob as g
-_old_cands = (g.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/**/model.safetensors", recursive=True)
-            + g.glob("/content/drive/MyDrive/UG_TTS/**/akan-finetuned/**/model.safetensors", recursive=True)
-            + g.glob("/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_old.zip"))
-if not _old_cands and glob.glob("/content/drive/MyDrive/UG_TTS/*.zip"):
-    print("checking Drive zips for OLD (original 11940-step) weights ...")
+assert glob.glob(os.path.join(NEW, "*.safetensors")), "NEW weights missing - rerun training loader first"
 from google.colab import drive
 if not Path("/content/drive/MyDrive").exists():
     drive.mount("/content/drive")
-_old_cands = (g.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/**/model.safetensors", recursive=True)
-            + g.glob("/content/drive/MyDrive/UG_TTS/**/akan-finetuned/**/model.safetensors", recursive=True))
-assert _old_cands, "OLD weights not found on Drive - paste this line to Hermes; we may need the Oct-6 zip instead"
-OLD = _old_cands[0]
-print("OLD weights:", OLD)
+_weights = (glob.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/model.safetensors")
+          + glob.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/**/*.safetensors", recursive=True))
+assert _weights, "OLD weights not found on Drive - paste this to Hermes"
+_wpath = _weights[0]
+# tokenizer/vocab/config from the fine-tune's OWN base repo (character vocab identical)
+_BASE_TOK = "facebook/mms-tts-aka"
+OLD = "/content/model_OLD_11940"
+os.makedirs(OLD, exist_ok=True)
+shutil.copy(_wpath, os.path.join(OLD, "model.safetensors"))
+from huggingface_hub import hf_hub_download
+for _f in ["vocab.json", "tokenizer_config.json", "special_tokens_map.json", "preprocessor_config.json", "config.json"]:
+    try:
+        src = hf_hub_download(_BASE_TOK, _f)
+        shutil.copy(src, os.path.join(OLD, _f))
+    except Exception as e:
+        print("  (skip)", _f, str(e)[:80])
+print("OLD model dir built:", OLD, "->", sorted(os.listdir(OLD)))
 
 stage(1, "Judge: mms-1b-all WITH aka adapter (adapter was the bug in v1)")
 import torch, soundfile as sf, numpy as np
