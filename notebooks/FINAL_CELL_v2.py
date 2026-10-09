@@ -99,8 +99,12 @@ cfg = {
 }
 _resume = bool(glob.glob("/content/akan-vits-finetuned/checkpoint-*"))
 if _resume:
-    cfg["resume_from_checkpoint"] = True
-    print("checkpoints present -> RESUME")
+    # harness semantics (run_vits_finetuning.py L1047-1066): value must be the
+    # STRING "latest" (bool True crashes at os.path.basename). It then auto-finds
+    # checkpoint-<max> in output_dir and restores weights+optimizer+step counter.
+    cfg["resume_from_checkpoint"] = "latest"
+    _cks = sorted(glob.glob("/content/akan-vits-finetuned/checkpoint-*"), key=lambda p: int(p.rsplit("-",1)[1]))
+    print("checkpoints present -> RESUME from", _cks[-1] if _cks else "latest")
 else:
     cfg.pop("resume_from_checkpoint", None)
     print("no checkpoints -> FRESH RUN")
