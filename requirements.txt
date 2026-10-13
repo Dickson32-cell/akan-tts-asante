@@ -1,5 +1,8 @@
 torch>=2.1
-transformers>=4.33
+# TRAINING/NOTEBOOK PIN: transformers==4.49.0 - newer versions (5.x) remove
+# harness-required config attributes (see report Section 2 + patch_harness_v2.py).
+# The >=4.33 line stays for inference-only installs; TRAINING MUST USE 4.49.
+transformers>=4.33,<4.50
 # datasets pinned to 3.x on purpose: 4.x/5.x decode audio via torchcodec-FFmpeg
 # (fragile on Windows/Colab); 3.x uses soundfile directly for WAV. Match Colab!
 datasets[audio]==3.2.0

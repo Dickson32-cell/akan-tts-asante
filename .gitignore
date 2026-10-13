@@ -4,10 +4,12 @@ __pycache__/
 scratch/
 _ref/
 *.wav
-!06_samples/**/*.wav
+!samples/**/*.wav
 tts_data/
 ckpt*/
 wandb/
 .DS_Store
 *.safetensors
-*.binnotebooks/finetune-hf-vits/
+*.bin
+notebooks/finetune-hf-vits/
+notebooks/.ipynb_checkpoints/
