@@ -1,6 +1,6 @@
 # Akan TTS — HEALER v3 (compile-verified, span-rebuild, self-diagnosing)
 # Purpose: repair datasets/features/video.py wounded by an earlier bad patch.
-# Run: paste ONE two-liner in Colab that pulls this file and execs it.
+# Run: a two-line loader cell in Colab fetches this file at run time.
 import subprocess, glob, os
 
 def find_video_dot_py():

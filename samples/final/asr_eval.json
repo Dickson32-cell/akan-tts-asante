@@ -1,0 +1,89 @@
+{
+  "files": [
+    {
+      "file": "demo_01.wav",
+      "ref": "mema wo akye me nuanom wo ho te sɛn",
+      "raw_ref": "Mema wo akye, me nuanom. Wo ho te sɛn?",
+      "hyp": "ne nma wo ahyɛ milianom wɔ hɔ te sɛ",
+      "wer": 0.889,
+      "cer": 0.37
+    },
+    {
+      "file": "demo_02.wav",
+      "ref": "yɛfrɛ wo sɛ aba awurom na adidi nna na wɔkɔɔ adwuma",
+      "raw_ref": "Yɛfrɛ wo sɛ aba awurom na adidi nna na wɔkɔɔ adwuma.",
+      "hyp": "ɛfrɛ ho sɛ aba awuro m na didi na na wɔkɔ aduma",
+      "wer": 0.727,
+      "cer": 0.146
+    },
+    {
+      "file": "demo_03.wav",
+      "ref": "ɛda bɔne ɛnyɛ nea mɛsɔ hwɛ na mɛbɔ mmɔden ara",
+      "raw_ref": "Ɛda bɔne! Ɛnyɛ nea mɛsɔ hwɛ, na mɛbɔ mmɔden ara.",
+      "hyp": "dabɔne aneanua mɛsɔ hwɛ na mɛbo mmɔden a",
+      "wer": 0.5,
+      "cer": 0.222
+    },
+    {
+      "file": "demo_04.wav",
+      "ref": "sukuu no mu suani no bɔɔ mfomsoɔ enti ne kyereɛ gyinaa hɔ",
+      "raw_ref": "Sukuu no mu suani no bɔɔ mfomsoɔ, enti ne kyereɛ gyinaa hɔ.",
+      "hyp": "sokuu ne musoa ane no bɔmfo nsuɔ enti na kyereɛ agyinaam",
+      "wer": 0.75,
+      "cer": 0.261
+    },
+    {
+      "file": "demo_05.wav",
+      "ref": "ɔkraman no suro wia na ɛnnyɛ nea ɔhunu no",
+      "raw_ref": "Ɔkraman no suro wia na ɛnnyɛ nea ɔhunu no.",
+      "hyp": "ɔkaaman no suowiɛ na ɛnyɛ nea wɔmunu no",
+      "wer": 0.556,
+      "cer": 0.182
+    },
+    {
+      "file": "demo_06.wav",
+      "ref": "mɛtoa so ara na mempam wo fa wo ho so na dwenso",
+      "raw_ref": "Mɛtoa so ara na mempam wo; fa wo ho so na dwenso.",
+      "hyp": "na toa soara nane mpam wɔ fa wɔn hɔ so na gye nso",
+      "wer": 0.833,
+      "cer": 0.25
+    },
+    {
+      "file": "demo_07.wav",
+      "ref": "afe mpem mmienu ne aduonu nsia mu no sika a yɛde bɛboa mpɔtam hɔfoɔ bɛyɛ aduonu num sɛdeɛ ɛbɛyɛ mɛ",
+      "raw_ref": "Afe 2026 mu no, sika a yɛde bɛboa mpɔtam hɔfoɔ bɛyɛ aduonu num sɛdeɛ ɛbɛyɛ mɛ.",
+      "hyp": "asore ntɛm dienu ni aduonu siam nom sikaa yɛde bɛban pɔtam wɔfaw bɛyɛ aduonunu sɛdeɛ ɛbɛyɛ no",
+      "wer": 0.75,
+      "cer": 0.253
+    },
+    {
+      "file": "demo_08.wav",
+      "ref": "ɔpanyin no ka kyerɛɛ wɔn sɛ monnye mo ho mfie na yɛnkɔ yɛn adwuma no nyinaa yie",
+      "raw_ref": "Ɔpanyin no ka kyerɛɛ wɔn sɛ: \"Monnye mo ho mfie, na yɛnkɔ yɛn adwuma no nyinaa yie.\"",
+      "hyp": "nopaanii no ka kyerɛɛ wɔn sɛ moɔnea no ho mfie na yɛkɔ yɛn aduma no anina na yi",
+      "wer": 0.471,
+      "cer": 0.238
+    },
+    {
+      "file": "demo_09.wav",
+      "ref": "adwuma pa akoma pa na ɛno na ɛkyerɛ obi mu nimdeɛ",
+      "raw_ref": "Adwuma pa, akoma pa — na ɛno na ɛkyerɛ obi mu nimdeɛ.",
+      "hyp": "madwugma pa akoma pa na ɛnɔ na ɛteɛ wɔ bi mu nimdeɛ",
+      "wer": 0.455,
+      "cer": 0.205
+    },
+    {
+      "file": "demo_10.wav",
+      "ref": "ankasa sɛ wohyira wo dwuma a kwaaman na wɔbɛka wo ho asɛm",
+      "raw_ref": "Ankasa, sɛ wohyira wo dwuma a, kwaaman na wɔbɛka wo ho asɛm.",
+      "hyp": "naankasa sɛ wohyina wo duma a waman na wɔbɛka wo ho asɛ",
+      "wer": 0.417,
+      "cer": 0.152
+    }
+  ],
+  "mean_wer": 0.635,
+  "mean_cer": 0.228,
+  "asr_model": "facebook/mms-1b-all+aka",
+  "engine": "mms_aka",
+  "mismatch_control_cer": 0.853
+}

@@ -24,7 +24,7 @@ except SystemExit as e:
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above for diagnosis.")
+    print("The lines above state the failing stage and its fix.")
     raise
 
 print("\n──── executing part 2 (stages 7-9: training → convergence → push) ────")
@@ -36,5 +36,5 @@ except SystemExit as e:
     raise SystemExit(0)
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above for diagnosis.")
+    print("The lines above state the failing stage and its fix.")
     raise SystemExit(0)

@@ -8,7 +8,7 @@ Differences vs Colab:
  3. Output dir /kaggle/working/akan-vits-finetuned-freeze; artifacts saved + pushed same way.
 Pins identical: transformers 4.49.0, datasets 3.2.0, seed 456, LR 5e-5, 12 epochs, freeze text_encoder+flow.
 """
-# ══════════════ PASTE FROM HERE INTO ONE KAGGLE CELL ══════════════
+# ══════════════ RUN THIS FILE AS ONE KAGGLE CELL ══════════════
 import subprocess, sys, os, glob, json, time, urllib.request, getpass
 from pathlib import Path
 
@@ -16,7 +16,7 @@ def shell(cmd, must=True):
     r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if r.returncode != 0 and must:
         print("FAILED:", cmd); print((r.stdout or "")[-900:]); print((r.stderr or "")[-900:])
-        raise SystemExit("Send the output above for diagnosis")
+        raise SystemExit("Review the output above - the stopped stage names its own fix")
     return r
 
 print("stage 0: GPU")
@@ -61,7 +61,7 @@ if not Path("/kaggle/tmp/tts_data").exists():
     shell("unzip -o -q /kaggle/tmp/tts_data.zip -d /kaggle/tmp/work", must=False)
     shell("cp /kaggle/tmp/work/selected.jsonl /kaggle/tmp/selected.jsonl || true")
     if not Path("/kaggle/tmp/selected.jsonl").exists():
-        raise SystemExit("selected.jsonl missing after unzip - record the output for diagnosis")
+        raise SystemExit("selected.jsonl missing after unzip - review the unzip lines above")
     base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/16fedb8/src/"
     for f in ["normalize_twi.py", "extract_asante_colab.py"]:
         Path("/kaggle/tmp/" + f).write_text(urllib.request.urlopen(base+f, timeout=60).read().decode(), encoding="utf-8")
@@ -155,7 +155,7 @@ if _vid:
         open(_vid[0], "w", encoding="utf-8").write(_new + "\n"); print("patched: video.py")
 # FREEZE insert: after model init - upstream moved (no model.eval()); anchor = from_pretrained close-paren
 _freeze_anchor = re.search(r"model\s*=\s*VitsModelForPreTraining\.from_pretrained\((?:.|\n)*?\n\s*\)", _s)
-assert _freeze_anchor, "freeze anchor NOT FOUND - record the output for diagnosis"
+assert _freeze_anchor, "freeze anchor not found - inspect the harness file"
 _bi = "    "  # insert sits inside main()'s body
 _ins = ("\n"
         + _bi + "# FREEZE-RUN INSERT: protect base phonetics (post-init, pre-optimizer)\n"

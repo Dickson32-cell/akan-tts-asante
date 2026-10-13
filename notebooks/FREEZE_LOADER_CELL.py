@@ -1,6 +1,6 @@
 # ═══ THE FREEZE-RUN LOADER — the only cell to run in Colab ═══
 # Fetches the two freeze-run stage files from GitHub at run time (pinned) and executes them.
-# Stages auto-skip what's already done. Paste this whole cell in a FRESH Colab (T4 GPU), press play.
+# Stages auto-skip what's already done. Put this whole cell in a FRESH Colab notebook (T4 GPU) and run it.
 import urllib.request
 
 BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/6162cd7/notebooks/"
@@ -24,7 +24,7 @@ except SystemExit as e:
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above for diagnosis.")
+    print("The lines above state the failing stage and its fix.")
     raise
 
 print("\n──── part 2: stages 6-9 (patches -> FREEZE training -> convergence -> isolated push) ────")
@@ -32,9 +32,9 @@ try:
     exec(compile(part2, "freeze_stage7", "exec"), globals())
 except SystemExit as e:
     print("STOPPED:", e)
-    print("(training failures: send the printed lines to the operator)")
+    print("(training failures: review the printed lines on failure)")
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above for diagnosis.")
+    print("The lines above state the failing stage and its fix.")
     raise

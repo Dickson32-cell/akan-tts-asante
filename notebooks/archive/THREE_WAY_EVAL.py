@@ -145,4 +145,4 @@ from huggingface_hub import upload_file
 upload_file(path_or_fileobj="/content/three_way_results.json",
             path_in_repo="three_way_results.json",
             repo_id="Dickson32-cell/akan-twi-mms", repo_type="model")
-print("\npushed three_way_results.json to the Hub. Send this whole table to the operator.")
+print("\npushed three_way_results.json to the Hub. The table above is the result summary.")

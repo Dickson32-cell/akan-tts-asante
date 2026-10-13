@@ -77,4 +77,4 @@ for f in ARTIFACTS:
 
 print("\n✅ SETTLED: main repo = ORIGINAL 11940 (research baseline as reviewed);")
 print("   gentle repo = tonight's improvement (CER 0.232, gap-to-base −39%).")
-print("Send the output above for diagnosisboth lines above.")
+print("The two lines above summarize the verdict.")
