@@ -24,7 +24,7 @@ except SystemExit as e:
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above to Hermes in Telegram.")
+    print("Send the lines above for diagnosis.")
     raise
 
 print("\n──── part 2: stages 6-9 (patches -> FREEZE training -> convergence -> isolated push) ────")
@@ -32,9 +32,9 @@ try:
     exec(compile(part2, "freeze_stage7", "exec"), globals())
 except SystemExit as e:
     print("STOPPED:", e)
-    print("(training failures: send the printed lines to Hermes)")
+    print("(training failures: send the printed lines to the operator)")
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above to Hermes in Telegram.")
+    print("Send the lines above for diagnosis.")
     raise

@@ -24,7 +24,7 @@ except SystemExit as e:
     raise
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above to Hermes in Telegram.")
+    print("Send the lines above for diagnosis.")
     raise
 
 print("\n──── executing part 2 (stages 7-9: training → convergence → push) ────")
@@ -32,9 +32,9 @@ try:
     exec(compile(part2, "stage7-9", "exec"), globals())
 except SystemExit as e:
     print("STOPPED:", e)
-    print("(training failed or a stage refused — send Hermes the lines above)")
+    print("(training failed or a stage refused — keep the log lines above)")
     raise SystemExit(0)
 except Exception:
     import traceback; traceback.print_exc()
-    print("Send the lines above to Hermes in Telegram.")
+    print("Send the lines above for diagnosis.")
     raise SystemExit(0)

@@ -119,7 +119,7 @@ else:
     _msg = (_r.stdout or _r.stderr).strip().splitlines()
     print("probe:", _msg[-1][:120] if _msg else "(no output)")
     if _r.returncode != 0:
-        print("STILL FAILING - send the probe line + the 20 lines above to Hermes")
+        print("STILL FAILING - send the probe line + the 20 lines above to the operator")
         raise SystemExit(0)
 
 # ── training ──
@@ -158,7 +158,7 @@ if proc.returncode != 0:
     print("TRAINING FAILED \u2014 last lines:")
     for l in Path(LOG).read_text(errors="replace").splitlines()[-12:]:
         print("   ", l[:180])
-    raise SystemExit("Send the lines above to Hermes.")
+    raise SystemExit("Send the lines above for diagnosis.")
 
 # ── convergence report (tfevents — the harness's real log; not trainer_state.json) ──
 stage(8, "Convergence report from tfevents")
@@ -237,4 +237,4 @@ for f in ["/content/akan-vits-finetuned/loss_curve.png",
         except Exception as e:
             print("upload failed (keep the Drive copy):", f, str(e)[:120])
 print("\n\u2705 DONE \u2014 artifacts on the Hub: https://huggingface.co/Dickson32-cell/akan-twi-mms")
-print("Send the TRAINING EXITED rc= line and the VERDICT line to Hermes.")
+print("Send the TRAINING EXITED rc= line and the VERDICT line to the operator.")

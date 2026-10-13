@@ -12,7 +12,7 @@ def shell(cmd, must=True, cwd=None):
     if r.returncode != 0 and must:
         print("COMMAND FAILED:", cmd)
         print((r.stdout or "")[-1200:]); print((r.stderr or "")[-1200:])
-        raise SystemExit("Send the lines above to Hermes in Telegram.")
+        raise SystemExit("Send the lines above for diagnosis.")
     return r
 
 # stage 1: GPU
@@ -74,7 +74,7 @@ else:
     r = shell("python /content/extract_asante_colab.py --manifest /content/work/selected.jsonl --out /content/tts_data", must=False)
     if r.returncode != 0:
         print((r.stdout or "")[-900:]); print((r.stderr or "")[-900:])
-        raise SystemExit("corpus build failed - send lines above to Hermes")
+        raise SystemExit("corpus build failed - Send the output above for diagnosis")
 
 # stage 5: base training checkpoint (skip if built)
 stage(5, "Training base (generator 'aka' + Meta discriminator)")
@@ -85,7 +85,7 @@ else:
               cwd="/content/finetune-hf-vits", must=False)
     if r.returncode != 0:
         print((r.stdout or "")[-900:]); print((r.stderr or "")[-900:])
-        raise SystemExit("discriminator conversion failed - send lines above to Hermes")
+        raise SystemExit("discriminator conversion failed - Send the output above for diagnosis")
     print("base ready:", sorted(os.path.basename(x) for x in glob.glob("/content/aka_train_base/*")))
 
 print("\nSTAGES 1-5 COMPLETE - the loader now runs stages 6-9 (patches > training > convergence > push)")

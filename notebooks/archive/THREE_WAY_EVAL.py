@@ -29,7 +29,7 @@ else:
     if not Path("/content/drive/MyDrive").exists():
         drive.mount("/content/drive")
     z = glob.glob("/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_new.zip")
-    assert z, "No /content model AND no Drive zip — tell Hermes"
+    assert z, "No /content model AND no Drive zip — record the failure"
     zf = z[0]
     print("unzipping:", zf)
     with zipfile.ZipFile(zf) as f:
@@ -145,4 +145,4 @@ from huggingface_hub import upload_file
 upload_file(path_or_fileobj="/content/three_way_results.json",
             path_in_repo="three_way_results.json",
             repo_id="Dickson32-cell/akan-twi-mms", repo_type="model")
-print("\npushed three_way_results.json to the Hub. Send this whole table to Hermes.")
+print("\npushed three_way_results.json to the Hub. Send this whole table to the operator.")

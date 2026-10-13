@@ -14,7 +14,7 @@ def shell(cmd, must=True, cwd=None):
     if r.returncode != 0 and must:
         print("COMMAND FAILED:", cmd)
         print((r.stdout or "")[-1200:]); print((r.stderr or "")[-1200:])
-        raise SystemExit("Send the lines above to Hermes in Telegram.")
+        raise SystemExit("Send the lines above for diagnosis.")
     return r
 
 # stage 1: GPU
@@ -76,7 +76,7 @@ else:
     r = shell("python /content/extract_asante_colab.py --manifest /content/work/selected.jsonl --out /content/tts_data", must=False)
     if r.returncode != 0:
         print((r.stdout or "")[-900:]); print((r.stderr or "")[-900:])
-        raise SystemExit("corpus build failed - send lines above to Hermes")
+        raise SystemExit("corpus build failed - Send the output above for diagnosis")
 
 # stage 5: the FREEZE-RUN training base = gentle weights from the gentle Hub repo
 # (freeze fine-tunes START from an already-good model and protect it by freezing parts)
@@ -91,6 +91,6 @@ else:
     files = sorted(os.path.basename(x) for x in glob.glob("/content/aka_train_base/*"))
     print("freeze base ready:", files)
     if not glob.glob("/content/aka_train_base/*.safetensors"):
-        raise SystemExit("gentle weights did not land - send lines above to Hermes")
+        raise SystemExit("gentle weights did not land - Send the output above for diagnosis")
 
 print("\nSTAGES 1-5 COMPLETE - loader continues with stages 6-9 (patches > training > convergence > push)")

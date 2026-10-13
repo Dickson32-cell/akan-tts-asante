@@ -131,7 +131,7 @@ del _frozen, _kept
 '''
     # insert right after the first "model.eval()" line in the harness (all VITS harness versions have one)
     m = _re.search(r'\n(\s*)model\.eval\(\)', _s)
-    assert m, "model.eval() not found in harness - send harness grep to Hermes"
+    assert m, "model.eval() not found in harness - send harness grep to the operator"
     insert_at = m.end()
     _s = _s[:insert_at] + "\n" + _insert + _s[insert_at:]
     open(_h, 'w', encoding='utf-8').write(_s)
@@ -172,7 +172,7 @@ if proc.returncode != 0:
     print("TRAINING FAILED - last lines:")
     for l in Path(LOG).read_text(errors="replace").splitlines()[-12:]:
         print("   ", l[:180])
-    raise SystemExit("Send the lines above to Hermes.")
+    raise SystemExit("Send the lines above for diagnosis.")
 # confirm the freeze actually engaged
 freeze_line = [l for l in Path(LOG).read_text(errors="replace").splitlines() if "[FREEZE]" in l]
 print(freeze_line[-1] if freeze_line else "WARNING: no FREEZE line in log - check insert placement")
@@ -271,4 +271,4 @@ if os.path.exists(LOG):
         print("log upload failed:", str(e)[:120])
 print("\n\u2705 DONE - FREEZE weights live ONLY at: https://huggingface.co/Dickson32-cell/akan-twi-mms-freeze")
 print("(main akan-twi-mms + gentle repos were never touched by this run)")
-print("Send the TRAINING EXITED rc= line, the [FREEZE] line, and the VERDICT line to Hermes.")
+print("send the TRAINING EXITED rc= line, the [FREEZE] line, and the VERDICT line to the operator.")

@@ -13,7 +13,7 @@ def shell(cmd, must=True, cwd=None, timeout=None):
     if r.returncode != 0 and must:
         print("COMMAND FAILED:", cmd)
         print((r.stdout or "")[-1200:]); print((r.stderr or "")[-1200:])
-        print(">>> paste the lines above to Hermes in Telegram, then re-run this cell.")
+        print(">>> paste the lines above to the operator in Telegram, then re-run this cell.")
         raise SystemExit("STOPPED after failed command")
     return r
 
@@ -38,7 +38,7 @@ if _vids:
                   "    except ImportError:\n", "        VideoReader = None\n",
                   "\n", "    from .features import FeatureType\n"]
         _new = "".join(_lines[:_ti] + _canon + _lines[_fi + 1:])
-        assert _ok(_new), "heal failed - paste output to Hermes"
+        assert _ok(_new), "heal failed - paste output to the operator"
         open(_vid, "w", encoding="utf-8").write(_new)
         print("HEALED + compile-verified")
 _r = shell('python -c "import datasets; print(\'REIMPORT-OK\', datasets.__version__)"')
@@ -171,7 +171,7 @@ _ln = ((_pr1.stdout or "") + (_pr1.stderr or "")).strip().splitlines()
 print("formatter probe:", (_ln[-1][:110] if _ln else "(none)"), "[rc=%d]" % _pr1.returncode)
 if _pr1.returncode != 0:
     print("\n".join(_ln[-12:]))
-    raise SystemExit("formatter probe failed - paste lines to Hermes")
+    raise SystemExit("formatter probe failed - record the output for diagnosis")
 
 stage(7, "Training (truncating monitor: only THIS attempt shows)")
 LOG = "/content/train_akan.log"
@@ -206,7 +206,7 @@ if rc != 0:
     _seg = _lines_all[(_m[-1] + 1) if _m else max(0, len(_lines_all) - 40):]
     print("THIS ATTEMPT's LAST 25 LINES (the true error):")
     for l in _seg[-25:]: print("   ", l[:170])
-    raise SystemExit("TRAINING FAILED - paste the THIS ATTEMPT block to Hermes")
+    raise SystemExit("TRAINING FAILED - paste the THIS ATTEMPT block to the operator")
 
 stage(8, "Convergence report (tfevents + CSV)")
 import matplotlib
@@ -267,4 +267,4 @@ for f in ["/content/akan-vits-finetuned/loss_curve.png",
         except Exception as e:
             print("upload failed:", os.path.basename(f), str(e)[:100])
 print("\n\u2705 DONE - https://huggingface.co/Dickson32-cell/akan-twi-mms")
-print("Send the VERDICT line to Hermes.")
+print("send the VERDICT line to the operator.")

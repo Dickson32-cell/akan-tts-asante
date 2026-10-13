@@ -14,7 +14,7 @@ def shell(cmd, must=True, timeout=None):
     r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=timeout)
     if r.returncode != 0 and must:
         print((r.stdout or "")[-1000:]); print((r.stderr or "")[-1000:])
-        raise SystemExit("STOPPED - paste lines above to Hermes")
+        raise SystemExit("STOPPED - paste lines above to the operator")
     return r
 
 stage(0, "Build OLD model dir (Drive weights + base tokenizer/config)")
@@ -25,7 +25,7 @@ if not Path("/content/drive/MyDrive").exists():
     drive.mount("/content/drive")
 _weights = (glob.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/model.safetensors")
           + glob.glob("/content/drive/MyDrive/UG_TTS/akan-finetuned/**/*.safetensors", recursive=True))
-assert _weights, "OLD weights not found on Drive - paste this to Hermes"
+assert _weights, "OLD weights not found on Drive - record the output for diagnosis"
 _wpath = _weights[0]
 # tokenizer/vocab/config from the fine-tune's OWN base repo (character vocab identical)
 _BASE_TOK = "facebook/mms-tts-aka"
@@ -169,5 +169,5 @@ if PUSH_GENTLE_TO_NEW_REPO:
             upload_file(path_or_fileobj=p, path_in_repo=f,
                         repo_id="Dickson32-cell/akan-twi-mms-gentle", repo_type="model")
             print("gentle repo upload:", f)
-print("\nDONE - send the whole STAGE-4 table to Hermes.")
+print("\nDONE - send the whole STAGE-4 table to the operator.")
 print("NOTE: both Hub-restoring flags were", RUN_RESTORE_OLD_TO_HUB, "/", PUSH_GENTLE_TO_NEW_REPO, " - nothing was silently overwritten.")

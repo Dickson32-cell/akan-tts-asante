@@ -16,7 +16,7 @@ def shell(cmd, must=True):
     r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if r.returncode != 0 and must:
         print("FAILED:", cmd); print((r.stdout or "")[-900:]); print((r.stderr or "")[-900:])
-        raise SystemExit("Send lines above to Hermes")
+        raise SystemExit("Send the output above for diagnosis")
     return r
 
 print("stage 0: GPU")
@@ -70,7 +70,7 @@ if not Path("/kaggle/tmp/tts_data").exists():
     shell("unzip -o -q /kaggle/tmp/tts_data_43h.zip -d /kaggle/tmp/work", must=False)
     shell("cp /kaggle/tmp/work/selected.jsonl /kaggle/tmp/selected_43h.jsonl || true")
     if not Path("/kaggle/tmp/selected_43h.jsonl").exists():
-        raise SystemExit("selected.jsonl missing after unzip - paste this to Hermes")
+        raise SystemExit("selected.jsonl missing after unzip - record the output for diagnosis")
     base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/16fedb8/src/"
     for f in ["normalize_twi.py", "extract_asante_colab.py"]:
         Path("/kaggle/tmp/" + f).write_text(urllib.request.urlopen(base+f, timeout=60).read().decode(), encoding="utf-8")
@@ -165,7 +165,7 @@ if _vid:
         open(_vid[0], "w", encoding="utf-8").write(_new + "\n"); print("patched: video.py")
 # FREEZE insert: after model init - upstream moved (no model.eval()); anchor = from_pretrained close-paren
 _freeze_anchor = re.search(r"model\s*=\s*VitsModelForPreTraining\.from_pretrained\((?:.|\n)*?\n\s*\)", _s)
-assert _freeze_anchor, "freeze anchor NOT FOUND - paste this to Hermes"
+assert _freeze_anchor, "freeze anchor NOT FOUND - record the output for diagnosis"
 _bi = "    "  # insert sits inside main()'s body
 _ins = ("\n"
         + _bi + "# FREEZE-RUN INSERT: protect base phonetics (post-init, pre-optimizer)\n"
@@ -201,7 +201,7 @@ logf.close()
 print("=== TRAINING EXITED rc=%s ===" % proc.returncode)
 if proc.returncode != 0:
     for l in Path(LOG).read_text(errors="replace").splitlines()[-12:]: print("  ", l[:170])
-    raise SystemExit("send lines to Hermes")
+    raise SystemExit("Failure - review the log")
 print("\nDONE. push to hub = handled by config (hub_model_id -freeze; push_to_hub True)")
 print("artifacts: /kaggle/working/akan-vits-finetuned-freeze")
-print("NEXT: 4-way eval cell from Hermes after training completes")
+print("NEXT: run the 3-way/4-way evaluator after training completes")
