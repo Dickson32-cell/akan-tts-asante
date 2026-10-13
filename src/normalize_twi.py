@@ -175,5 +175,5 @@ def coverage_report(texts) -> dict:
     return {
         "before": dict(sorted(before.items(), key=lambda kv: -kv[1])),
         "after": dict(sorted(after.items(), key=lambda kv: -kv[1])),
-        "n_texts": sum(1 for _ in []) or len(before) and before or before,
+        "n_texts": len(list(texts)) if hasattr(texts, "__len__") else sum(1 for _ in texts),
     }
