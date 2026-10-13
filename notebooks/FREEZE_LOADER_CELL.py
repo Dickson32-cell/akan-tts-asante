@@ -3,7 +3,7 @@
 # Stages auto-skip what's already done. Paste this whole cell in a FRESH Colab (T4 GPU), press play.
 import urllib.request
 
-BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/GITPIN/notebooks/"
+BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/6162cd7/notebooks/"
 def pull(name):
     code = urllib.request.urlopen(BASE + name, timeout=60).read().decode("utf-8")
     print("pulled", name, f"({len(code)} bytes)")
