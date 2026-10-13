@@ -143,20 +143,24 @@ if _vid:
         assert _done
         _new = "".join(_out); compile(_new, _vid[0], "exec")
         open(_vid[0], "w", encoding="utf-8").write(_new + "\n"); print("patched: video.py")
-# FREEZE insert after model.eval()
-m = re.search(r"\n(\s*)model\.eval\(\)", _s)
-assert m
-_ins = ("\n# FREEZE-RUN INSERT: protect base phonetics\n_f=0; _k=0\n"
-        "for _n, _p in model.named_parameters():\n"
-        "    if _n.startswith('text_encoder.') or _n.startswith('flow.'):\n"
-        "        _p.requires_grad = False; _f += 1\n"
-        "    else:\n        _k += 1\n"
-        "print(f'[FREEZE] {_f} frozen / {_k} trainable')\n")
+# FREEZE insert: after model init - upstream moved (no model.eval()); anchor = from_pretrained close-paren
+_freeze_anchor = re.search(r"model\s*=\s*VitsModelForPreTraining\.from_pretrained\((?:.|\n)*?\n\s*\)", _s)
+assert _freeze_anchor, "freeze anchor NOT FOUND - paste this to Hermes"
+_bi = "    "  # insert sits inside main()'s body
+_ins = ("\n"
+        + _bi + "# FREEZE-RUN INSERT: protect base phonetics (post-init, pre-optimizer)\n"
+        + _bi + "_f=0; _k=0\n"
+        + _bi + "for _n, _p in model.named_parameters():\n"
+        + _bi + "    if _n.startswith('text_encoder.') or _n.startswith('flow.'):\n"
+        + _bi + "        _p.requires_grad = False; _f += 1\n"
+        + _bi + "    else:\n"
+        + _bi + "        _k += 1\n"
+        + _bi + "print(f'[FREEZE] {_f} frozen / {_k} trainable')\n")
 if "# FREEZE-RUN INSERT" not in _s:
-    _s = _s[:m.end()] + _ins + _s[m.end():]
+    _s = _s[:_freeze_anchor.end()] + _ins + _s[_freeze_anchor.end():]
     compile(_s, _h, "exec")
     open(_h, "w", encoding="utf-8").write(_s)
-    print("patched: FREEZE insert (compile-verified)")
+    print("patched: FREEZE insert (compile-verified; anchor = VitsModelForPreTraining.from_pretrained)")
 
 print("stage 7: TRAINING (freeze)")
 LOG = "/kaggle/working/train_akan_freeze.log"
