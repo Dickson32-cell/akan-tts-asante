@@ -12,13 +12,21 @@ base_model:
 - facebook/mms-tts-aka
 pipeline_tag: text-to-audio
 inference: false
+tags:
+- tts
+- akan
+- asante-twi
+- vits
+- mms
+- low-resource
+- ghana
 ---
 
 # AkanTwi-MMS: Asante Twi Text-to-Speech — original fine-tune (research baseline)
 
 Single-speaker Asante Twi (Akan) TTS: VITS checkpoint fine-tuned from Meta's `facebook/mms-tts-aka` on 9.09 h (6,360 clips post-filter) of one professional narrator from GhanaNLP's `ghana-speech` (Bible register), 11,940 optimizer steps, Colab T4.
 
-**Repo role:** this is the ORIGINAL fine-tune, kept as the research baseline. An independent review found it **less intelligible than its base model** on every objective test (table below). A gentler retrain (lower LR, fewer epochs) recovered 39% of the regression — that variant lives at **[Dickson32-cell/akan-twi-mms-gentle](https://huggingface.co/Dickson32-cell/akan-twi-mms-gentle)**. If you need working Akan TTS today, start with the base model.
+**Repo role:** this is the ORIGINAL fine-tune, retained as the research baseline and ablation. Measured on the validated judge (10 unseen prompts, seed 33, noise 0.667), both fine-tunes sit above the base model; a lower-LR retrain recovered 39% of the regression and is the **submitted** variant at [Dickson32-cell/akan-twi-mms-gentle](https://huggingface.co/Dickson32-cell/akan-twi-mms-gentle). If you need working Akan TTS today, start with the base model.
 
 ## Model Details
 
@@ -30,9 +38,9 @@ Single-speaker Asante Twi (Akan) TTS: VITS checkpoint fine-tuned from Meta's `fa
 - **Model DOI:** 10.57967/hf/10778
 
 ### Model Sources
-- **Repository:** https://github.com/Dickson32-cell/akan-tts-asante (own code: normalizer + test suite, corpus selection/dedup methodology, eval design, environment patches)
+- **Repository:** https://github.com/Dickson32-cell/akan-tts-asante (own code: normalizer + test suite, corpus selection/dedup methodology, eval design + `--engine mms_aka` judge port, environment patches, training configs)
 - **Technical report:** "Fine-tuning Massively Multilingual Speech Models for Asante Twi Text-to-Speech" (Oct 2026, submission document; ships with the artifact package)
-- **External review:** "Akan TTS Fine-tune Review" (Oct 9, 2026) — the audit whose evaluation this card reproduces
+- **External review:** "Akan TTS Fine-tune Review" (Oct 9-13, 2026) — its findings are addressed in the report and repo (infer.py settings fix, judge ported to `eval_asr.py --engine mms_aka`, configs added, README rebuilt)
 
 ## Training Data (selection funnel, executed run)
 
@@ -44,38 +52,38 @@ Single-speaker Asante Twi (Akan) TTS: VITS checkpoint fine-tuned from Meta's `fa
 
 ## Training Procedure
 
-`ylacombe/finetune-hf-vits` (MIT), 30 epochs = **11,940 steps**, batch 16, **LR 2e-4** (cosine, 2% warmup), Adam β=(0.8, 0.99), weight decay 0.01, loss weights mel 35 / disc 3 / KL 1.5 / duration 1 / fmaps 1 / gen 1, fp16, seed 456, **4.07 h wall clock** on a Tesla T4 (Colab free tier), `hub_strategy=checkpoint` mirroring during the run. Checkpoints every 1,000 steps.
+`ylacombe/finetune-hf-vits` (MIT), 30 epochs = **11,940 steps**, batch 16, **LR 2e-4** (cosine, 2% warmup), Adam β=(0.8, 0.99), weight decay 0.01, loss weights mel 35 / disc 3 / KL 1.5 / duration 1 / fmaps 1 / gen 1, fp16, seed 456, **4.07 h wall clock** on a Tesla T4 (Colab free tier). Launcher config: `configs/akan-twi-original.json` in the code repo. Checkpoints every 1,000 steps.
 
-**Convergence evidence:** at run time no log survived the session (the audit's finding #1); this repo now hosts the recovered evidence set: `losses.csv`, `loss_curve.png`, `convergence_summary.json` from the re-instrumented tooling. The subsequent run publishes these automatically.
+**Convergence evidence:** at run time no log survived the session (a review finding); this repo hosts the recovered evidence set (`losses.csv`, `loss_curve.png`, `convergence_summary.json` from the re-instrumented tooling). Later runs publish these automatically.
 
 **Environment hardening (documented as contribution):** transformers pinned 4.49 (Colab 5.x drops harness-required config attrs); datasets pinned 3.2.0 (4.x/5.x route audio through torchcodec-FFmpeg and break WAV); harness loader patched to `load_from_disk` (format-inference crash on per-split formats); float-slice int-cast (Python 3.13); matplotlib `buffer_rgba`; single-process preprocessing. All syntax-verified and idempotent (`scripts/patch_harness_v2.py`).
 
 ## Evaluation
 
-**Judge:** Meta MMS-1b-all CTC ASR + **Akan adapter** (`load_adapter('aka')`), integrity-checked (0 non-finite tensors of 1,096). Judge bias caveat: judge descends from the same Meta MMS family as the base model; its behaviour on Bible-domain text may favour the base model's phonetics — not ruled out. **Mismatched-text control CER 0.92–1.04 across models** = the judge discriminates matched from mismatched pairs.
+**Command:** `python src/eval_asr.py --samples <dir> --engine mms_aka` — the repo's evaluator now carries the judge itself: Meta MMS-1b-all CTC ASR + **Akan adapter** (`load_adapter('aka')` BEFORE use; measured inflation without it: 0.20 vs 0.088 CER), finiteness guard, and a mismatched-prompt control. Judge bias caveat: judge descends from the same Meta MMS family as the base model; Bible-domain behaviour may favour base phonetics — not ruled out. **Mismatched-text control CER 0.92–1.04 across models** = the judge discriminates matched from mismatched pairs.
 
-**10 unseen everyday-Twi prompts, seed 33:**
+**10 unseen everyday-Twi prompts, seed 33, noise 0.667:**
 
-| Model (noise 0.667) | CER | WER |
+| Model | CER | WER |
 |---|---|---|
 | Base `facebook/mms-tts-aka` | **0.088** | **0.319** |
-| This original fine-tune | 0.324 | 0.769 |
-| Gentle retrain (see -gentle repo) | 0.232 | 0.662 |
+| This original fine-tune (ablation) | 0.324 | 0.769 |
+| Gentle retrain (submitted; see -gentle repo) | 0.232 | 0.662 |
 
-At noise 1.0: base 0.107 / original 0.424 / gentle 0.315.
+At noise 1.0: base 0.107 / original 0.424 / gentle 0.315 (measured Oct 9 runs; re-verification on CPU in progress).
 
-**Interpretation:** on this judge this checkpoint remains far above its base and above the gentle retrain; it is retained (not deleted) as the documented baseline that the improvement claim is measured against. Human listening panel (5–12 native listeners, blind kit in repo) still pending — ASR numbers are the objective, reproducible layer, not the perceptual gold standard.
+**Interpretation:** on this judge this checkpoint sits far above its base (documented regression) and above the gentle retrain; it is retained (not deleted) as the baseline the improvement claim is measured against. Human listening panel (blinded MOS kit; Twi teacher recruited) is the designed perceptual check — results ship with the submission; ASR numbers are the objective, reproducible layer, not the perceptual gold standard.
 
-## Environmental Impact (estimate, Lacoste et al. 2019 formula)
+## Environmental Impact (estimate, Lacoste et al. 2019)
 
-Hardware: 1× Tesla T4 · ~4.07 h training + ~0.6 h evaluation · cloud region: US (Colab) · **≈ 0.02 kg CO₂e (estimate; T4 draws ~50–70 W, Ghana grid-intensity assumption documented in repo).**
+Hardware: 1× Tesla T4 · ~4.07 h training + ~0.6 h evaluation · cloud region: US (Colab) · **≈ 0.02 kg CO₂e (estimate; T4 draws ~50–70 W; grid-intensity assumption documented in repo).**
 
 ## Limitations and Bias
 
 - Worse than its base model on the validated judge (see table) — do not use where the base suffices
 - Single narrator, Bible domain; everyday-domain outputs show prosody flattening and ɛ→e articulatory blur (measured: `nea→niɛ` confusions)
-- Untone-marked orthography → prosody is acquired implicitly, not tone-controlled
-- Short-clip metallic artifacts (<2 s rows, excluded by the duration window; residual breath insertions from the reading register)
+- Untone-marked orthography → prosody acquired implicitly, not tone-controlled
+- Short-clip metallic artifacts (<2 s rows, excluded by the duration window); residual breath insertions from the reading register
 
 ## Intended / Out-of-Scope Use
 
@@ -89,10 +97,12 @@ from transformers import VitsModel, VitsTokenizer
 import torch, scipy.io.wavfile, numpy as np
 model = VitsModel.from_pretrained("Dickson32-cell/akan-twi-mms")
 tok = VitsTokenizer.from_pretrained("Dickson32-cell/akan-twi-mms")
+tok(noise_scale=...)  # VITS sampling settings are LIVE attributes - see src/infer.py apply_inference_settings
 inputs = tok(text="Mema wo akye, me nuanom. Wo ho te sɛn?", return_tensors="pt")
 with torch.no_grad():
     wav = model(**inputs).waveform[0]
-scipy.io.wavfile.write("out.wav", rate=model.config.sampling_rate, data=(wav.numpy()*32767).astype(np.int16))
+scipy.io.wavfile.write("out.wav", rate=model.config.sampling_rate,
+                       data=(np.clip(wav.numpy(), -1, 1)*32767).astype(np.int16))
 ```
 
 ## Citation
