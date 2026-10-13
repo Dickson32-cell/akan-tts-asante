@@ -47,18 +47,19 @@ except Exception:
     from huggingface_hub import login; login(tok)
     me = api.whoami(); print("logged:", me["name"])
 
-print("stage 4: corpus from public Drive URL")
+print("stage 4: corpus from GitHub-raw manifest (internet-only; no Drive mount)")
 if not Path("/kaggle/tmp/tts_data").exists():
     shell("mkdir -p /kaggle/tmp/work")
-    shell("curl -L -o /kaggle/tmp/tts_data.zip 'https://drive.google.com/uc?export=download&id=1xM6Z60rNDqgsZ0PREJaMyee' || true")
-    r = shell("ls -la /kaggle/tmp/tts_data.zip", must=False)
-    size = (r.stdout or "").split()[:0]
-    shell("unzip -o -q /kaggle/tmp/tts_data.zip -d /kaggle/tmp/work", must=False)
-    shell("cp -r /kaggle/tmp/work/selected.jsonl /kaggle/tmp/work/*  /kaggle/tmp/ 2>/dev/null || true")
-    # NOTE: Drive direct download of folders needs confirm token; if zip < 100KB it likely failed -> fallback manual upload
+    MAN = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/6019485/data/tts_data.zip"
+    shell(f"curl -L -o /kaggle/tmp/tts_data.zip '{MAN}' || true")
     zpath = "/kaggle/tmp/tts_data.zip"
     if not Path(zpath).exists() or os.path.getsize(zpath) < 100_000:
-        raise SystemExit("Drive direct download failed - upload tts_data.zip manually via Kaggle 'Input' (Add Input > Upload), then rerun this cell")
+        raise SystemExit("Manifest fetch failed - check internet toggle (Settings) then rerun")
+    print("manifest zip:", os.path.getsize(zpath), "bytes - OK")
+    shell("unzip -o -q /kaggle/tmp/tts_data.zip -d /kaggle/tmp/work", must=False)
+    shell("cp /kaggle/tmp/work/selected.jsonl /kaggle/tmp/selected.jsonl || true")
+    if not Path("/kaggle/tmp/selected.jsonl").exists():
+        raise SystemExit("selected.jsonl missing after unzip - paste this to Hermes")
     base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/16fedb8/src/"
     for f in ["normalize_twi.py", "extract_asante_colab.py"]:
         Path("/kaggle/tmp/" + f).write_text(urllib.request.urlopen(base+f, timeout=60).read().decode(), encoding="utf-8")
