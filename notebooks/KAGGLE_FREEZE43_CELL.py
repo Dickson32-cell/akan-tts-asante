@@ -39,14 +39,23 @@ if not Path("/kaggle/tmp/finetune-hf-vits/run_vits_finetuning.py").exists():
     shell("mkdir -p /kaggle/tmp/finetune-hf-vits/monotonic_align/monotonic_align")
     shell("cp -n /kaggle/tmp/finetune-hf-vits/monotonic_align/core.py /kaggle/tmp/finetune-hf-vits/monotonic_align/monotonic_align/core.py || true")
     shell("cd /kaggle/tmp/finetune-hf-vits/monotonic_align && python setup.py build_ext --inplace", must=False)
-print("stage 3: HF login")
-from huggingface_hub import HfApi
+print("stage 3: HF login (interactive box OR Kaggle Secret 'HF_TOKEN' for headless)")
+from huggingface_hub import HfApi, login as _login
 api = HfApi()
 try:
     me = api.whoami(); print("logged:", me["name"])
 except Exception:
-    tok = getpass.getpass("Paste HF token (write): ")
-    from huggingface_hub import login; login(tok)
+    tok = None
+    try:
+        from kaggle_secrets import UserSecretsClient
+        tok = UserSecretsClient().get_secret("HF_TOKEN")
+        print("token source: Kaggle Secret")
+    except Exception:
+        pass
+    if not tok:
+        tok = getpass.getpass("Paste HF token (write): ")
+        print("token source: typed")
+    _login(tok)
     me = api.whoami(); print("logged:", me["name"])
 
 print("stage 4: corpus from GitHub-raw manifest (internet-only; no Drive mount)")
