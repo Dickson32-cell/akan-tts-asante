@@ -30,7 +30,7 @@ Single-speaker Asante Twi (Akan) TTS: VITS checkpoint **retrained from `facebook
 
 ## Model Details
 
-- **Developed by:** Abdul Rashid Dickson (RAMEDIC Consultancy & Creative Ltd)
+- **Developed by:** Abdul Rashid Dickson
 - **Model type:** VITS (MMS-TTS variant, character-level Akan tokenizer, 30-symbol vocab; 83M parameters, 16 kHz)
 - **Language(s):** Asante Twi (Akan macro-language, ISO 639-3 aka)
 - **Retrained from:** [facebook/mms-tts-aka](https://huggingface.co/facebook/mms-tts-aka)

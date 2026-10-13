@@ -22,7 +22,7 @@ Single-speaker Asante Twi (Akan) text-to-speech model: a VITS checkpoint fine-tu
 
 ## Model Details
 
-- **Developed by:** Abdul Rashid Dickson ([Dickson32-cell](https://huggingface.co/Dickson32-cell)) — RAMEDIC Consultancy & Creative Ltd
+- **Developed by:** Abdul Rashid Dickson ([Dickson32-cell](https://huggingface.co/Dickson32-cell))
 - **Model type:** VITS (single-stage conditional VAE with adversarial learning, text→waveform end-to-end; MMS-TTS variant), character-level Akan tokenizer, 83M parameters, 16 kHz audio
 - **Language(s):** Asante Twi (Akan macro-language, ISO 639-3 `aka`, ISO 639-1 `ak`)
 - **Finetuned from:** [facebook/mms-tts-aka](https://huggingface.co/facebook/mms-tts-aka)
