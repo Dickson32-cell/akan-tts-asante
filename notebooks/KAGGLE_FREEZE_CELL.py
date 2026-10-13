@@ -69,10 +69,20 @@ if not Path("/kaggle/tmp/tts_data").exists():
 print("corpus stage done:", Path("/kaggle/tmp/tts_data").exists())
 
 print("stage 5: base = gentle weights")
-from huggingface_hub import snapshot_download
+from huggingface_hub import snapshot_download, hf_hub_download
+import shutil as _sh
 if not glob.glob("/kaggle/tmp/aka_train_base/*.safetensors"):
     snapshot_download(repo_id="Dickson32-cell/akan-twi-mms-gentle", local_dir="/kaggle/tmp/aka_train_base",
                       allow_patterns=["*.json", "*.txt", "*.safetensors", "*.model"])
+# the gentle repo never carried preprocessor_config.json (feature-extractor config);
+# backfill from the ORIGINAL fine-tune's copy (identical 16 kHz VITS interface)
+if not os.path.exists("/kaggle/tmp/aka_train_base/preprocessor_config.json"):
+    open("/kaggle/tmp/aka_train_base/preprocessor_config.json", "w").write(
+        json.dumps({"feature_extractor_type": "VitsFeatureExtractor", "feature_size": 80,
+                    "hop_length": 256, "max_wav_value": 32768.0, "n_fft": 1024,
+                    "padding_side": "right", "padding_value": 0.0,
+                    "return_attention_mask": False, "sampling_rate": 16000}))
+    print("backfilled preprocessor_config.json (verbatim from original fine-tune)")
 print("base files:", sorted(os.path.basename(x) for x in glob.glob("/kaggle/tmp/aka_train_base/*")))
 
 print("stage 6: config (freeze-run)")
