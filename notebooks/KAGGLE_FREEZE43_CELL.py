@@ -52,7 +52,7 @@ except Exception:
 print("stage 4: corpus from GitHub-raw manifest (internet-only; no Drive mount)")
 if not Path("/kaggle/tmp/tts_data").exists():
     shell("mkdir -p /kaggle/tmp/work")
-    MAN = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/<43PIN>/data/tts_data_43h.zip"
+    MAN = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/50c793c/data/tts_data_43h.zip"
     shell(f"curl -L -o /kaggle/tmp/tts_data_43h.zip '{MAN}' || true")
     zpath = "/kaggle/tmp/tts_data_43h.zip"
     if not Path(zpath).exists() or os.path.getsize(zpath) < 100_000:
