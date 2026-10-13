@@ -27,9 +27,11 @@ if "T4" not in (r.stdout or "") and "P100" not in (r.stdout or ""):
 import torch; assert torch.cuda.is_available()
 print("cuda ok:", torch.cuda.get_device_name(0))
 
-print("stage 1: pins")
-shell("pip install -q 'transformers==4.49.0'")
-shell("pip install -q 'datasets==3.2.0' librosa soundfile accelerate")
+print("stage 1: pins (single resolver command incl. huggingface_hub<1.0)")
+shell("pip install -q 'huggingface_hub<1.0' 'transformers==4.49.0' 'datasets==3.2.0' librosa soundfile accelerate")
+import importlib, huggingface_hub as _hh
+_r = shell("python -c 'import huggingface_hub; print(huggingface_hub.__version__)'", must=False)
+print("huggingface_hub resolved:", (_r.stdout or "?").strip())
 print("stage 2: harness")
 if not Path("/kaggle/tmp/finetune-hf-vits/run_vits_finetuning.py").exists():
     shell("git clone https://github.com/ylacombe/finetune-hf-vits /kaggle/tmp/finetune-hf-vits", must=False)
