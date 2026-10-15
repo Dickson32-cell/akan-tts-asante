@@ -1,0 +1,889 @@
+{
+  "files": [
+    {
+      "file": "held_001.wav",
+      "ref": "ɔno nso na ɔhwinhwim ne pea atɔfoɔ ahasa soɔ na ɔwɔ din baasa no mu",
+      "raw_ref": "ɔno nso na ɔhwinhwim ne pea atɔfoɔ ahasa soɔ na ɔwɔ din baasa no mu",
+      "hyp": "ɔno nso na ɔhwimhwem ne pea atɔfoɔ ahaasa soɔ na ɔwɔ din baasa nom",
+      "wer": 0.267,
+      "cer": 0.075
+    },
+    {
+      "file": "held_002.wav",
+      "ref": "na dawid boaa aaron mma ne lewifoɔ no ano kehat mma no mu ɔsafohene uriel ne ne nuanom ɔha aduonu",
+      "raw_ref": "na dawid boaa aaron mma ne lewifoɔ no ano kehat mma no mu ɔsafohene uriel ne ne nuanom ɔha aduonu",
+      "hyp": "na dawid boaa aralma no ne lewifoɔ noa no kehatema no mu ɔsafohene ureel ne ne nuanom ɔhae aduono",
+      "wer": 0.45,
+      "cer": 0.128
+    },
+    {
+      "file": "held_003.wav",
+      "ref": "deɛ ɔtɔ so dunan ne matitia ne mma ne ne nuanom wɔyɛ dummienu",
+      "raw_ref": "deɛ ɔtɔ so dunan ne matitia ne mma ne ne nuanom wɔyɛ dummienu",
+      "hyp": "deɛ ɔtɔ so dunaɛ ne matetia ne mma ne ne nuanom wɔyɛ dumieno",
+      "wer": 0.231,
+      "cer": 0.082
+    },
+    {
+      "file": "held_004.wav",
+      "ref": "na semida mma ne ahian sekem likhi ne aniam",
+      "raw_ref": "na semida mma ne ahian sekem likhi ne aniam",
+      "hyp": "na samedama ne aheɛn sekem liki ɛne anian",
+      "wer": 0.667,
+      "cer": 0.229
+    },
+    {
+      "file": "held_005.wav",
+      "ref": "wiɛ ɛtwa sɛ fekuo ahodoɔ ba mo mu na wɔn a wɔfra no ada adi mo mu",
+      "raw_ref": "wiɛ ɛtwa sɛ fekuo ahodoɔ ba mo mu na wɔn a wɔfra no ada adi mo mu",
+      "hyp": "weɛ ɛtwa sɛ fɛkuo ahodoɔ ɛba mo mu na wɔn a wɔfra no adaadi momu",
+      "wer": 0.412,
+      "cer": 0.061
+    },
+    {
+      "file": "held_006.wav",
+      "ref": "na deɛ ɔdi na ɔnom sɛdeɛ ɛnsɛ no ɔdi nom de atemmuo ba ɔno ara ne so ɛfiri sɛ wammu nipadua no yie",
+      "raw_ref": "na deɛ ɔdi na ɔnom sɛdeɛ ɛnsɛ no ɔdi nom de atemmuo ba ɔno ara ne so ɛfiri sɛ wammu nipadua no yie",
+      "hyp": "na deɛ ɔdi na ɔnom sa deɛ ɛnsɛ no odinom de atɛmmuo ba ɔnoara ne so ɛfiri sɛ wɔamu nipadua no yie",
+      "wer": 0.348,
+      "cer": 0.066
+    },
+    {
+      "file": "held_007.wav",
+      "ref": "na mo nso moyɛ kristo nipadua ne akwaa mmaako mmaako",
+      "raw_ref": "na mo nso moyɛ kristo nipadua ne akwaa mmaako mmaako",
+      "hyp": "na mo nso moyɛ kristo nnipadua no akwaa amaako maako",
+      "wer": 0.4,
+      "cer": 0.093
+    },
+    {
+      "file": "held_008.wav",
+      "ref": "na deɛ ɔde ne ho bɔ awurade ho no ne no yɛ honhom baako",
+      "raw_ref": "na deɛ ɔde ne ho bɔ awurade ho no ne no yɛ honhom baako",
+      "hyp": "na deɛ ɔde ne ho bɔ awurade ho no no ne yɛ honhom baako",
+      "wer": 0.143,
+      "cer": 0.048
+    },
+    {
+      "file": "held_009.wav",
+      "ref": "yɛtwerɛ yeinom brɛ mo na yɛn anigyeɛ awie pɛyɛ",
+      "raw_ref": "yɛtwerɛ yeinom brɛ mo na yɛn anigyeɛ awie pɛyɛ",
+      "hyp": "yɛatwerɛ yeinom brɛ mo na yɛn anigye awie pɛeɛ",
+      "wer": 0.333,
+      "cer": 0.079
+    },
+    {
+      "file": "held_010.wav",
+      "ref": "na sɛ yɛdi n'ahyɛdeɛ so a ɛno ara na yɛde hunu sɛ yɛnim no",
+      "raw_ref": "na sɛ yɛdi n'ahyɛdeɛ so a ɛno ara na yɛde hunu sɛ yɛnim no",
+      "hyp": "na sɛ yɛdi nʼ ahyɛdeɛ so a ɛno ar na yɛde hunu sɛ yɛnim no",
+      "wer": 0.214,
+      "cer": 0.022
+    },
+    {
+      "file": "held_011.wav",
+      "ref": "yei mu na yɛhunu nokorɛ honhom ne nnaadaa honhom",
+      "raw_ref": "yei mu na yɛhunu nokorɛ honhom ne nnaadaa honhom",
+      "hyp": "yei mu na yɛhunuu nokorɛ honhom ne naadaa honhonhom",
+      "wer": 0.333,
+      "cer": 0.125
+    },
+    {
+      "file": "held_012.wav",
+      "ref": "na yɛnim sɛ nyankopɔn ba no aba na wabɛma yɛn nteaseɛ a yɛde hunu ɔnokwafoɔ no",
+      "raw_ref": "na yɛnim sɛ nyankopɔn ba no aba na wabɛma yɛn nteaseɛ a yɛde hunu ɔnokwafoɔ no",
+      "hyp": "na yɛnim sɛ onyankopɔn ba no aba na wabɛma yɛn antiasea a yɛde hunu ɔnokwafoɔ no",
+      "wer": 0.125,
+      "cer": 0.063
+    },
+    {
+      "file": "held_013.wav",
+      "ref": "na rehoboam sii mu kɔɔ sekem na sekem na israel nyinaa aba sɛ wɔrebɛsi no hene",
+      "raw_ref": "na rehoboam sii mu kɔɔ sekem na sekem na israel nyinaa aba sɛ wɔrebɛsi no hene",
+      "hyp": "na rehoboam siamu kɔɔ sekem na sekem na israel nyinaa ba sɛ wɔ bɛsi no hene",
+      "wer": 0.312,
+      "cer": 0.063
+    },
+    {
+      "file": "held_014.wav",
+      "ref": "na asɛm yi danee bɔne na ɔman no fa kɔɔ baako yi anim wɔ dan na baako no nso kɔɔ betel",
+      "raw_ref": "na asɛm yi danee bɔne na ɔman no fa kɔɔ baako yi anim wɔ dan na baako no nso kɔɔ betel",
+      "hyp": "na asɛm ni danee bɔne na ɔman no fa kɔɔ baako yiɛ anim wɔ dan na baako nso kɔɔ betel",
+      "wer": 0.143,
+      "cer": 0.061
+    },
+    {
+      "file": "held_015.wav",
+      "ref": "na ne ba abiam bɛdii n'adeɛ",
+      "raw_ref": "na ne ba abiam bɛdii n'adeɛ",
+      "hyp": "na ne ba abeam bɛdii naa deɛ",
+      "wer": 0.5,
+      "cer": 0.091
+    },
+    {
+      "file": "held_016.wav",
+      "ref": "na hiram firii tiro bɛhwɛɛ nkuro a salomo de maa no no nanso ansɔ n'ani",
+      "raw_ref": "na hiram firii tiro bɛhwɛɛ nkuro a salomo de maa no no nanso ansɔ n'ani",
+      "hyp": "na heram firi tiro bɛhwɛe nkuraa a salomo de maa no no nanso ansɔna",
+      "wer": 0.4,
+      "cer": 0.14
+    },
+    {
+      "file": "held_017.wav",
+      "ref": "enti mommɔ mo adwene mu abɔsoɔ mo ani nna hɔ na momma mo ani nna adom a wɔde rebrɛ mo yesu kristo ahoyie mu no so koraa",
+      "raw_ref": "enti mommɔ mo adwene mu abɔsoɔ mo ani nna hɔ na momma mo ani nna adom a wɔde rebrɛ mo yesu kristo ahoyie mu no so koraa",
+      "hyp": "enti mommɔ mo adwene mu abɔsoɔ mo anina hɔ na momma mo anina adom a wɔde brɛ mo yesu kristo aho yie mu no so koraa",
+      "wer": 0.259,
+      "cer": 0.043
+    },
+    {
+      "file": "held_018.wav",
+      "ref": "na yei ne asɛmpa a wɔaka akyerɛ mo no",
+      "raw_ref": "na yei ne asɛmpa a wɔaka akyerɛ mo no",
+      "hyp": "na yei ne asɛmpa a wɔakankyerɛ mo no",
+      "wer": 0.222,
+      "cer": 0.034
+    },
+    {
+      "file": "held_019.wav",
+      "ref": "na mmom sɛ moyɛ papa na mohunu amane na moto mo bo ase a yei na ɛyɛ animuonyam nyankopɔn anim",
+      "raw_ref": "na mmom sɛ moyɛ papa na mohunu amane na moto mo bo ase a yei na ɛyɛ animuonyam nyankopɔn anim",
+      "hyp": "na mmom sɛ moyɛ papa na mohunu amane na moto mo bo ase a yei na ɛyɛ animuonyam nyankopɔn anim",
+      "wer": 0.0,
+      "cer": 0.0
+    },
+    {
+      "file": "held_020.wav",
+      "ref": "na yei na wɔbɔɔ din frɛɛ mo ɛfiri sɛ kristo nso hunuu amane maa mo gyaa mo nhwɛsoɔ sɛ monni n'anammɔn akyi",
+      "raw_ref": "na yei na wɔbɔɔ din frɛɛ mo ɛfiri sɛ kristo nso hunuu amane maa mo gyaa mo nhwɛsoɔ sɛ monni n'anammɔn akyi",
+      "hyp": "na yei na wɔboɔ din frɛɛ mo ɛfiri sɛ kristo nso hunuu amane maa mo gyaa mo nhwɛsoɔ sɛ monni nʼa na mo akyi",
+      "wer": 0.182,
+      "cer": 0.047
+    },
+    {
+      "file": "held_021.wav",
+      "ref": "na da bi saulo ba yonatan ka kyerɛɛ n'abɔfra a ɔkura n'akodeɛ no sɛ bra ma yɛnkɔ filistifoɔ bansifoɔ a wɔwɔ nohoa no ho",
+      "raw_ref": "na da bi saulo ba yonatan ka kyerɛɛ n'abɔfra a ɔkura n'akodeɛ no sɛ bra ma yɛnkɔ filistifoɔ bansifoɔ a wɔwɔ nohoa no ho",
+      "hyp": "na daabi sar ba yo no atanka kyerɛ na abɔfra okura nakodeɛ no sɛ braaman kɔ filistifoɔ bansifoɔ a wɔwɔ no hoa noo",
+      "wer": 0.708,
+      "cer": 0.146
+    },
+    {
+      "file": "held_022.wav",
+      "ref": "monkɔ nkɔhwehwɛ mu yie na monhwɛ nhunu faako a ɔhyɛ ne onii ko a ɔhunuu no hɔ",
+      "raw_ref": "monkɔ nkɔhwehwɛ mu yie na monhwɛ nhunu faako a ɔhyɛ ne onii ko a ɔhunuu no hɔ",
+      "hyp": "monkɔnkɔ ahwehwɛ mu yie na monhwɛ hunu faako a ɔhyɛn ne wɔnni ko a ɔhunuu no hɔ",
+      "wer": 0.294,
+      "cer": 0.098
+    },
+    {
+      "file": "held_023.wav",
+      "ref": "awurade mmu me ne wo ntam atɛn na awurade nnye m'aweretɔdeɛ wo nsam",
+      "raw_ref": "awurade mmu me ne wo ntam atɛn na awurade nnye m'aweretɔdeɛ wo nsam",
+      "hyp": "awurade mu me ne wɔ ntam atɛn na awurade nyemarɛtɔdeɛ wɔn nsɛm",
+      "wer": 0.462,
+      "cer": 0.182
+    },
+    {
+      "file": "held_024.wav",
+      "ref": "ɛnna akis de siklag maa no da no ara enti siklag danee yuda ahemfo deɛ de bɛsi nnɛ yi",
+      "raw_ref": "ɛnna akis de siklag maa no da no ara enti siklag danee yuda ahemfo deɛ de bɛsi nnɛ yi",
+      "hyp": "ɛnna arkes di siklag maa no da no ar enti siklag da nee yuda ahemfodeɛ di bɛsinei",
+      "wer": 0.579,
+      "cer": 0.119
+    },
+    {
+      "file": "held_025.wav",
+      "ref": "wɔsoma timoteo kɔ tesalonika",
+      "raw_ref": "wɔsoma timoteo kɔ tesalonika",
+      "hyp": "maa ɛdi ka timiɛnsa wɔsoma timoteo kɔ tesalonika",
+      "wer": 1.0,
+      "cer": 0.64
+    },
+    {
+      "file": "held_026.wav",
+      "ref": "awia ne anadwo yɛsrɛ pii sɛ yɛbɛhunu mo anim na yɛama mo gyidie awie mayɛ",
+      "raw_ref": "awia ne anadwo yɛsrɛ pii sɛ yɛbɛhunu mo anim na yɛama mo gyidie awie mayɛ",
+      "hyp": "awia ne anadwo yɛsrɛɛ pii sɛ yɛbɛhunu mo anim na yɛama mo gyidie awie ma eɛ",
+      "wer": 0.2,
+      "cer": 0.034
+    },
+    {
+      "file": "held_027.wav",
+      "ref": "na mo deɛ anuanom monni esum mu na ɛda no abɛto mo sɛ owifoɔ",
+      "raw_ref": "na mo deɛ anuanom monni esum mu na ɛda no abɛto mo sɛ owifoɔ",
+      "hyp": "na mo deɛ anuanom monni asum mu na da no abɛto mo sɛ owifoɔ",
+      "wer": 0.143,
+      "cer": 0.043
+    },
+    {
+      "file": "held_028.wav",
+      "ref": "monnnum honhom no monnte adiyisɛm atua",
+      "raw_ref": "monnnum honhom no monnte adiyisɛm atua",
+      "hyp": "munnom honhom no monte adiyi sɛm atua",
+      "wer": 0.667,
+      "cer": 0.121
+    },
+    {
+      "file": "held_029.wav",
+      "ref": "nanso mmerɛ santen hene onyankopɔn koro a ɔtease daa a wɔnhu no no anidie ne animuonyam nka no mmerɛ santen mfesanten",
+      "raw_ref": "nanso mmerɛ santen hene onyankopɔn koro a ɔtease daa a wɔnhu no no anidie ne animuonyam nka no mmerɛ santen mfesanten",
+      "hyp": "nanso mmerɛ santenhene onyankopɔn koro a ɔte ase daa a wɔnhu no no ɛnne dee ne animuonyam nka no mmere santene mfisantene",
+      "wer": 0.429,
+      "cer": 0.082
+    },
+    {
+      "file": "held_030.wav",
+      "ref": "nanso mmerɛ santen hene onyankopɔn koro a ɔte ase daa a wɔnhu no no anidie ne animuonyam nka no mmerɛ santen mfesanten",
+      "raw_ref": "nanso mmerɛ santen hene onyankopɔn koro a ɔte ase daa a wɔnhu no no anidie ne animuonyam nka no mmerɛ santen mfesanten",
+      "hyp": "nanso mmerɛ santenhene onyankopɔn koro a ɔte ase daa a wɔnhu no no ɛnne dee ne animuonyam nka no mmere santene mfisantene",
+      "wer": 0.318,
+      "cer": 0.082
+    },
+    {
+      "file": "held_031.wav",
+      "ref": "ɔbaa deɛ memma no kwan sɛ ɔnkyerɛkyerɛ anaasɛ ɔnni ɔbarima so na mmom ɔnyɛ komm",
+      "raw_ref": "ɔbaa deɛ memma no kwan sɛ ɔnkyerɛkyerɛ anaasɛ ɔnni ɔbarima so na mmom ɔnyɛ komm",
+      "hyp": "ɔbaa deɛ me ma no kwan sɛ ɔnkyerɛ kyerɛ naasɛ ɔnni ɔbaama so na mmom wɔnyɛ koo",
+      "wer": 0.533,
+      "cer": 0.108
+    },
+    {
+      "file": "held_032.wav",
+      "ref": "ɛfiri sɛ wɔbɔɔ adam kane ansa na hawa redi hɔ",
+      "raw_ref": "ɛfiri sɛ wɔbɔɔ adam kane ansa na hawa redi hɔ",
+      "hyp": "efisɛ wɔbɔɔ adam kane ansa na hawa eydi ho",
+      "wer": 0.4,
+      "cer": 0.167
+    },
+    {
+      "file": "held_033.wav",
+      "ref": "na yɛnni agyapadeɛ biara nso yisai ba no mu",
+      "raw_ref": "na yɛnni agyapadeɛ biara nso yisai ba no mu",
+      "hyp": "na yɛni agyapadeɛ bi ara nso yisia ba nom",
+      "wer": 0.667,
+      "cer": 0.114
+    },
+    {
+      "file": "held_034.wav",
+      "ref": "na asa ne nnipa a wɔka ne ho no tii wɔn kɔduruu gerar",
+      "raw_ref": "na asa ne nnipa a wɔka ne ho no tii wɔn kɔduruu gerar",
+      "hyp": "na asa ne nnipa a wɔka ne ho no tii wɔn koduru gɛra",
+      "wer": 0.154,
+      "cer": 0.098
+    },
+    {
+      "file": "held_035.wav",
+      "ref": "na ɔhene salomo so senee asase so ahemfo nyinaa adedodoɔ ne nyansa fam",
+      "raw_ref": "na ɔhene salomo so senee asase so ahemfo nyinaa adedodoɔ ne nyansa fam",
+      "hyp": "na ɔhene salomon so sene asase so ahemfo nyinaa adededoɔ ne nyansa fɛ",
+      "wer": 0.308,
+      "cer": 0.086
+    },
+    {
+      "file": "held_036.wav",
+      "ref": "na salomo dii israel nyinaa so hene yerusalem mfirinhyia aduanan",
+      "raw_ref": "na salomo dii israel nyinaa so hene yerusalem mfirinhyia aduanan",
+      "hyp": "na salomon de israel nnaa so hene yerusalem mfinhyia aduanan",
+      "wer": 0.4,
+      "cer": 0.127
+    },
+    {
+      "file": "held_037.wav",
+      "ref": "na m'ani da so sɛ mobɛhunu sɛ yɛn deɛ yɛnyɛ nnipa a wɔmfata",
+      "raw_ref": "na m'ani da so sɛ mobɛhunu sɛ yɛn deɛ yɛnyɛ nnipa a wɔmfata",
+      "hyp": "na mʼani da so sɛ mubɛhunu sɛ yɛn deɛ yɛnyɛ nnipa a wɔmfata",
+      "wer": 0.077,
+      "cer": 0.021
+    },
+    {
+      "file": "held_038.wav",
+      "ref": "na yɛntumi nyɛ hwee ntia nokorɛ no na mmom deɛ yɛtumi yɛ no yɛyɛ ma nokorɛ",
+      "raw_ref": "na yɛntumi nyɛ hwee ntia nokorɛ no na mmom deɛ yɛtumi yɛ no yɛyɛ ma nokorɛ",
+      "hyp": "na yɛn tumi nya hwee ntia nokorɛ no na mmum deɛ ɛtumi yɛn no yɛyɛ ma nokorɛ",
+      "wer": 0.375,
+      "cer": 0.068
+    },
+    {
+      "file": "held_039.wav",
+      "ref": "awurade yesu kristo adom onyankopɔn dɔ ne honhom kronkron ayɔnkofa nka mo nyinaa",
+      "raw_ref": "awurade yesu kristo adom onyankopɔn dɔ ne honhom kronkron ayɔnkofa nka mo nyinaa",
+      "hyp": "awurade yesu kristo adom onyankopɔn dɔ ne honhom kronkoro yɔnkfa nka mo nyinaa",
+      "wer": 0.154,
+      "cer": 0.059
+    },
+    {
+      "file": "held_040.wav",
+      "ref": "na meyɛɛ m'adwene sɛ meremfa awerɛhoɔ memma mo nkyɛn bio",
+      "raw_ref": "na meyɛɛ m'adwene sɛ meremfa awerɛhoɔ memma mo nkyɛn bio",
+      "hyp": "na meyɛ maadwen sɛ memfa awerɛhoɔ mema mo nkyɛn bio",
+      "wer": 0.4,
+      "cer": 0.128
+    },
+    {
+      "file": "held_041.wav",
+      "ref": "na yei ne ɔdɔ no sɛ yɛbɛnante sɛdeɛ ahyɛdeɛ no teɛ",
+      "raw_ref": "na yei ne ɔdɔ no sɛ yɛbɛnante sɛdeɛ ahyɛdeɛ no teɛ",
+      "hyp": "na yei ne ɔdɔ no sɛ yɛbɛ na nte sɛdeɛ ahyɛdeɛ no teɛ",
+      "wer": 0.273,
+      "cer": 0.0
+    },
+    {
+      "file": "held_042.wav",
+      "ref": "yei ne ahyɛdeɛ no sɛdeɛ moate firi mfitiaseɛ sɛ monnante mu",
+      "raw_ref": "yei ne ahyɛdeɛ no sɛdeɛ moate firi mfitiaseɛ sɛ monnante mu",
+      "hyp": "yei ne ahyɛdeɛ no sɛdeɛ mo ate firi mfiteaseɛ sɛ monna nte mo",
+      "wer": 0.545,
+      "cer": 0.041
+    },
+    {
+      "file": "held_043.wav",
+      "ref": "na m'ani da so sɛ mɛba mo nkyɛn na yɛde ano ne ano akasa na yɛn anigyeɛ awie pɛyɛ",
+      "raw_ref": "na m'ani da so sɛ mɛba mo nkyɛn na yɛde ano ne ano akasa na yɛn anigyeɛ awie pɛyɛ",
+      "hyp": "na mʼani da so sɛ mɛba mo nkyɛn na yɛde ano ne ano akasa na yɛn anigyɛ awie pɛɛ",
+      "wer": 0.105,
+      "cer": 0.032
+    },
+    {
+      "file": "held_044.wav",
+      "ref": "enti awurade se mpa a woaforɔ no woremfiri so nsiane na wuo na wobɛwuo",
+      "raw_ref": "enti awurade se mpa a woaforɔ no woremfiri so nsiane na wuo na wobɛwuo",
+      "hyp": "enti awurade sɛ mpa a wɔaforow no wɔmfiri su nsane na wuo na wɔbɛwu",
+      "wer": 0.429,
+      "cer": 0.193
+    },
+    {
+      "file": "held_045.wav",
+      "ref": "hwɛ ogya afiri ɔsoro aduru abɛhye akane aduonum so asafohene baanu no ne wɔn aduonum aduonum no na afei ma me kra boɔ nyɛ den w'ani so",
+      "raw_ref": "hwɛ ogya afiri ɔsoro aduru abɛhye akane aduonum so asafohene baanu no ne wɔn aduonum aduonum no na afei ma me kra boɔ nyɛ den w'ani so",
+      "hyp": "hwɛ ɔgya afiri soro aduru abɛhye akane aduonom nso asafohene baanu no ne wɔn aduonom aduonom no na afei ma me kraaboɔ nyɛ den wɔani so",
+      "wer": 0.333,
+      "cer": 0.074
+    },
+    {
+      "file": "held_046.wav",
+      "ref": "na ne na din de yehoadin a ɔfiri yerusalem",
+      "raw_ref": "na ne na din de yehoadin a ɔfiri yerusalem",
+      "hyp": "na ne nadin ne yohoa adi na wɔfiri yerusalem",
+      "wer": 0.667,
+      "cer": 0.118
+    },
+    {
+      "file": "held_047.wav",
+      "ref": "na wɔbaa israel nsraban mu no israel sɔre kunkumm moabfoɔ na wɔdwanee wɔn anim na wɔtaa wɔn kɔkunkumm moabfoɔ",
+      "raw_ref": "na wɔbaa israel nsraban mu no israel sɔre kunkumm moabfoɔ na wɔdwanee wɔn anim na wɔtaa wɔn kɔkunkumm moabfoɔ",
+      "hyp": "na wɔbaa israel nsra abana mu no israel asɔre kunkum mmu afoɔ na wɔdwanee wɔn anim na wɔtaa wɔn kokunkummu afoɔ",
+      "wer": 0.421,
+      "cer": 0.099
+    },
+    {
+      "file": "held_048.wav",
+      "ref": "okristoni frɛ ne ne yie no",
+      "raw_ref": "okristoni frɛ ne ne yie no",
+      "hyp": "ɔkristo ni frɛ nye ne yie no",
+      "wer": 0.5,
+      "cer": 0.095
+    },
+    {
+      "file": "held_049.wav",
+      "ref": "ɛfiri sɛ deɛ yeinom abɔ no no yɛ onifirani na n'ani anyam ɔnhunu akyiri adeɛ na ne werɛ afiri ne bɔne a wayɛ dada no ho hohorɔ",
+      "raw_ref": "ɛfiri sɛ deɛ yeinom abɔ no no yɛ onifirani na n'ani anyam ɔnhunu akyiri adeɛ na ne werɛ afiri ne bɔne a wayɛ dada no ho hohorɔ",
+      "hyp": "ɛfiri sɛ deɛ yeinom abɔ no no yɛ onifraani na nʼani anyam ɔhhunu akyiri adeɛ na ne werɛ afiri ne bɔne a wayɛ dada no ho hohoro",
+      "wer": 0.111,
+      "cer": 0.04
+    },
+    {
+      "file": "held_050.wav",
+      "ref": "enti mmom anuanom mommɔ mmɔden nhyɛ mo frɛ ne mo yie mu den na sɛ moyɛ yeinom a morensunti da",
+      "raw_ref": "enti mmom anuanom mommɔ mmɔden nhyɛ mo frɛ ne mo yie mu den na sɛ moyɛ yeinom a morensunti da",
+      "hyp": "enti mmom anuanom mommɔ mmɔden nhyɛ mo frɛ ne mo yie mu den na sɛ moyɛ yei no mo a monsu nti da",
+      "wer": 0.25,
+      "cer": 0.041
+    },
+    {
+      "file": "held_051.wav",
+      "ref": "ɛno mu na ɔsoro bɛsɔ ogya asɛeɛ na wiem mfitiasedeɛ anane ahye",
+      "raw_ref": "ɛno mu na ɔsoro bɛsɔ ogya asɛeɛ na wiem mfitiasedeɛ anane ahye",
+      "hyp": "ɛno mu na ɔsoro bɛsɔ ogyaa sɛeɛ na wiem mfi teasedeɛ ananeahyɛ",
+      "wer": 0.417,
+      "cer": 0.039
+    },
+    {
+      "file": "held_052.wav",
+      "ref": "na wɔka kyerɛɛ dawid sɛ uria ansiane ankɔ ne fie",
+      "raw_ref": "na wɔka kyerɛɛ dawid sɛ uria ansiane ankɔ ne fie",
+      "hyp": "na ɔka kyerɛɛ dawid sɛ yuria ansa ne ankɔ ne fie",
+      "wer": 0.4,
+      "cer": 0.077
+    },
+    {
+      "file": "held_053.wav",
+      "ref": "na dawid soma maa wɔkɔɔ tamar nkyɛn efie sɛ kɔ wo nua amnon fie ɛ na kɔyɛ aduane ma no",
+      "raw_ref": "na dawid soma maa wɔkɔɔ tamar nkyɛn efie sɛ kɔ wo nua amnon fie ɛ na kɔyɛ aduane ma no",
+      "hyp": "na dawid suma ma wɔ kɔɔ tama nkyɛn efie sɛ kɔwnia amnɔm fiɛɛ na ka yɛ adoanemma no",
+      "wer": 0.7,
+      "cer": 0.164
+    },
+    {
+      "file": "held_054.wav",
+      "ref": "na dawid sii afɔrebukyia maa awurade wɔ hɔ na ɔbɔɔ ɔhyeɛ afɔdeɛ ne asomdwoeɛ afɔdeɛ",
+      "raw_ref": "na dawid sii afɔrebukyia maa awurade wɔ hɔ na ɔbɔɔ ɔhyeɛ afɔdeɛ ne asomdwoeɛ afɔdeɛ",
+      "hyp": "na dawid siafɔbebotua ma awurade wɔ hɔ na ɔbɔɔ hyeafɔ deɛ ne asomdwoafɔ deɛ",
+      "wer": 0.467,
+      "cer": 0.159
+    },
+    {
+      "file": "held_055.wav",
+      "ref": "na ɔde asraafoɔ bansifoɔ tenaa edom edom nyinaa mu na ɔde bansifoɔ tenatenaeɛ na edomfoɔ nyinaa bɛyɛɛ dawid nkoa",
+      "raw_ref": "na ɔde asraafoɔ bansifoɔ tenaa edom edom nyinaa mu na ɔde bansifoɔ tenatenaeɛ na edomfoɔ nyinaa bɛyɛɛ dawid nkoa",
+      "hyp": "na ɔde asraafoɔ bansifoɔ tenaa adom adom nyinaa m na ɔde baansifoɔ tena tenaeɛ na edomfoɔ nyinaa bɛyee dawid nkoa",
+      "wer": 0.368,
+      "cer": 0.064
+    },
+    {
+      "file": "held_056.wav",
+      "ref": "mo boasetɔ ne gyidie a mokura mu mo taa nyinaa ne amaneɛ a momiaa mo ani hunuiɛ no mu nti ɛma yɛn ara yɛhoahoa yɛn ho ma mo wɔ nyankopɔn asafo no mu",
+      "raw_ref": "mo boasetɔ ne gyidie a mokura mu mo taa nyinaa ne amaneɛ a momiaa mo ani hunuiɛ no mu nti ɛma yɛn ara yɛhoahoa yɛn ho ma mo wɔ nyankopɔn asafo no mu",
+      "hyp": "mo bo asetɔ ne gyidie a mokora mu motaa nyinaa ne amaneɛ a momi a mo ani hunuiɛ nom nti ɛma yɛa yɛhoaahoa yɛn homa mo ɛwɔ onyankopɔn asafo mo",
+      "wer": 0.545,
+      "cer": 0.103
+    },
+    {
+      "file": "held_057.wav",
+      "ref": "na wɔnhwɛ n'anwanwadeɛ wɔ wɔn a wɔagye adie nyinaa mu ɛfiri sɛ wɔagye yɛn adanseɛ a yɛdii mo no adi ɛda no ara mu",
+      "raw_ref": "na wɔnhwɛ n'anwanwadeɛ wɔ wɔn a wɔagye adie nyinaa mu ɛfiri sɛ wɔagye yɛn adanseɛ a yɛdii mo no adi ɛda no ara mu",
+      "hyp": "na wɔnhwɛ na wɔanwaadeɛ wɔ nwɔn a wɔagye adiɛ nyinaa mu ɛfiri sɛ wɔagyeyɛn adanseɛ a yɛdii mo no adi ɛda no amu",
+      "wer": 0.333,
+      "cer": 0.089
+    },
+    {
+      "file": "held_058.wav",
+      "ref": "emu na ɔnam yɛn asɛmpa no so afrɛ mo aba na moanya yɛn awurade yesu kristo animuonyam",
+      "raw_ref": "emu na ɔnam yɛn asɛmpa no so afrɛ mo aba na moanya yɛn awurade yesu kristo animuonyam",
+      "hyp": "ɛmu na ɔnam yɛn asɛmpa no so afrɛ mo aba na moanyɛ yɛn awurade yesu kristo animuonyam",
+      "wer": 0.118,
+      "cer": 0.029
+    },
+    {
+      "file": "held_059.wav",
+      "ref": "na yɛte sɛ ebinom wɔ hɔ a wɔnenam basabasa wɔ mo mu na wɔnyɛ adwuma na mmom wɔyɛ terɛterɛ",
+      "raw_ref": "na yɛte sɛ ebinom wɔ hɔ a wɔnenam basabasa wɔ mo mu na wɔnyɛ adwuma na mmom wɔyɛ terɛterɛ",
+      "hyp": "na yɛte sɛ ebinom wɔ hɔ a wɔne nam basabasa wɔ mo mu na wɔnnyɛ adwuma na mmom wɔyɛ trɛtrɛ",
+      "wer": 0.211,
+      "cer": 0.042
+    },
+    {
+      "file": "held_060.wav",
+      "ref": "hunu deɛ meseɛ yi na awurade bɛma wo ade nyinaa mu nteaseɛ",
+      "raw_ref": "hunu deɛ meseɛ yi na awurade bɛma wo ade nyinaa mu nteaseɛ",
+      "hyp": "hunu deɛ mesiei na awurade bɛma wɔ ade nyinaa mu ntiase",
+      "wer": 0.333,
+      "cer": 0.128
+    },
+    {
+      "file": "held_061.wav",
+      "ref": "bɔ mmɔden gyina nyankopɔn anim sɛdeɛ ɔfata sɛ odwumayɛni a ɛnni sɛ ɔfɛreɛ na ɔpɛɛpɛɛ nokwasɛm no mu pɛpɛɛpɛ",
+      "raw_ref": "bɔ mmɔden gyina nyankopɔn anim sɛdeɛ ɔfata sɛ odwumayɛni a ɛnni sɛ ɔfɛreɛ na ɔpɛɛpɛɛ nokwasɛm no mu pɛpɛɛpɛ",
+      "hyp": "bɔmmɔden gyina nyankopɔn anim sɛdeɛ ɔfata sɛ odwuma yɛnni a ɛnni sɛ ɔfareɛ na wɔpɛɛpɛɛ nokwaasɛn mu pɛpɛɛ pɛ",
+      "wer": 0.526,
+      "cer": 0.067
+    },
+    {
+      "file": "held_062.wav",
+      "ref": "nso wɔrenkɔ wɔn anim pii biara na wɔn gyimi bɛda adi nnipa nyinaa anim sɛdeɛ wɔn deɛ no nso yɛeɛ no",
+      "raw_ref": "nso wɔrenkɔ wɔn anim pii biara na wɔn gyimi bɛda adi nnipa nyinaa anim sɛdeɛ wɔn deɛ no nso yɛeɛ no",
+      "hyp": "nso wɔn koɔ anim pii biara na wɔn gyimi bɛdɛɛ de nnipa nyinaa nim sɛdeɛ wɔndeɛ no nso yɛeɛ no",
+      "wer": 0.333,
+      "cer": 0.114
+    },
+    {
+      "file": "held_063.wav",
+      "ref": "na wo deɛ tena deɛ woasua no na woahunu afiri nokorɛ no mu",
+      "raw_ref": "na wo deɛ tena deɛ woasua no na woahunu afiri nokorɛ no mu",
+      "hyp": "na wodeɛ ɛtena deɛ wɔasua na wanhunu afirii nokora no mu",
+      "wer": 0.615,
+      "cer": 0.174
+    },
+    {
+      "file": "held_064.wav",
+      "ref": "ɔdɔfo mebɔ mpaeɛ sɛ adeɛ nyinaa mu ɛnsi wo yie na nya ahoɔden sɛdeɛ asi wo kra yie no",
+      "raw_ref": "ɔdɔfo mebɔ mpaeɛ sɛ adeɛ nyinaa mu ɛnsi wo yie na nya ahoɔden sɛdeɛ asi wo kra yie no",
+      "hyp": "ɔdɔfo mebɔ mpaeɛ sɛ adeɛ nyinaa mu ɛnsi wo yie na nyaahoɔden sɛdeɛ asi wo kraa yie no",
+      "wer": 0.158,
+      "cer": 0.015
+    },
+    {
+      "file": "held_065.wav",
+      "ref": "na wogya wɔn kwan sɛdeɛ ɛsɛ nyankopɔn anim a na woayɛ no yie",
+      "raw_ref": "na wogya wɔn kwan sɛdeɛ ɛsɛ nyankopɔn anim a na woayɛ no yie",
+      "hyp": "na wogya wɔn nkwan sɛdeɛ ɛsɛ nyankopɔn ani mu a na wayɛ no yie",
+      "wer": 0.308,
+      "cer": 0.062
+    },
+    {
+      "file": "held_066.wav",
+      "ref": "na m'ani da so sɛ mɛhu mo ntɛm na yɛde ano ne ano akasa",
+      "raw_ref": "na m'ani da so sɛ mɛhu mo ntɛm na yɛde ano ne ano akasa",
+      "hyp": "na mʼani da so sɛ mɛhu mɔ ntam na yɛde ano ne ano akasa",
+      "wer": 0.143,
+      "cer": 0.048
+    },
+    {
+      "file": "held_067.wav",
+      "ref": "bobɔ nnamfonom no din mmaako mmaako kyea wɔn",
+      "raw_ref": "bobɔ nnamfonom no din mmaako mmaako kyea wɔn",
+      "hyp": "bobɔnamfonom no din maako maako kyeaa wɔn",
+      "wer": 0.625,
+      "cer": 0.108
+    },
+    {
+      "file": "held_068.wav",
+      "ref": "sɛdeɛ asɛm a ɔde brɛɛ israel mma berɛ a ɔnam yesu kristo so kaa asomdwoeɛ ho asɛmpa no teɛ no ɔno ne nnipa nyinaa wura",
+      "raw_ref": "sɛdeɛ asɛm a ɔde brɛɛ israel mma berɛ a ɔnam yesu kristo so kaa asomdwoeɛ ho asɛmpa no teɛ no ɔno ne nnipa nyinaa wura",
+      "hyp": "sɛdeɛ asɛm a ɔde berɛ israel mma berɛ a ɔnam yesu kristo so kaa somdwoe ho asɛmpa no teɛ no ɔno ne nnipa nyinaa wra",
+      "wer": 0.12,
+      "cer": 0.053
+    },
+    {
+      "file": "held_069.wav",
+      "ref": "na awurade ka kyerɛɛ paulo anisoadehunu mu anadwo sɛ nsuro kasa na mmua w'ano",
+      "raw_ref": "na awurade ka kyerɛɛ paulo anisoadehunu mu anadwo sɛ nsuro kasa na mmua w'ano",
+      "hyp": "na awurade ka kyerɛɛ paulo anisoade hunu mu anadwo sɛ nsuro kasa na mmua wano",
+      "wer": 0.214,
+      "cer": 0.016
+    },
+    {
+      "file": "held_070.wav",
+      "ref": "na wɔamuamua wɔn ani na wɔamfa wɔn ani anhunu adeɛ",
+      "raw_ref": "na wɔamuamua wɔn ani na wɔamfa wɔn ani anhunu adeɛ",
+      "hyp": "na wɔamuamua wɔn ani na wɔamfa wɔn ani ahuna deɛ",
+      "wer": 0.2,
+      "cer": 0.049
+    },
+    {
+      "file": "held_071.wav",
+      "ref": "wɔpaepaee mpo gilead anyinsɛnfoɔ mu",
+      "raw_ref": "wɔpaepaee mpo gilead anyinsɛnfoɔ mu",
+      "hyp": "wɔ paepae mpo giliad anyinsɛmfoo mu",
+      "wer": 0.8,
+      "cer": 0.129
+    },
+    {
+      "file": "held_072.wav",
+      "ref": "bɔ wo ho adwaa kɔ yuda asase so na kɔdidi hɔ na hyɛ nkɔm wɔ hɔ",
+      "raw_ref": "bɔ wo ho adwaa kɔ yuda asase so na kɔdidi hɔ na hyɛ nkɔm wɔ hɔ",
+      "hyp": "bɔw ho adwa kɔ yuda asase so na kɔdedi hɔ na hyɛ nkɔm wɔ hɔ",
+      "wer": 0.25,
+      "cer": 0.064
+    },
+    {
+      "file": "held_073.wav",
+      "ref": "na wo deɛ wobɛwu asase a ɛso akum so",
+      "raw_ref": "na wo deɛ wobɛwu asase a ɛso akum so",
+      "hyp": "na wo deɛ wobɛwu asaase a ɛsoa kum so",
+      "wer": 0.333,
+      "cer": 0.036
+    },
+    {
+      "file": "held_074.wav",
+      "ref": "na asase mu nyinaa bɛpuhu sɛ asubɔnten nil",
+      "raw_ref": "na asase mu nyinaa bɛpuhu sɛ asubɔnten nil",
+      "hyp": "na asaase mu nyinaa bepuhu sɛ asubɔnten naa",
+      "wer": 0.375,
+      "cer": 0.114
+    },
+    {
+      "file": "held_075.wav",
+      "ref": "ɛnam gyidie a ɛwɔ onyankopɔn a ɔnyanee no firii awufoɔ mu no tumi adwuma so",
+      "raw_ref": "ɛnam gyidie a ɛwɔ onyankopɔn a ɔnyanee no firii awufoɔ mu no tumi adwuma so",
+      "hyp": "ɛnam gyidiɛ ɛwo onyankopɔn a onyanee no firi owofuo mu no tumi adwuma so",
+      "wer": 0.4,
+      "cer": 0.148
+    },
+    {
+      "file": "held_076.wav",
+      "ref": "na afei mo deɛ monyi abufuo koko bɔne bɔnepɛ abususɛm ne aniwusɛm nyinaa mfiri mo anomu ngu",
+      "raw_ref": "na afei mo deɛ monyi abufuo koko bɔne bɔnepɛ abususɛm ne aniwusɛm nyinaa mfiri mo anomu ngu",
+      "hyp": "na afei mo deɛ monyɛ abufoo okobɔne bɔne pɛ abususɛm ne anu sɛm nyinaa mfiri mo ano mu ngu",
+      "wer": 0.471,
+      "cer": 0.067
+    },
+    {
+      "file": "held_077.wav",
+      "ref": "ɛyerenom okununom mma awofoɔ nkoa ne awuranom",
+      "raw_ref": "ɛyerenom okununom mma awofoɔ nkoa ne awuranom",
+      "hyp": "ɛyerenom okununom mma awofoɔ nkoa ne awuranom",
+      "wer": 0.0,
+      "cer": 0.0
+    },
+    {
+      "file": "held_078.wav",
+      "ref": "na afei yesu a wɔfrɛ no yusto wɔn a wɔfiri twetiatwa mu no kyea mo",
+      "raw_ref": "na afei yesu a wɔfrɛ no yusto wɔn a wɔfiri twetiatwa mu no kyea mo",
+      "hyp": "na afei yesu a ɔwɔfrɛ ne yusto wɔn a wɔfiri twetuatwa mu no ɛkyea mo",
+      "wer": 0.267,
+      "cer": 0.077
+    },
+    {
+      "file": "held_079.wav",
+      "ref": "ɛfiri sɛ afei deɛ ahoɔden biara nni me mu na home biara nso nni me mu",
+      "raw_ref": "ɛfiri sɛ afei deɛ ahoɔden biara nni me mu na home biara nso nni me mu",
+      "hyp": "ɛfiri sɛ afei deɛ ahoɔden biara nimi mu na home biara nso nimi mu",
+      "wer": 0.25,
+      "cer": 0.074
+    },
+    {
+      "file": "held_080.wav",
+      "ref": "na wɔn a wɔbɔ apam no ho mmusuo no ɔde tɛkyerɛmakyene bɛsɛe wɔn ara nanso wɔn a wɔnim wɔn nyankopɔn no bɛhyɛ wɔn ho den na wɔayɛ adeɛ",
+      "raw_ref": "na wɔn a wɔbɔ apam no ho mmusuo no ɔde tɛkyerɛmakyene bɛsɛe wɔn ara nanso wɔn a wɔnim wɔn nyankopɔn no bɛhyɛ wɔn ho den na wɔayɛ adeɛ",
+      "hyp": "na wɔn a wɔbɔ apam no ho mmusuo no ɔde tɛkyerɛmakyene bɛsɛn wɔn aa nanso wɔn a wɔnim wɔn onyankopɔn no bɛhyɛ wɔn ho den na wɔayɛ adeɛ",
+      "wer": 0.107,
+      "cer": 0.028
+    },
+    {
+      "file": "held_081.wav",
+      "ref": "anadwo no ara na wɔkumm kaldeafoɔ hene belsasar",
+      "raw_ref": "anadwo no ara na wɔkumm kaldeafoɔ hene belsasar",
+      "hyp": "anadwo no ar ana wɔkum kade afoɔ ne belsasa",
+      "wer": 0.875,
+      "cer": 0.125
+    },
+    {
+      "file": "held_082.wav",
+      "ref": "nanso ɔbɛbubu a ɛnyɛ onipa nsa na ɛbɛbubu no",
+      "raw_ref": "nanso ɔbɛbubu a ɛnyɛ onipa nsa na ɛbɛbubu no",
+      "hyp": "nanso ɔbɛbubu a ɛnyɛ nnipa nsa ne ɛbɛbubu no",
+      "wer": 0.222,
+      "cer": 0.056
+    },
+    {
+      "file": "held_083.wav",
+      "ref": "nnanson na di dapɔnna no ma awurade wo nyankopɔn faako a wayie hɔ na awurade wo nyankopɔn bɛhyira wo wo nnɔbaeɛ mu ne wo nsa ano adwuma nyinaa mu enti ma w'ani nnye ara",
+      "raw_ref": "nnanson na di dapɔnna no ma awurade wo nyankopɔn faako a wayie hɔ na awurade wo nyankopɔn bɛhyira wo wo nnɔbaeɛ mu ne wo nsa ano adwuma nyinaa mu enti ma w'ani nnye ara",
+      "hyp": "nanso na adinapɔnna no ma awurade onyankopɔn faako a wɔayie hɔ na awurade onyankopɔn bɛhyira wo wo noɔbaeɛ mu ne wo nsa ano adwuma nyinaa mu enti ma wʼani nnye a",
+      "wer": 0.294,
+      "cer": 0.067
+    },
+    {
+      "file": "held_084.wav",
+      "ref": "ɔnanani nkyɛn na gye mfɛntomu na wo nua deɛ nnye ne hɔ bi na awurade wo nyankopɔn nhyira wo deɛ wode wo nsa bɛka nyinaa mu asase a worekɔ akɔfa no so",
+      "raw_ref": "ɔnanani nkyɛn na gye mfɛntomu na wo nua deɛ nnye ne hɔ bi na awurade wo nyankopɔn nhyira wo deɛ wode wo nsa bɛka nyinaa mu asase a worekɔ akɔfa no so",
+      "hyp": "ɔnaneani nkyɛn na gyee mfa nto mu na onua deɛ nye ne hɔ bi na awurade onyankopɔn hyira wodeɛ wode wo nsa bɛka nyinaa mu asase a wokɔ akɔfa no so",
+      "wer": 0.438,
+      "cer": 0.076
+    },
+    {
+      "file": "held_085.wav",
+      "ref": "deuteronomium aduonu nan",
+      "raw_ref": "deuteronomium aduonu nan",
+      "hyp": "di tronomiom tea de onu nan",
+      "wer": 1.667,
+      "cer": 0.318
+    },
+    {
+      "file": "held_086.wav",
+      "ref": "na ɔsɔfoɔ no nnye kɛntɛn no mfiri wo nsam mfa nsi awurade wo nyankopɔn afɔrebukyia no anim",
+      "raw_ref": "na ɔsɔfoɔ no nnye kɛntɛn no mfiri wo nsam mfa nsi awurade wo nyankopɔn afɔrebukyia no anim",
+      "hyp": "na ɔsɔfoɔ no nye kɛntɛn no mfiri wo nsɛm mfansi awurade onyankopɔn afɔrebukyia no ani",
+      "wer": 0.412,
+      "cer": 0.054
+    },
+    {
+      "file": "held_087.wav",
+      "ref": "ahuhudeɛ mu ahuhudeɛ ɔsɛnkafoɔ no na ɔseɛ ne nyinaa yɛ ahuhudeɛ",
+      "raw_ref": "ahuhudeɛ mu ahuhudeɛ ɔsɛnkafoɔ no na ɔseɛ ne nyinaa yɛ ahuhudeɛ",
+      "hyp": "ahuhudeɛ mu ahuhudeɛ ɔsɛ nkamfoɔ no na ɔseɛ ne nyinaa yɛ ahuhudeɛ",
+      "wer": 0.182,
+      "cer": 0.019
+    },
+    {
+      "file": "held_088.wav",
+      "ref": "asɛm awieeɛ yɛ sene ne mfitiaseɛ",
+      "raw_ref": "asɛm awieeɛ yɛ sene ne mfitiaseɛ",
+      "hyp": "asɛm awieyɛ yɛ sene ne mfiteaaseɛ",
+      "wer": 0.333,
+      "cer": 0.111
+    },
+    {
+      "file": "held_089.wav",
+      "ref": "mede nyansa masɔ yei nyinaa mahwɛ mekaa sɛ mɛhunu nyansa nso ɛne me ntam ware",
+      "raw_ref": "mede nyansa masɔ yei nyinaa mahwɛ mekaa sɛ mɛhunu nyansa nso ɛne me ntam ware",
+      "hyp": "mede nyansa masoyei nyinaa mahwɛ mekaa sɛ mmɛhunu nyansa nso ɛne me ntɛm ware",
+      "wer": 0.267,
+      "cer": 0.048
+    },
+    {
+      "file": "held_090.wav",
+      "ref": "na hwan na ɔnim asɛm ase kyerɛ",
+      "raw_ref": "na hwan na ɔnim asɛm ase kyerɛ",
+      "hyp": "na hwan na onim asɛm ase kyerɛ",
+      "wer": 0.143,
+      "cer": 0.042
+    },
+    {
+      "file": "held_091.wav",
+      "ref": "enti afei monyɛ ahɔhoɔ ne amamfrafoɔ bio na mmom moyɛ ahotefoɔ no yɔnko-man-mma ne nyankopɔn fiefoɔ",
+      "raw_ref": "enti afei monyɛ ahɔhoɔ ne amamfrafoɔ bio na mmom moyɛ ahotefoɔ no yɔnko-man-mma ne nyankopɔn fiefoɔ",
+      "hyp": "nti afei monyɛ ahɔhoɔ ne amamfrafoɔ bio na mmom moyɛ ahoteefoɔ ne yɛn koman mma ne nyankopɔn fiefoɔ",
+      "wer": 0.375,
+      "cer": 0.071
+    },
+    {
+      "file": "held_092.wav",
+      "ref": "ne mu na yɛnam ne ho gyidie so anya nnamyɛ ne kwan ahotosoɔ mu",
+      "raw_ref": "ne mu na yɛnam ne ho gyidie so anya nnamyɛ ne kwan ahotosoɔ mu",
+      "hyp": "ne mu na yɛnam ne ho gyidie so anya nam yɛ ne kwan ahotosoom",
+      "wer": 0.286,
+      "cer": 0.061
+    },
+    {
+      "file": "held_093.wav",
+      "ref": "na mommma wɔnte aniwudeɛ ne nkwaseasɛm anaa asereseresɛm a ɛnsɛ na mmom aseda",
+      "raw_ref": "na mommma wɔnte aniwudeɛ ne nkwaseasɛm anaa asereseresɛm a ɛnsɛ na mmom aseda",
+      "hyp": "na momma wɔn te aniwudeɛ ne nkwaseasɛm anaa aseesresɛm a ɛnsɛ na mmom aseda",
+      "wer": 0.308,
+      "cer": 0.046
+    },
+    {
+      "file": "held_094.wav",
+      "ref": "yei nti monnyɛ nnipa a wɔnni adwene na mmom monyɛ nnipa a wɔhunu adeɛ a awurade pɛ yie",
+      "raw_ref": "yei nti monnyɛ nnipa a wɔnni adwene na mmom monyɛ nnipa a wɔhunu adeɛ a awurade pɛ yie",
+      "hyp": "yei nti monyɛ nnipa a wɔnni adwene na mmom monyɛ nnipa a wɔhunu adeɛ awurade pɛ yie",
+      "wer": 0.111,
+      "cer": 0.029
+    },
+    {
+      "file": "held_095.wav",
+      "ref": "na wɔhyehyɛɛ nsa sika nkuruwa mu na nkuruwa no nso gu ahodoɔ na ɔhene nsa no dɔɔso sɛdeɛ ɛwɔ ɔhene no nsam",
+      "raw_ref": "na wɔhyehyɛɛ nsa sika nkuruwa mu na nkuruwa no nso gu ahodoɔ na ɔhene nsa no dɔɔso sɛdeɛ ɛwɔ ɔhene no nsam",
+      "hyp": "na wɔhyehyɛɛ nsa sika nkuruwaa mu na nkuruwaa no nso guahodoɔ na ɔhene nsa dɔɔ so sɛdeɛ ɛwɔ ɔhene no nsam",
+      "wer": 0.273,
+      "cer": 0.047
+    },
+    {
+      "file": "held_096.wav",
+      "ref": "nanso haman sii ne ho so na ɔsii mu kɔɔ ne fie",
+      "raw_ref": "nanso haman sii ne ho so na ɔsii mu kɔɔ ne fie",
+      "hyp": "nanso harman sii ne ho so na ɔsii mu kɔɔ ne fie",
+      "wer": 0.083,
+      "cer": 0.029
+    },
+    {
+      "file": "held_097.wav",
+      "ref": "nso yei nyinaa nnɔɔso mma me berɛ a mehunu yudani mordekai no sɛ ɔte ɔhene ponkɛseɛ mu yi",
+      "raw_ref": "nso yei nyinaa nnɔɔso mma me berɛ a mehunu yudani mordekai no sɛ ɔte ɔhene ponkɛseɛ mu yi",
+      "hyp": "nso yɛn nyinaa nnɔ so mma me berɛ a mehunuu yudani mɔde kae no sɛ ɔtee ɔ hene po nkɛseɛ mu ɛ",
+      "wer": 0.667,
+      "cer": 0.139
+    },
+    {
+      "file": "held_098.wav",
+      "ref": "na yɛ ne mmɛn sisi ne ntwea nnan so",
+      "raw_ref": "na yɛ ne mmɛn sisi ne ntwea nnan so",
+      "hyp": "na yɛ ne mai sisii ne ntwe anan so",
+      "wer": 0.444,
+      "cer": 0.185
+    },
+    {
+      "file": "held_099.wav",
+      "ref": "na aaron tenee ne nsa wɔ misraim nsuo so na mponkyerɛne ba bɛkataa misraim asase nyinaa so",
+      "raw_ref": "na aaron tenee ne nsa wɔ misraim nsuo so na mponkyerɛne ba bɛkataa misraim asase nyinaa so",
+      "hyp": "na haron tenee ne nsa wo misrim nsuo so na mpɔnkyerɛnni ba bɛkataa misrim asase nyinaa so",
+      "wer": 0.294,
+      "cer": 0.095
+    },
+    {
+      "file": "held_100.wav",
+      "ref": "na awurade ka kyerɛɛ mose sɛ ka kyerɛ aaron sɛ tene wo poma no bɔ asase so mfuturo na ɛnnane edwie wɔ misraim asase nyinaa so",
+      "raw_ref": "na awurade ka kyerɛɛ mose sɛ ka kyerɛ aaron sɛ tene wo poma no bɔ asase so mfuturo na ɛnnane edwie wɔ misraim asase nyinaa so",
+      "hyp": "na awurade ka kyerɛɛ mose sɛ ka kyerɛɛ haron sɛ tenewo poma no bɔ asase so mfuturo na ɛna ne adue wɔ misirim asase nyinaa so",
+      "wer": 0.308,
+      "cer": 0.08
+    },
+    {
+      "file": "held_101.wav",
+      "ref": "na sɛ wobɔ ɔbɔnefoɔ no kɔkɔ na wansane amfiri ne bɔne no mu ne n'akwammɔne no so a ɔbɛwu n'amumuyɛ mu na wo deɛ woagye wo kra",
+      "raw_ref": "na sɛ wobɔ ɔbɔnefoɔ no kɔkɔ na wansane amfiri ne bɔne no mu ne n'akwammɔne no so a ɔbɛwu n'amumuyɛ mu na wo deɛ woagye wo kra",
+      "hyp": "na sɛ wobɔɔ ɔbɔnefoɔ no kɔkɔ na woansa ne amfiri ne bɔnee no mu ne nakwambɔne ne so a ɔbɛwu na mu muyɛm na wo deɛ wagye wo kra",
+      "wer": 0.333,
+      "cer": 0.091
+    },
+    {
+      "file": "held_102.wav",
+      "ref": "on ne pi-beset mmeranteɛ bɛtotɔ nkrantɛ ano",
+      "raw_ref": "on ne pi-beset mmeranteɛ bɛtotɔ nkrantɛ ano",
+      "hyp": "on ne pi beset mmara ntea ɛbɛto tɔn nkrantaa no",
+      "wer": 1.143,
+      "cer": 0.135
+    },
+    {
+      "file": "held_103.wav",
+      "ref": "ɛfiri sɛ wɔka sɛ awurade nhu yɛn awurade agya asase no",
+      "raw_ref": "ɛfiri sɛ wɔka sɛ awurade nhu yɛn awurade agya asase no",
+      "hyp": "ɛfiri sɛ wɔka sɛ awurade nhuyɛn awurade agya asaase no",
+      "wer": 0.273,
+      "cer": 0.023
+    },
+    {
+      "file": "held_104.wav",
+      "ref": "na wɔtenatenaa ase bosome a ɛtɔ so du no da a ɛdi kan no mu sɛ wɔrehwehwɛ asɛm no mu",
+      "raw_ref": "na wɔtenatenaa ase bosome a ɛtɔ so du no da a ɛdi kan no mu sɛ wɔrehwehwɛ asɛm no mu",
+      "hyp": "na ɔtena tenaasebosomeɛ tɔ so du no da a ɛdi kan no mu sɛ wɔhwehwɛ asɛm no mu",
+      "wer": 0.3,
+      "cer": 0.077
+    },
+    {
+      "file": "held_105.wav",
+      "ref": "hasum mma ahanu aduonu mmiɛnsa",
+      "raw_ref": "hasum mma ahanu aduonu mmiɛnsa",
+      "hyp": "ha summa ahaɛno aduono miɛnsa",
+      "wer": 1.0,
+      "cer": 0.192
+    },
+    {
+      "file": "held_106.wav",
+      "ref": "yaala mma darkon mma gidel mma sefatia mma hatil mma pokeret-hasebaim mma ami mma",
+      "raw_ref": "yaala mma darkon mma gidel mma sefatia mma hatil mma pokeret-hasebaim mma ami mma",
+      "hyp": "yala ma dakon ma gidal ma sefatia ma hatiw ma pokretasebemma amima",
+      "wer": 0.929,
+      "cer": 0.235
+    },
+    {
+      "file": "held_107.wav",
+      "ref": "nsra a ɔkɔsraa yerusalem siria ne kilikia",
+      "raw_ref": "nsra a ɔkɔsraa yerusalem siria ne kilikia",
+      "hyp": "nsiraa ɔkɔ saa yerusalem siria ne kilikia",
+      "wer": 0.429,
+      "cer": 0.057
+    },
+    {
+      "file": "held_108.wav",
+      "ref": "pam afenaa no ne ne ba ɛfiri sɛ afenaa ba no ne ɔdehyeɛ ba no renni adeɛ",
+      "raw_ref": "pam afenaa no ne ne ba ɛfiri sɛ afenaa ba no ne ɔdehyeɛ ba no renni adeɛ",
+      "hyp": "pam afnaa no ne ne ba ɛfiri sɛ afnaa ba no ne ɔdehyeɛ ba no nniadeɛ",
+      "wer": 0.235,
+      "cer": 0.071
+    },
+    {
+      "file": "held_109.wav",
+      "ref": "mommma yɛmpɛ animuonyam hunu nnyiyi yɛn ho abufuo nntentane yɛn ho",
+      "raw_ref": "mommma yɛmpɛ animuonyam hunu nnyiyi yɛn ho abufuo nntentane yɛn ho",
+      "hyp": "momma yɛn pɛ animuonyam hunu nyiyi yɛn ho abufuo ntentane yɛn ho",
+      "wer": 0.455,
+      "cer": 0.071
+    },
+    {
+      "file": "held_110.wav",
+      "ref": "na isak kɔɔ filistifoɔ hene abimelek nkyɛn wɔ gerar",
+      "raw_ref": "na isak kɔɔ filistifoɔ hene abimelek nkyɛn wɔ gerar",
+      "hyp": "na isak kɔɔ filistifoɔ hene abimelek nkyɛn wɔ gara",
+      "wer": 0.111,
+      "cer": 0.047
+    }
+  ],
+  "mean_wer": 0.377,
+  "mean_cer": 0.089,
+  "asr_model": "facebook/mms-1b-all+aka",
+  "engine": "mms_aka",
+  "mismatch_control_cer": 0.906
+}
