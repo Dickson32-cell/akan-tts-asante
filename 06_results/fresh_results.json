@@ -1,0 +1,206 @@
+{
+  "judged_on": "facebook/mms-1b-all + aka adapter (CPU), seed 33, noise 0.667",
+  "rendered_by": "src/infer.py (fixed: live noise attributes), seed 33",
+  "date": "2026-10-13",
+  "gentle": {
+    "mean_cer": 0.228,
+    "mean_wer": 0.635,
+    "mismatch_control_cer": 0.853,
+    "per_clip": [
+      {
+        "file": "demo_01.wav",
+        "cer": 0.37,
+        "wer": 0.889,
+        "hyp": "ne nma wo ahyɛ milianom wɔ hɔ te sɛ"
+      },
+      {
+        "file": "demo_02.wav",
+        "cer": 0.146,
+        "wer": 0.727,
+        "hyp": "ɛfrɛ ho sɛ aba awuro m na didi na na wɔkɔ aduma"
+      },
+      {
+        "file": "demo_03.wav",
+        "cer": 0.222,
+        "wer": 0.5,
+        "hyp": "dabɔne aneanua mɛsɔ hwɛ na mɛbo mmɔden a"
+      },
+      {
+        "file": "demo_04.wav",
+        "cer": 0.261,
+        "wer": 0.75,
+        "hyp": "sokuu ne musoa ane no bɔmfo nsuɔ enti na kyereɛ agyinaam"
+      },
+      {
+        "file": "demo_05.wav",
+        "cer": 0.182,
+        "wer": 0.556,
+        "hyp": "ɔkaaman no suowiɛ na ɛnyɛ nea wɔmunu no"
+      },
+      {
+        "file": "demo_06.wav",
+        "cer": 0.25,
+        "wer": 0.833,
+        "hyp": "na toa soara nane mpam wɔ fa wɔn hɔ so na gye nso"
+      },
+      {
+        "file": "demo_07.wav",
+        "cer": 0.253,
+        "wer": 0.75,
+        "hyp": "asore ntɛm dienu ni aduonu siam nom sikaa yɛde bɛban pɔtam wɔfaw bɛyɛ aduonunu sɛdeɛ ɛbɛyɛ no"
+      },
+      {
+        "file": "demo_08.wav",
+        "cer": 0.238,
+        "wer": 0.471,
+        "hyp": "nopaanii no ka kyerɛɛ wɔn sɛ moɔnea no ho mfie na yɛkɔ yɛn aduma no anina na yi"
+      },
+      {
+        "file": "demo_09.wav",
+        "cer": 0.205,
+        "wer": 0.455,
+        "hyp": "madwugma pa akoma pa na ɛnɔ na ɛteɛ wɔ bi mu nimdeɛ"
+      },
+      {
+        "file": "demo_10.wav",
+        "cer": 0.152,
+        "wer": 0.417,
+        "hyp": "naankasa sɛ wohyina wo duma a waman na wɔbɛka wo ho asɛ"
+      }
+    ]
+  },
+  "base": {
+    "mean_cer": 0.08,
+    "mean_wer": 0.305,
+    "mismatch_control_cer": 0.875,
+    "per_clip": [
+      {
+        "file": "demo_01.wav",
+        "cer": 0.185,
+        "wer": 0.444,
+        "hyp": "mɛma wo akyerɛme nuanom mu ho te sɛn"
+      },
+      {
+        "file": "demo_02.wav",
+        "cer": 0.073,
+        "wer": 0.273,
+        "hyp": "yɛfrɛ wo sɛ abawuro mu na adidi nna na wɔkɔɔ adwumu"
+      },
+      {
+        "file": "demo_03.wav",
+        "cer": 0.0,
+        "wer": 0.0,
+        "hyp": "ɛda bɔne ɛnyɛ nea mɛsɔ hwɛ na mɛbɔ mmɔden ara"
+      },
+      {
+        "file": "demo_04.wav",
+        "cer": 0.109,
+        "wer": 0.5,
+        "hyp": "so kuruu no mu suani no bɔ mfomsoɔ enti nekyereɛ gyina hɔ"
+      },
+      {
+        "file": "demo_05.wav",
+        "cer": 0.061,
+        "wer": 0.222,
+        "hyp": "ɔkraman no soro wia na ɛnyɛ nea ɔhunu no"
+      },
+      {
+        "file": "demo_06.wav",
+        "cer": 0.056,
+        "wer": 0.667,
+        "hyp": "mɛtoaso ara na me mpa m o fa wo ho so na dwe so"
+      },
+      {
+        "file": "demo_07.wav",
+        "cer": 0.139,
+        "wer": 0.45,
+        "hyp": "fei mpembienu ne aduonu nsiɛn mu sika a yɛde bɛboa mpɔtam hɔfoɔ bɛyɛ aduonunom sɛdeɛ ɛbɛyɔ ɛ"
+      },
+      {
+        "file": "demo_08.wav",
+        "cer": 0.111,
+        "wer": 0.235,
+        "hyp": "ɔpanye no ka kyerɛɛ wɔn sɛ monye mo ho mfie na yɛnkɔ yɛn adwuma no nna yi"
+      },
+      {
+        "file": "demo_09.wav",
+        "cer": 0.026,
+        "wer": 0.091,
+        "hyp": "dwuma pa akoma pa na ɛno na ɛkyerɛ obi mu nimdeɛ"
+      },
+      {
+        "file": "demo_10.wav",
+        "cer": 0.043,
+        "wer": 0.167,
+        "hyp": "nkasa sɛ wohyira wo dwuma a kwaman na wɔbɛka wo ho asɛm"
+      }
+    ]
+  },
+  "original": {
+    "mean_cer": 0.319,
+    "mean_wer": 0.73,
+    "mismatch_control_cer": 0.88,
+    "per_clip": [
+      {
+        "file": "demo_01.wav",
+        "cer": 0.296,
+        "wer": 0.778,
+        "hyp": "ne ma wo aɛ menuanom momu te sɛ"
+      },
+      {
+        "file": "demo_02.wav",
+        "cer": 0.268,
+        "wer": 0.727,
+        "hyp": "na sra wo sɛ amahawurum na didi na na wɔkɔ naduma"
+      },
+      {
+        "file": "demo_03.wav",
+        "cer": 0.472,
+        "wer": 1.0,
+        "hyp": "adabɔ mo ɛ anyɛniɛ ana so ahwɛ na nabɔ nwɔdee a"
+      },
+      {
+        "file": "demo_04.wav",
+        "cer": 0.348,
+        "wer": 0.833,
+        "hyp": "sukuano mu siaanii no bɔ nso nsuɔ enti ykyewɛ gyinamo"
+      },
+      {
+        "file": "demo_05.wav",
+        "cer": 0.455,
+        "wer": 1.0,
+        "hyp": "ɔtenama yɛm no suori a na yɛnnyɛ nyee a wɔmu numu"
+      },
+      {
+        "file": "demo_06.wav",
+        "cer": 0.361,
+        "wer": 0.75,
+        "hyp": "na toɔ asoaa na mea pammɔ faw wɔn ho so na adɛ nso"
+      },
+      {
+        "file": "demo_07.wav",
+        "cer": 0.405,
+        "wer": 0.75,
+        "hyp": "ahwrɛntannwie no ne adinon siam no sitwa a yɛde bɛboa mpatam wɔmfoɔ bɛnyɛɛ ade mo mu sɛnea ɛbɛyɛ"
+      },
+      {
+        "file": "demo_08.wav",
+        "cer": 0.159,
+        "wer": 0.412,
+        "hyp": "ɔpanin no ka kyerɛɛ wɔn sɛ moɔnyɛ momonomfie na yɛnkɔ yɛn adima no nyinaa ɛyi"
+      },
+      {
+        "file": "demo_09.wav",
+        "cer": 0.205,
+        "wer": 0.545,
+        "hyp": "adwunua fa akoma pa na mona ɛhyeɛ obi m nimdeɛ"
+      },
+      {
+        "file": "demo_10.wav",
+        "cer": 0.217,
+        "wer": 0.5,
+        "hyp": "nkɛsa sɛ wohyeɛ wo ndwuma a kwaman na wɔbɛta wo nɔ asɛm"
+      }
+    ]
+  }
+}

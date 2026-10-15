@@ -1,0 +1,24 @@
+{
+  "judged_on": "facebook/mms-1b-all + aka adapter (CPU), seed 33, noise 0.667",
+  "date": "2026-10-14",
+  "freeze": {
+    "mean_cer": 0.263,
+    "mean_wer": 0.634,
+    "mismatch_control_cer": 0.849
+  },
+  "gentle": {
+    "mean_cer": 0.228,
+    "mean_wer": 0.635,
+    "mismatch_control_cer": 0.853
+  },
+  "base": {
+    "mean_cer": 0.08,
+    "mean_wer": 0.305,
+    "mismatch_control_cer": 0.875
+  },
+  "original": {
+    "mean_cer": 0.319,
+    "mean_wer": 0.73,
+    "mismatch_control_cer": 0.88
+  }
+}

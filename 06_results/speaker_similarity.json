@@ -1,0 +1,8 @@
+{
+  "embedding_space": "facebook/mms-1b-all last-layer mean-pool, wave 16k",
+  "sentence": "\u0186no nso na \u0254hwinhwim ne pea at\u0254fo\u0254 ahasa so\u0254, na \u0254w\u0254 din baasa no mu.",
+  "cosine_narrator_vs_original_model": 0.8637,
+  "cosine_narrator_vs_gentle": 0.9059,
+  "cosine_narrator_vs_base": 0.9673,
+  "control_narrator_vs_teacher_other_person": 0.8473
+}
