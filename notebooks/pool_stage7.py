@@ -111,22 +111,46 @@ else:
     if "except ImportError" in _cur and "VideoReader = None" in _cur:
         print("video.py already patched (idempotent skip)")
     else:
-        _out, _done = [], False
-        for _l in _cur.splitlines(keepends=True):
-            if not _done and _l.strip() == "from torchvision.io import VideoReader":
-                _ind = _l[: len(_l) - len(_l.lstrip())]
-                _out.append(_ind + "try:")
-                _out.append(_ind + "    from torchvision.io import VideoReader")
-                _out.append(_ind + "except ImportError:")
-                _out.append(_ind + "    VideoReader = None")
-                _done = True
-            else:
-                _out.append(_l)
-        assert _done, "VideoReader import line not found"
-        _new = "\n".join([l.rstrip() for l in "".join(_out).splitlines()])
-        compile(_new, _vid, "exec")
-        open(_vid, "w", encoding="utf-8").write(_new + "\n")
-        print("harness PATCHED: video.py optional import (compile-verified)")
+        _candidates = (
+            "from torchvision.io import VideoReader",
+            "from torchvision.io.video import VideoReader",
+            "from torchvision.io import video as _video_mod",
+        )
+        _hit = None
+        for _cand in _candidates:
+            for _l in _cur.splitlines(keepends=True):
+                if _l.strip() == _cand:
+                    _hit = (l_ := _l)
+                    break
+            if _hit:
+                break
+        if _hit:
+            _out, _done = [], False
+            for _l in _cur.splitlines(keepends=True):
+                if not _done and _l.strip() == _hit.strip():
+                    _ind = _l[: len(_l) - len(_l.lstrip())]
+                    _out.append(_ind + "try:")
+                    _out.append(_ind + "    " + _l.strip())
+                    _out.append(_ind + "except ImportError:")
+                    _out.append(_ind + "    VideoReader = None")
+                    _done = True
+                else:
+                    _out.append(_l)
+            assert _done, "candidate import line vanished mid-patch"
+            _new = "\n".join([l.rstrip() for l in "".join(_out).splitlines()])
+            compile(_new, _vid, "exec")
+            open(_vid, "w", encoding="utf-8").write(_new + "\n")
+            print("harness PATCHED: video.py optional import (compile-verified, pattern: " + _hit.strip() + ")")
+        else:
+            # no known pattern in this image's video.py - verify the module imports
+            # clean as-is; if it does, the patch is simply not required here.
+            import importlib
+            try:
+                importlib.import_module("datasets.features.video")
+                print("video.py has a different import layout but imports clean - patch 4 NOT required on this image; continuing")
+            except Exception as _e:
+                print("video.py unpatchable AND broken:", str(_e)[:200])
+                raise SystemExit("video.py needs manual attention - send the output above to Hermes")
 
 # training + live monitor + DRIVE CHECKPOINT MIRROR
 stage(7, "Training (pool run) - checkpoints mirrored to Drive every save")
