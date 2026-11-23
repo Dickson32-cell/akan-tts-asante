@@ -79,11 +79,20 @@ else:
         if not _who():
             raise SystemExit("Login incomplete - run this cell again and finish the sign-in.")
 
-# stage 4: corpus (skip if /content/tts_data exists) - THE POOL MANIFEST (39.98h)
+# stage 4: corpus (VALIDATE, not mere exists) - THE POOL MANIFEST (39.98h)
 stage(4, "Corpus (Drive > unzip tts_data_40h.zip > stream selected audio)")
-if Path("/content/tts_data").exists():
-    print("tts_data present > skip")
+def _dataset_dir_valid(pth):
+    base = Path(pth)
+    return base.joinpath("dataset_dict.json").exists() and \
+           ((base / "train" / "state.json").exists() or (base / "train" / "dataset_info.json").exists())
+if _dataset_dir_valid("/content/tts_data"):
+    print("tts_data present AND valid > skip")
 else:
+    if Path("/content/tts_data").exists():
+        import shutil as _sh
+        _sh.rmtree("/content/tts_data", ignore_errors=True)
+        print("tts_data dir INVALID (partial build) > cleaned - rebuilding from shard checkpoints")
+
     from google.colab import drive
     if not Path("/content/drive/MyDrive").exists():
         drive.mount("/content/drive")
@@ -94,7 +103,7 @@ else:
     _n = sum(1 for _l in open("/content/work/selected.jsonl", encoding="utf-8") if _l.strip())
     print("pool manifest rows:", _n)
     assert _n == 28434, "POOL MANIFEST MISMATCH - expected 28434 rows (28234 train + 200 eval). STOPPING before any training."
-    base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/abeb3c9/src/"
+    base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/037e7ee/src/"
     for f in ["normalize_twi.py", "extract_asante_colab.py"]:
         Path("/content/" + f).write_text(
             urllib.request.urlopen(base + f, timeout=60).read().decode("utf-8"), encoding="utf-8")
