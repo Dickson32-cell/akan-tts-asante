@@ -94,7 +94,7 @@ else:
     _n = sum(1 for _l in open("/content/work/selected.jsonl", encoding="utf-8") if _l.strip())
     print("pool manifest rows:", _n)
     assert _n == 28434, "POOL MANIFEST MISMATCH - expected 28434 rows (28234 train + 200 eval). STOPPING before any training."
-    base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/master/src/"
+    base = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/abeb3c9/src/"
     for f in ["normalize_twi.py", "extract_asante_colab.py"]:
         Path("/content/" + f).write_text(
             urllib.request.urlopen(base + f, timeout=60).read().decode("utf-8"), encoding="utf-8")
