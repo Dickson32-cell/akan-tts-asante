@@ -3,7 +3,7 @@
 # Stages auto-skip what is already done; checkpoints mirror to Drive every save; resume-on-contact.
 import urllib.request
 
-BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/edbf10c/notebooks/"
+BASE = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/3d6e515/notebooks/"
 def pull(name):
     code = urllib.request.urlopen(BASE + name, timeout=60).read().decode("utf-8")
     print("pulled", name, f"({len(code)} bytes)")
