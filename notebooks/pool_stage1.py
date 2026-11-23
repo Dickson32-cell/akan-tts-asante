@@ -44,21 +44,40 @@ if need_install or not harness_ok or not mono_ok:
     shell("cd /content/finetune-hf-vits/monotonic_align && python setup.py build_ext --inplace", must=False)
 print("harness ready:", harness_ok, "| pins:", _v_t, _v_d)
 
-# stage 3: HF login
+# stage 3: HF login - Colab secret HF_TOKEN first (enables background/Run-all),
+# then stored credentials, then the interactive widget as last resort.
 stage(3, "Hugging Face login")
 from huggingface_hub import HfApi
 api = HfApi()
-try:
-    me = api.whoami()
-    print("already logged in as:", me["name"])
-except Exception:
-    from huggingface_hub import notebook_login
-    notebook_login()
-    api = HfApi()
+def _who():
     try:
-        me = api.whoami(); print("logged in as:", me["name"])
+        me = api.whoami(); print("logged in as:", me["name"]); return True
     except Exception:
-        raise SystemExit("Login incomplete - run this cell again and finish the sign-in.")
+        return False
+if _who():
+    pass
+else:
+    _t = None
+    try:
+        from google.colab import userdata
+        _t = userdata.get("HF_TOKEN")
+        print("using Colab secret: HF_TOKEN")
+    except Exception:
+        try:
+            from huggingface_hub import get_token
+            _t = get_token()
+        except Exception:
+            _t = None
+    if _t:
+        from huggingface_hub import login as _login
+        _login(token=_t)
+        if not _who():
+            raise SystemExit("Colab secret HF_TOKEN did not authenticate - check the token has WRITE access.")
+    else:
+        from huggingface_hub import notebook_login
+        notebook_login()
+        if not _who():
+            raise SystemExit("Login incomplete - run this cell again and finish the sign-in.")
 
 # stage 4: corpus (skip if /content/tts_data exists) - THE POOL MANIFEST (39.98h)
 stage(4, "Corpus (Drive > unzip tts_data_40h.zip > stream selected audio)")
