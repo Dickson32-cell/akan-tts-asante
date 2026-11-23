@@ -36,6 +36,7 @@ def main():
 
     import pyarrow.parquet as pq
     import datasets as hfds
+    from datasets.arrow_writer import ArrowWriter
     from huggingface_hub import HfFileSystem
 
     raw = Path(args.manifest).read_text(encoding="utf-8")
