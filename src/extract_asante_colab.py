@@ -64,35 +64,49 @@ def main():
     })
 
     outdir = Path(args.out)
-    tmpdir = outdir / "_arrow_tmp"
+    tmpdir = outdir / "_arrowwork"
     tmpdir.mkdir(parents=True, exist_ok=True)
+    done_path = tmpdir / "done.json"
+    done = {"shards": [], "matched": 0}
+    if done_path.exists():
+        try:
+            done = json.loads(done_path.read_text(encoding="utf-8"))
+        except Exception:
+            done = {"shards": [], "matched": 0}
+    done_shards = set(done["shards"])
+    seen_ids = set(r["id"] for r in sel)
 
     fs = HfFileSystem()
     api_path = f"datasets/{args.dataset}/{args.config}"
     shards = sorted(fs.ls(api_path, detail=False))
     shards = [s for s in shards if s.endswith(".parquet")]
 
-    # STREAMING WRITE: each matched row goes straight into its split's ArrowWriter
-    # on disk - RAM stays flat no matter how big the corpus gets.
+    # STREAMING WRITE with SHARD-LEVEL CHECKPOINTING:
+    # each shard's matched rows finalize to their own per-(shard,split) arrow file,
+    # and finished shard indices are recorded in done.json - a rerun skips finished
+    # shards entirely. RAM stays flat; interruptions never restart whole sweeps.
     writers = {}
-    split_arrow = {}
-    matched = 0
+    matched = done["matched"]
     bad = Counter()
 
-    def row_writer(split):
-        if split not in writers:
-            apath = str(tmpdir / f"{split}.arrow")
-            writers[split] = ArrowWriter(features=feats, path=apath, embed_local_files=True)
-            split_arrow[split] = apath
-        return writers[split]
+    def finish_writers(idx):
+        for key in [k for k in writers if k[1] == idx]:
+            n, _ = writers[key].finalize()
+            print(f"   arrow done: {key[0]}.s{key[1]:02d} ({n} rows this shard)", flush=True)
+        done["shards"].append("s%02d" % idx)
+        done["matched"] = matched
+        done_path.write_text(json.dumps(done), encoding="utf-8")
 
     for i, shard in enumerate(shards, 1):
+        if "s%02d" % i in done_shards:
+            print(f"[{i}/{len(shards)}] {Path(shard).name}: already done > skip", flush=True)
+            continue
         with fs.open(shard) as f:
             pf = pq.ParquetFile(f)
             for rg in range(pf.num_row_groups):
                 tbl = pf.read_row_group(rg, columns=["id", "audio"]).to_pydict()
                 for rid, aud in zip(tbl["id"], tbl["audio"]):
-                    if rid not in want:
+                    if rid not in want or rid in seen_ids:
                         continue
                     meta = want[rid]
                     split = meta.get("split", "train")
@@ -104,7 +118,11 @@ def main():
                     for ch in meta["norm"]:
                         if ch not in REQUIRED and ch != " ":
                             bad[ch] += 1
-                    row_writer(split).write({
+                    key = (split, i)
+                    if key not in writers:
+                        apath = str(tmpdir / f"{split}.s{i:02d}.arrow")
+                        writers[key] = ArrowWriter(features=feats, path=apath, embed_local_files=True)
+                    writers[key].write({
                         "audio": {"bytes": b, "path": aud.get("path", f"{rid}.wav")},
                         "text": meta["norm"],
                         "raw_text": meta["raw"],
@@ -112,29 +130,33 @@ def main():
                         "speaker_id": 0,
                         "id": rid,
                     })
+                    seen_ids.add(rid)
                     matched += 1
         print(f"[{i}/{len(shards)}] {Path(shard).name}: matched so far {matched}/{len(want)}", flush=True)
-        if matched == len(want):
-            break
+        finish_writers(i)
     if matched < len(want):
-        raise SystemExit(f"only matched {matched}/{len(want)} ids — manifest vs shards mismatch")
+        raise SystemExit(f"only matched {matched}/{len(want)} ids — manifest vs shards mismatch "
+                         f"(shard checkpoint kept; rerun to continue)")
     if bad:
         raise SystemExit(f"normalizer leaked chars: {dict(bad)}")
-    for split, w in writers.items():
-        n, _ = w.finalize()
-        print(f"arrow finalized: {split} -> {split_arrow[split]} ({n} rows)", flush=True)
 
     # assemble as a memory-mapped DatasetDict honoring the selection-time split
     dd_dict = {}
     for split in ("train", "eval"):
-        if split in split_arrow:
-            d = hfds.Dataset.from_file(split_arrow[split])
-            print(f"{split}: {len(d)} rows | {sum(d['duration'])/3600:.2f}h", flush=True)
-            dd_dict[split] = d
+        parts = sorted(glob.glob(str(tmpdir / f"{split}.s*.arrow")))
+        if not parts:
+            continue
+        d = hfds.concatenate_datasets([hfds.Dataset.from_file(pp) for pp in parts])
+        print(f"{split}: {len(d)} rows | {sum(d['duration'])/3600:.2f}h", flush=True)
+        dd_dict[split] = d
+    if set(dd_dict) != {"train", "eval"} or len(dd_dict["train"]) + len(dd_dict["eval"]) != len(want):
+        raise SystemExit("assembled splits do not cover the manifest - refusing to save a partial corpus")
     dd = hfds.DatasetDict(dd_dict)
     dd.save_to_disk(args.out)
-    print("saved", args.out, flush=True)
-    # clear the intermediate arrow tmp only after the dict is safely saved
+    # VERIFY the saved dict loads before declaring success (guards the stage-4 skip)
+    back = hfds.load_from_disk(args.out)
+    assert len(back["train"]) + len(back["eval"]) == len(want), "saved dict failed load-verification"
+    print("saved AND load-verified", args.out, flush=True)
     import shutil
     shutil.rmtree(tmpdir, ignore_errors=True)
     print("tmp arrow cleared", flush=True)
