@@ -74,12 +74,26 @@ def main():
         except Exception:
             done = {"shards": [], "matched": 0}
     done_shards = set(done["shards"])
-    seen_ids = set(r["id"] for r in sel)
 
     fs = HfFileSystem()
     api_path = f"datasets/{args.dataset}/{args.config}"
     shards = sorted(fs.ls(api_path, detail=False))
     shards = [s for s in shards if s.endswith(".parquet")]
+
+    # STALE-CHECKPOINT RULE: a checkpoint recording full coverage with fewer
+    # matched rows than the manifest came from a broken matching pass - reset it
+    # completely instead of skipping all shards.
+    if done_shards and len(done_shards) >= len(shards) and done["matched"] != len(want):
+        print("STALE CHECKPOINT: all shards recorded but matched != manifest - resetting (broken matching pass)", flush=True)
+        import glob as _glob2, shutil as _sh2
+        for f in _glob2.glob(str(tmpdir / "*.arrow")) + [str(done_path)]:
+            try:
+                os.remove(f)
+            except FileNotFoundError:
+                pass
+        done = {"shards": [], "matched": 0}
+        done_shards = set()
+        matched = 0
 
     # STREAMING WRITE with SHARD-LEVEL CHECKPOINTING:
     # each shard's matched rows finalize to their own per-(shard,split) arrow file,
@@ -106,7 +120,7 @@ def main():
             for rg in range(pf.num_row_groups):
                 tbl = pf.read_row_group(rg, columns=["id", "audio"]).to_pydict()
                 for rid, aud in zip(tbl["id"], tbl["audio"]):
-                    if rid not in want or rid in seen_ids:
+                    if rid not in want:
                         continue
                     meta = want[rid]
                     split = meta.get("split", "train")
@@ -130,7 +144,6 @@ def main():
                         "speaker_id": 0,
                         "id": rid,
                     })
-                    seen_ids.add(rid)
                     matched += 1
         print(f"[{i}/{len(shards)}] {Path(shard).name}: matched so far {matched}/{len(want)}", flush=True)
         finish_writers(i)
