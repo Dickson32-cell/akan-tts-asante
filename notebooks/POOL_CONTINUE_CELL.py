@@ -60,7 +60,7 @@ cfg = {
   "project_name": "akan_twi_tts_pool_continue", "push_to_hub": True,
   "hub_model_id": REPO, "hub_strategy": "end",
   "report_to": ["tensorboard"], "logging_strategy": "steps", "logging_steps": 20,
-  "overwrite_output_dir": False,
+  "overwrite_output_dir": True,  # reruns of the continuation cell must never be blocked by earlier debris
   "output_dir": OUT,
   "dataset_name": "/content/tts_data", "dataset_config_name": None,
   "audio_column_name": "audio", "text_column_name": "text",
@@ -119,7 +119,12 @@ if "tostring_rgb" in _ps:
 else:
     print("plot.py already modern")
 
-# 5) pre-launch sweep: no orphaned launcher from a failed attempt may hold the GPU
+# 5) pre-launch sweep: no orphaned launcher may hold the GPU; no stale output debris
+shutil.rmtree(OUT, ignore_errors=True)
+for stale in glob.glob(MIRROR + "/checkpoint-*"):
+    # every mirror dir is stale now: the only mirror was the lost mid-save 20000,
+    # and its weights already live in the keep-safe archival file outside pool_ckpts
+    shutil.rmtree(stale, ignore_errors=True)
 subprocess.run("pkill -9 -f run_vits_finetuning || true", shell=True)
 subprocess.run("pkill -9 -f accelerate.commands.launch || true", shell=True)
 time.sleep(3)
