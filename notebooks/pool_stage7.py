@@ -48,7 +48,8 @@ cfg = {
 }
 # resume-on-contact: local checkpoints win; else pull the newest COMPLETE checkpoint from Drive
 Path(MIRROR).mkdir(parents=True, exist_ok=True)
-_REQUIRED = {"trainer_state.json", "pytorch_model.bin", "pytorch_model_1.bin"}
+_REQUIRED_CORE = {"trainer_state.json", "config.json"}
+_WEIGHT_SUFFIXES = (".safetensors", ".bin")
 
 def _ck_safe(base):
     out = []
@@ -59,29 +60,33 @@ def _ck_safe(base):
     return sorted(out)
 
 def _ck_complete(pth):
+    """complete = trainer state + config + at least one weight file, nobody mid-save"""
     have = set(os.path.basename(f) for f in glob.glob(pth + "/*"))
     if any(n.startswith(".tmp") for n in have):
-        return False  # trainer still writing this checkpoint
-    return _REQUIRED.issubset(have)
-
+        return False, {"mid-save .tmp files"}
+    if not _REQUIRED_CORE.issubset(have):
+        return False, _REQUIRED_CORE - have
+    if not [n for n in have if any(n.endswith(sf) for sf in _WEIGHT_SUFFIXES)]:
+        return False, {"any weight file (*.safetensors / *.bin)"}
+    return True, set()
 local_ck = _ck_safe(OUT) if Path(OUT).exists() else []
 mir_ck = _ck_safe(MIRROR)
-if local_ck and _ck_complete(local_ck[-1][1]):
+if local_ck and _ck_complete(local_ck[-1][1])[0]:
     cfg["resume_from_checkpoint"] = "latest"  # STRING, the harness requires latest
     print("local checkpoints found -> RESUME (latest =", Path(local_ck[-1][1]).name, ")")
 elif mir_ck:
     for n, pth in local_ck:          # drop incomplete local restores so "latest" cannot pick them
-        if not _ck_complete(pth):
+        if not _ck_complete(pth)[0]:
             print("removing incomplete local checkpoint:", Path(pth).name)
             shutil.rmtree(pth, ignore_errors=True)
     restored = None; skipped = []
     for n, pth in reversed(mir_ck):
-        if not _ck_complete(pth):
-            missing = _REQUIRED - set(os.path.basename(f) for f in glob.glob(pth + "/*"))
+        ok, missing = _ck_complete(pth)
+        if not ok:
             skipped.append("%s (missing %s)" % (Path(pth).name, sorted(missing)))
             continue
         shutil.copytree(pth, OUT + "/" + Path(pth).name, dirs_exist_ok=True)
-        if _ck_complete(OUT + "/" + Path(pth).name):
+        if _ck_complete(OUT + "/" + Path(pth).name)[0]:
             restored = pth
             cfg["resume_from_checkpoint"] = "latest"
             print("DRIVE RESUME: restored -> newest COMPLETE checkpoint", Path(pth).name,
@@ -197,33 +202,42 @@ Path("/content/train_pool_pid.txt").write_text(str(proc.pid))
 print("launched pid:", proc.pid, "- losses appear after a few minutes; CLOSE THE LAPTOP ANY TIME - the run is on Google's GPU")
 
 def mirror_newest():
-    """copy the newest local checkpoint to the Drive mirror (replacing old mirror); copy the log too."""
-    ck = sorted(glob.glob(OUT + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
+    """publish the newest COMPLETE checkpoint to Drive; keep the newest three mirrors."""
+    ck = _ck_safe(OUT)
     if not ck:
         return None
-    newest = Path(ck[-1]).name
+    n, newest_path = ck[-1]
+    newest = Path(newest_path).name
     tgt = MIRROR + "/" + newest
-    cur = sorted(glob.glob(MIRROR + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
-    done = Path(tgt, ".mirror_done")
-    if not done.exists():
-        print("[MIRROR] saving", newest, "to Drive ...", flush=True)
-        # copy-first, swap-later: never delete the previous good mirror until the
-        # new copy has fully landed (a mid-save copy must not destroy the mirror).
-        partial = tgt + ".partial"
-        shutil.rmtree(partial, ignore_errors=True)
-        shutil.copytree(ck[-1], partial, dirs_exist_ok=True,
-                        ignore=shutil.ignore_patterns(".tmp*"))
-        for old in cur + (glob.glob(tgt) if Path(tgt).exists() else []):
-            shutil.rmtree(old, ignore_errors=True)
-        os.rename(partial, tgt)
-        # mirror the running log too (resumable diagnostics)
-        try:
-            shutil.copy2(LOG, MIRROR + "/train_akan_pool.log")
-        except Exception:
-            pass
-        done.write_text("mirrored")
-        print("[MIRROR] done:", tgt, flush=True)
-    return Path(newest).name
+    if Path(tgt, ".mirror_done").exists():
+        return newest
+    ok, missing = _ck_complete(newest_path)
+    if not ok:
+        return newest  # mid-save or incomplete - retried on a later poll
+    if not Path(MIRROR).exists():
+        raise RuntimeError("Drive not mounted - run the loader cell which mounts Drive first")
+    print("[MIRROR] saving", newest, "to Drive ...", flush=True)
+    partial = tgt + ".partial"          # copy-first: the old good mirror is destroyed only after the copy lands
+    shutil.rmtree(partial, ignore_errors=True)
+    shutil.copytree(newest_path, partial, dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns(".tmp*"))
+    for old in glob.glob(MIRROR + "/checkpoint-*"):
+        if Path(old).name.startswith(newest + "."):
+            continue                    # our in-flight partial
+        shutil.rmtree(old, ignore_errors=True)
+    os.rename(partial, tgt)
+    try:
+        shutil.copy2(LOG, MIRROR + "/train_akan_pool.log")
+    except Exception:
+        pass
+    Path(tgt, ".mirror_done").write_text("mirrored")
+    print("[MIRROR] done:", tgt, flush=True)
+    # keep the newest THREE mirrors so a mid-save death costs at most one save
+    _all = sorted((int(Path(pp).name.split("-")[1]), pp) for pp in glob.glob(MIRROR + "/checkpoint-*")
+                  if _re.fullmatch(r"checkpoint-(\d+)", Path(pp).name))
+    for _oldn, _oldp in _all[:-3]:
+        shutil.rmtree(_oldp, ignore_errors=True)
+    return newest
 
 mirrored_last = None
 last = 0
