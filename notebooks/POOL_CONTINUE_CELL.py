@@ -73,7 +73,10 @@ cfg = {
   "preprocessing_num_workers": 1,
   "do_train": True, "max_steps": 6265, "num_train_epochs": 15,
   "gradient_accumulation_steps": 1, "per_device_train_batch_size": 16,
-  "learning_rate": 1.4e-5, "lr_scheduler_type": "cosine", "warmup_ratio": 0.0,
+  "learning_rate": 1.4e-5, "lr_scheduler_type": "cosine", "warmup_ratio": 0.01,
+  # warmup 0.01 = 62 of 6265 steps: the harness requires a num_warmup_steps value for
+  # cosine (warmup_ratio 0 crashes at scheduler init) AND the optimizer state was lost
+  # with the checkpoint - 62 steps lets Adam re-accumulate moments before the tiny LR.
   "adam_beta1": 0.8, "adam_beta2": 0.99, "weight_decay": 0.01, "group_by_length": False,
   "do_eval": True, "eval_steps": 500, "per_device_eval_batch_size": 8,
   "max_eval_samples": 25, "do_step_schedule_per_epoch": False,
@@ -116,7 +119,11 @@ if "tostring_rgb" in _ps:
 else:
     print("plot.py already modern")
 
-# 5) launch
+# 5) pre-launch sweep: no orphaned launcher from a failed attempt may hold the GPU
+subprocess.run("pkill -9 -f run_vits_finetuning || true", shell=True)
+subprocess.run("pkill -9 -f accelerate.commands.launch || true", shell=True)
+time.sleep(3)
+print("pre-launch sweep done (orphaned launchers cleared)")
 cmd = [sys.executable, "-m", "accelerate.commands.launch", hscript, "/content/finetune_akan_continue.json"]
 log_f = open(LOG, "a")
 proc = subprocess.Popen(cmd, stdout=log_f, stderr=subprocess.STDOUT, bufsize=1,
