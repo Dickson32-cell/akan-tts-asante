@@ -176,9 +176,15 @@ def mirror_newest():
     done = Path(tgt, ".mirror_done")
     if not done.exists():
         print("[MIRROR] saving", newest, "to Drive ...", flush=True)
-        for old in cur:
+        # copy-first, swap-later: never delete the previous good mirror until the
+        # new copy has fully landed (a mid-save copy must not destroy the mirror).
+        partial = tgt + ".partial"
+        shutil.rmtree(partial, ignore_errors=True)
+        shutil.copytree(ck[-1], partial, dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns(".tmp*"))
+        for old in cur + (glob.glob(tgt) if Path(tgt).exists() else []):
             shutil.rmtree(old, ignore_errors=True)
-        shutil.copytree(ck[-1], tgt, dirs_exist_ok=False)
+        os.rename(partial, tgt)
         # mirror the running log too (resumable diagnostics)
         try:
             shutil.copy2(LOG, MIRROR + "/train_akan_pool.log")
@@ -201,9 +207,15 @@ while proc.poll() is None:
         if any(k in l.lower() for k in ("loss", "eval_", "error", "traceback", "epoch", "it/s")):
             print(l[:180])
     last = len(lines)
-    mirrored_last = mirror_newest() or mirrored_last
+    try:
+        mirrored_last = mirror_newest() or mirrored_last
+    except Exception as e:
+        print("[MIRROR] transient failure (retried next poll):", str(e)[:140], flush=True)
 log_f.close()
-mirrored_last = mirror_newest() or mirrored_last
+try:
+    mirrored_last = mirror_newest() or mirrored_last
+except Exception as e:
+    print("[MIRROR] final-poll failure:", str(e)[:140])
 n_lines = sum(1 for _ in open(LOG, "r", errors="replace"))
 mins = round((time.time() - t0) / 60, 1)
 print("\n=== TRAINING EXITED rc=%s | ran %.1f min this session | log lines: %d ===" % (proc.returncode, mins, n_lines))
