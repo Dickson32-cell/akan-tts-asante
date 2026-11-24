@@ -2,11 +2,11 @@
 # Self-branching: if the trainer process is alive, re-attach (fixed mirror that CANNOT die:
 # temp-file skip + copy-first-swap-later), wait for exit, then run convergence + Drive zip + push.
 # If the trainer is gone, print exactly what to run (resume via the loader cell).
-import glob, json, os, subprocess, time, shutil, sys
+import glob, json, os, re, subprocess, time, shutil
 from pathlib import Path
 
 OUT = "/content/akan-vits-finetuned-pool"
-LOG = "/content/train_akan.log"
+LOG = "/content/train_akan_pool.log"   # REAL pool log name (train_akan.log was the 9h/freeze name)
 MIRROR = "/content/drive/MyDrive/UG_TTS/pool_ckpts"
 REPO = "Dickson32-cell/akan-twi-mms-pool"
 
@@ -22,12 +22,30 @@ def _alive(p):
     except Exception:
         return False
 
+def _ck_num(name):
+    m = re.fullmatch(r"checkpoint-(\d+)", name)
+    return int(m.group(1)) if m else None
+
+def _ck_list(base):
+    """checkpoint dirs only, sorted numerically; .partial/junk names are ignored."""
+    out = []
+    for p in glob.glob(base + "/checkpoint-*"):
+        n = _ck_num(Path(p).name)
+        if n is not None:
+            out.append((n, p))
+    return sorted(out)
+
+def _loglines():
+    try:
+        return Path(LOG).read_text(errors="replace").splitlines()
+    except FileNotFoundError:
+        return []
+
 if not pid or not _alive(pid):
     print("=== TRAINER NOT RUNNING ===")
-    ck_local = sorted(glob.glob(OUT + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
-    ck_drv = sorted(glob.glob(MIRROR + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
-    print("local checkpoints:", [Path(c).name for c in ck_local[-3:]])
-    print("drive mirrors  :", [Path(c).name for c in ck_drv[-3:]])
+    loc = _ck_list(OUT); drv = _ck_list(MIRROR)
+    print("local checkpoints:", [Path(p).name for _, p in loc[-3:]])
+    print("drive mirrors  :", [Path(p).name for _, p in drv[-3:]])
     print("YOUR ACTION: re-run the LOADER cell (same one from Telegram) - it resumes from the newest checkpoint (local wins, else Drive).")
     raise SystemExit(0)
 
@@ -38,10 +56,11 @@ sz1 = Path(LOG).stat().st_size if Path(LOG).exists() else 0
 print("log growth check:", sz0, "->", sz1, "| growing:", sz1 > sz0)
 
 def mirror_newest():
-    ck = sorted(glob.glob(OUT + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
+    ck = _ck_list(OUT)
     if not ck:
         return None
-    newest = Path(ck[-1]).name
+    n, newest_path = ck[-1]
+    newest = Path(newest_path).name
     tgt = MIRROR + "/" + newest
     if Path(tgt, ".mirror_done").exists():
         return newest
@@ -50,13 +69,13 @@ def mirror_newest():
     print("[MIRROR] saving", newest, "to Drive ...", flush=True)
     partial = tgt + ".partial"
     shutil.rmtree(partial, ignore_errors=True)
-    shutil.copytree(ck[-1], partial, dirs_exist_ok=True,
+    shutil.copytree(newest_path, partial, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns(".tmp*"))
-    for old in sorted(glob.glob(MIRROR + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1])):
-        if Path(old).name != newest:
-            shutil.rmtree(old, ignore_errors=True)
-    if Path(tgt).exists():
-        shutil.rmtree(tgt, ignore_errors=True)
+    # replace all old mirror dirs EXCEPT our in-flight partial (named newest+'.')
+    for old in glob.glob(MIRROR + "/checkpoint-*"):
+        if Path(old).name.startswith(newest + "."):
+            continue
+        shutil.rmtree(old, ignore_errors=True)
     os.rename(partial, tgt)
     try:
         shutil.copy2(LOG, MIRROR + "/train_akan_pool.log")
@@ -73,7 +92,8 @@ except Exception as e:
     print("[MIRROR] catch-up failed once (will retry in loop):", str(e)[:140])
 
 print("attached - watching the trainer to completion (leave this tab open)")
-last = len(Path(LOG).read_text(errors="replace").splitlines())
+lines = _loglines()
+last = len(lines)
 t0 = time.time()
 while _alive(pid):
     time.sleep(25)
@@ -89,7 +109,7 @@ while _alive(pid):
         mirror_newest()
     except Exception as e:
         print("[MIRROR] retry next poll:", str(e)[:140])
-raw = Path(LOG).read_text(errors="replace").splitlines()
+raw = _loglines()
 done_ok = any("26265/26265" in l for l in raw) or any("train_runtime" in l for l in raw)
 mins = round((time.time() - t0) / 60, 1)
 print("\n=== TRAINER EXITED (watched %.1f min) ===" % mins)
