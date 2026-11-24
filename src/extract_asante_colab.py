@@ -16,8 +16,10 @@ Usage (Colab):
   python extract_asante_colab.py --manifest selected.jsonl --out /content/tts_data
 """
 import argparse
+import glob
 import io
 import json
+import os
 import sys
 from collections import Counter
 from pathlib import Path
