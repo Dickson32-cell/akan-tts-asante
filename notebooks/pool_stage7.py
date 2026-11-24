@@ -34,7 +34,7 @@ cfg = {
   "override_speaker_embeddings": False,
   "full_generation_sample_text": "Mema wo akye, me nuanom. Wo ho te s\u025bn?",
   "max_duration_in_seconds": 12.0, "min_duration_in_seconds": 2.0, "max_tokens_length": 500,
-  "model_name_or_path": "facebook/mms-tts-aka",  # HUB ID proven by the Oct original run; a local dir hard-errors on the absent preprocessor_config.json while a hub id falls back to VitsFeatureExtractor defaults
+  "model_name_or_path": "/content/aka_train_base",  # local base WITH preprocessor_config.json staged by pool_stage1 (content = the values both completed runs used; this stack 404s/errors on a missing file either way)
   "preprocessing_num_workers": 1,
   "do_train": True, "num_train_epochs": 15,
   "gradient_accumulation_steps": 1, "per_device_train_batch_size": 16,

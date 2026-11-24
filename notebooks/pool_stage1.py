@@ -130,16 +130,32 @@ else:
 
 # stage 5: training base = ORIGINAL Meta base checkpoint (the clean data-scaling anchor)
 stage(5, "Training base = ORIGINAL Meta base (facebook/mms-tts-aka)")
-if Path("/content/aka_train_base").exists() and glob.glob("/content/aka_train_base/*.safetensors"):
+def _base_ok():
+    return Path("/content/aka_train_base").exists() and glob.glob("/content/aka_train_base/*.safetensors") \
+           and Path("/content/aka_train_base/preprocessor_config.json").exists()
+if _base_ok():
     print("pool base present > skip")
 else:
     from huggingface_hub import snapshot_download
-    snapshot_download(repo_id="facebook/mms-tts-aka",
-                      local_dir="/content/aka_train_base",
-                      allow_patterns=["*.json", "*.txt", "*.safetensors"])
-    files = sorted(os.path.basename(x) for x in glob.glob("/content/aka_train_base/*"))
-    print("pool base ready:", files)
-    if not glob.glob("/content/aka_train_base/*.safetensors"):
-        raise SystemExit("base weights did not land - Review the output above - the stopped stage names its own fix")
+    if not (Path("/content/aka_train_base").exists() and glob.glob("/content/aka_train_base/*.safetensors")):
+        snapshot_download(repo_id="facebook/mms-tts-aka",
+                          local_dir="/content/aka_train_base",
+                          allow_patterns=["*.json", "*.txt", "*.safetensors"])
+    # the harness's vendored VitsFeatureExtractor.from_pretrained hard-errors when
+    # preprocessor_config.json is absent (hub AND local, this transformers stack).
+    # Content = the values the two COMPLETED runs themselves used (original repo +
+    # freeze repo carry this same file): model-native 16000 Hz + class defaults.
+    _pcfg = {
+        "feature_extractor_type": "VitsFeatureExtractor",
+        "feature_size": 80, "hop_length": 256, "max_wav_value": 32768.0,
+        "n_fft": 1024, "padding_side": "right", "padding_value": 0.0,
+        "return_attention_mask": False, "sampling_rate": 16000,
+    }
+    json.dump(_pcfg, open("/content/aka_train_base/preprocessor_config.json", "w"), indent=2)
+    _ok = json.load(open("/content/aka_train_base/preprocessor_config.json"))["sampling_rate"] == 16000
+    print("pool base ready:", sorted(os.path.basename(x) for x in glob.glob("/content/aka_train_base/*")),
+          "| preprocessor_config written:", _ok)
+    if not _ok:
+        raise SystemExit("preprocessor config failed verification - Review the output above")
 
 print("\nSTAGES 1-5 COMPLETE - loader continues with stages 6-9 (patches > pool training with Drive checkpoints > convergence > push)")
