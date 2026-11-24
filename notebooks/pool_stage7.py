@@ -157,7 +157,7 @@ stage(7, "Training (pool run) - checkpoints mirrored to Drive every save")
 script = "/content/finetune-hf-vits/run_vits_finetuning.py"
 if not Path(script).exists():
     raise SystemExit("harness not found - run pool_stage1.py (stages 1-5) first")
-cmd = ["python", "-m", "accelerate.commands.launch", script, "/content/finetune_akan_pool.json"]
+cmd = [sys.executable, "-m", "accelerate.commands.launch", script, "/content/finetune_akan_pool.json"]
 print("launch args:", cmd)
 log_f = open(LOG, "a")
 proc = subprocess.Popen(cmd, stdout=log_f, stderr=subprocess.STDOUT, bufsize=1,

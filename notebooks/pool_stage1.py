@@ -24,25 +24,41 @@ if not torch.cuda.is_available():
     raise SystemExit("NO GPU - Runtime > Change runtime type > T4 GPU > save > run this cell again.")
 print("GPU OK:", torch.cuda.get_device_name(0))
 
-# stage 2: harness + pins (metadata-only version checks)
-stage(2, "Harness + versions")
-import importlib.metadata as md
-_v_t, _v_d = md.version("transformers"), md.version("datasets")
-print("versions (metadata): transformers", _v_t, "| datasets", _v_d)
+# stage 2: harness + pins - ONE interpreter law: install AND verify with
+# sys.executable -m pip (plain 'pip' can target a different python3.13 env than
+# the launcher's interpreter; that dual-env mismatch broke the pool run once).
+stage(2, "Harness + versions (single-interpreter pins)")
+print("python interpreter:", sys.executable)
+def _pins_of(exe):
+    import subprocess as _sp
+    r = _sp.run([exe, "-c",
+                 "import importlib.metadata as m; print(m.version('transformers'), m.version('datasets'))"],
+                capture_output=True, text=True, timeout=120)
+    return r.stdout.split() if r.returncode == 0 else []
+_v_t, _v_d = _pins_of(sys.executable) or ["?", "?"]
+print("versions (the launcher interpreter): transformers", _v_t, "| datasets", _v_d)
 need_install = not (_v_t == "4.49.0" and _v_d == "3.2.0")
 harness_ok = Path("/content/finetune-hf-vits/run_vits_finetuning.py").exists()
 mono_ok = bool(glob.glob("/content/finetune-hf-vits/monotonic_align/monotonic_align/*.so")) or \
           Path("/content/finetune-hf-vits/monotonic_align/monotonic_align/core.py").exists()
 if need_install or not harness_ok or not mono_ok:
-    shell("pip install -q 'transformers==4.49.0'")
-    shell("pip install -q 'datasets==3.2.0' librosa soundfile accelerate", must=False)
+    shell(sys.executable + " -m pip install -q 'transformers==4.49.0'")
+    shell(sys.executable + " -m pip install -q 'datasets==3.2.0' librosa soundfile accelerate", must=False)
     if not harness_ok:
         shell("git clone https://github.com/ylacombe/finetune-hf-vits /content/finetune-hf-vits")
-    shell("pip install -q -r /content/finetune-hf-vits/requirements.txt", must=False)
+    shell(sys.executable + " -m pip install -q -r /content/finetune-hf-vits/requirements.txt", must=False)
     shell("mkdir -p /content/finetune-hf-vits/monotonic_align/monotonic_align")
     shell("cp -n /content/finetune-hf-vits/monotonic_align/core.py /content/finetune-hf-vits/monotonic_align/monotonic_align/core.py || true")
-    shell("cd /content/finetune-hf-vits/monotonic_align && python setup.py build_ext --inplace", must=False)
-print("harness ready:", harness_ok, "| pins:", _v_t, _v_d)
+    shell("cd /content/finetune-hf-vits/monotonic_align && " + sys.executable + " setup.py build_ext --inplace", must=False)
+_v_t2, _v_d2 = _pins_of(sys.executable) or ["?", "?"]
+print("harness ready:", harness_ok and mono_ok, "| pins verified after install:", _v_t2, _v_d2)
+if not (_v_t2 == "4.49.0" and _v_d2 == "3.2.0"):
+    raise SystemExit("PIN FAILED on the launcher interpreter (" + sys.executable +
+                     "): transformers " + _v_t2 + " / datasets " + _v_d2 +
+                     " - NOTHING IS WRONG with the project; the environment needs the pins. "
+                     "Rerun this cell once more (it re-installs); if it still fails, "
+                     "Runtime > Restart session, then rerun this cell.")
+print("single-interpreter pin law: OK")
 
 # stage 3: HF login - Colab secret HF_TOKEN first (enables background/Run-all),
 # then stored credentials, then the interactive widget as last resort.
