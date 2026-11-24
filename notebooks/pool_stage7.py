@@ -100,6 +100,13 @@ elif mir_ck:
         raise SystemExit("All Drive mirrors incomplete - send this output to Hermes before rerunning.")
 else:
     print("no checkpoints anywhere -> FRESH RUN")
+if "resume_from_checkpoint" not in cfg:
+    # fresh-run hygiene: any leftover debris (failed restores, tmp scaffolds, stale
+    # checkpoint dirs) in the output folder would either block the trainer or make
+    # its implicit get_last_checkpoint() resume from garbage - a fresh run clears it
+    shutil.rmtree(OUT, ignore_errors=True)
+    print("fresh-run hygiene: output dir cleared")
+
 Path("/content/finetune_akan_pool.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 print("pool config written: LR 1e-4, 15 epochs, ~26.5k steps, repo Dickson32-cell/akan-twi-mms-pool")
 
