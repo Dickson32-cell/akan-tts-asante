@@ -64,6 +64,11 @@ def mirror_newest():
     tgt = MIRROR + "/" + newest
     if Path(tgt, ".mirror_done").exists():
         return newest
+    # never publish a checkpoint the trainer is still writing or an incomplete one:
+    _req = {"trainer_state.json", "pytorch_model.bin", "pytorch_model_1.bin"}
+    _have = set(os.path.basename(f) for f in glob.glob(newest_path + "/*"))
+    if any(x.startswith(".tmp") for x in _have) or not _req.issubset(_have):
+        return newest  # mid-save or incomplete - retry on a later poll
     if not Path(MIRROR).exists():
         raise RuntimeError("Drive not mounted - run the loader cell which mounts Drive first")
     print("[MIRROR] saving", newest, "to Drive ...", flush=True)

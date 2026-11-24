@@ -46,22 +46,53 @@ cfg = {
   "weight_disc": 3, "weight_fmaps": 1, "weight_gen": 1, "weight_kl": 1.5,
   "weight_duration": 1, "weight_mel": 35, "fp16": True, "seed": 456
 }
-# resume-on-contact: local checkpoints win; else pull latest from the Drive mirror
+# resume-on-contact: local checkpoints win; else pull the newest COMPLETE checkpoint from Drive
 Path(MIRROR).mkdir(parents=True, exist_ok=True)
-local_ck = sorted(glob.glob(OUT + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1])) if Path(OUT).exists() else []
-mir_ck = sorted(glob.glob(MIRROR + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
-if local_ck:
+_REQUIRED = {"trainer_state.json", "pytorch_model.bin", "pytorch_model_1.bin"}
+
+def _ck_safe(base):
+    out = []
+    for p in glob.glob(base + "/checkpoint-*"):
+        m = _re.fullmatch(r"checkpoint-(\d+)", Path(p).name)
+        if m:
+            out.append((int(m.group(1)), p))
+    return sorted(out)
+
+def _ck_complete(pth):
+    have = set(os.path.basename(f) for f in glob.glob(pth + "/*"))
+    if any(n.startswith(".tmp") for n in have):
+        return False  # trainer still writing this checkpoint
+    return _REQUIRED.issubset(have)
+
+local_ck = _ck_safe(OUT) if Path(OUT).exists() else []
+mir_ck = _ck_safe(MIRROR)
+if local_ck and _ck_complete(local_ck[-1][1]):
     cfg["resume_from_checkpoint"] = "latest"  # STRING, the harness requires latest
-    print("local checkpoints found -> RESUME (latest =", local_ck[-1].rsplit('/', 1)[-1], ")")
+    print("local checkpoints found -> RESUME (latest =", Path(local_ck[-1][1]).name, ")")
 elif mir_ck:
-    newest = mir_ck[-1]
-    shutil.copytree(newest, OUT + "/" + Path(newest).name, dirs_exist_ok=True)
-    _n = sorted(glob.glob(OUT + "/checkpoint-*"), key=lambda p: int(p.rsplit("-", 1)[-1]))
-    if _n:
-        cfg["resume_from_checkpoint"] = "latest"
-        print("DRIVE RESUME: restored -> newest Drive checkpoint", Path(newest).name)
-    else:
-        print("drive copy failed -> FRESH RUN")
+    for n, pth in local_ck:          # drop incomplete local restores so "latest" cannot pick them
+        if not _ck_complete(pth):
+            print("removing incomplete local checkpoint:", Path(pth).name)
+            shutil.rmtree(pth, ignore_errors=True)
+    restored = None; skipped = []
+    for n, pth in reversed(mir_ck):
+        if not _ck_complete(pth):
+            missing = _REQUIRED - set(os.path.basename(f) for f in glob.glob(pth + "/*"))
+            skipped.append("%s (missing %s)" % (Path(pth).name, sorted(missing)))
+            continue
+        shutil.copytree(pth, OUT + "/" + Path(pth).name, dirs_exist_ok=True)
+        if _ck_complete(OUT + "/" + Path(pth).name):
+            restored = pth
+            cfg["resume_from_checkpoint"] = "latest"
+            print("DRIVE RESUME: restored -> newest COMPLETE checkpoint", Path(pth).name,
+                  "(step %d of 26265)" % n)
+            if skipped:
+                print("   skipped incomplete mirrors (died mid-save):", ", ".join(skipped))
+            break
+        shutil.rmtree(OUT + "/" + Path(pth).name, ignore_errors=True)
+    if not restored:
+        print("NO COMPLETE MIRROR - newest Drive checkpoints:", [Path(p).name for _, p in mir_ck])
+        raise SystemExit("All Drive mirrors incomplete - send this output to Hermes before rerunning.")
 else:
     print("no checkpoints anywhere -> FRESH RUN")
 Path("/content/finetune_akan_pool.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
