@@ -103,7 +103,7 @@ if ev_files:
     print("saved losses.csv + loss_curve.png")
     main_tag = "train_summed_losses" if "train_summed_losses" in tags else (tags[0] if tags else None)
     if main_tag:
-        vals = [p[1] for p in acc.Scalars(main_tag)]
+        vals = [p.value for p in acc.Scalars(main_tag)]
         if len(vals) >= 20:
             k = max(2, len(vals) // 10)
             first = sum(vals[:k]) / k
