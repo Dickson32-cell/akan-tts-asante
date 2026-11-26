@@ -6,7 +6,7 @@ import glob, json, os, re, subprocess, time, shutil, sys
 from pathlib import Path
 
 OUT = "/content/akan-vits-finetuned-pool"
-LOG = "/content/train_akan_pool.log"
+LOG = "/content/train_akan_pool_resume.log" if Path("/content/train_akan_pool_resume.log").exists() else "/content/train_akan_pool.log"
 MIRROR = "/content/drive/MyDrive/UG_TTS/pool_ckpts"
 REPO = "Dickson32-cell/akan-twi-mms-pool"
 
