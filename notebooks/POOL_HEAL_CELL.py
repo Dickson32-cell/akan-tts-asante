@@ -199,4 +199,4 @@ try:
 except Exception as e:
     print("push failed:", str(e)[:200])
     print("the checkpoint zip is safe in Drive; push again later from a new session")
-print("\n=== POOL RUN COMPLETE - send the VERDICT lines to Hermes for the 4-way eval ===")
+print("\n=== POOL RUN COMPLETE - record the VERDICT lines for the final eval ===")

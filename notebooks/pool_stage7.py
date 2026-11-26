@@ -97,7 +97,7 @@ elif mir_ck:
         shutil.rmtree(OUT + "/" + Path(pth).name, ignore_errors=True)
     if not restored:
         print("NO COMPLETE MIRROR - newest Drive checkpoints:", [Path(p).name for _, p in mir_ck])
-        raise SystemExit("All Drive mirrors incomplete - send this output to Hermes before rerunning.")
+        raise SystemExit("All Drive mirrors incomplete before rerunning.")
 else:
     print("no checkpoints anywhere -> FRESH RUN")
 if "resume_from_checkpoint" not in cfg:
@@ -193,7 +193,7 @@ else:
                 print("video.py has a different import layout but imports clean - patch 4 NOT required on this image; continuing")
             except Exception as _e:
                 print("video.py unpatchable AND broken:", str(_e)[:200])
-                raise SystemExit("video.py needs manual attention - send the output above to Hermes")
+                raise SystemExit("video.py needs manual attention - keep the output above for diagnosis")
 
 # training + live monitor + DRIVE CHECKPOINT MIRROR
 stage(7, "Training (pool run) - checkpoints mirrored to Drive every save")
@@ -364,4 +364,4 @@ try:
     print("PUSHED to Dickson32-cell/akan-twi-mms-pool (weights + artifacts)")
 except Exception as e:
     print("push failed:", str(e)[:200]); print("the checkpoint zip is safe in Drive; push again later from a new session")
-print("\n=== POOL RUN COMPLETE - send the VERDICT + rc lines to Hermes for the 4-way eval ===")
+print("\n=== POOL RUN COMPLETE - record the VERDICT + rc lines for the final eval ===")

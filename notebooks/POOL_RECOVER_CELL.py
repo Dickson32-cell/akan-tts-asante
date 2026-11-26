@@ -150,4 +150,4 @@ try:
 except Exception as e:
     print("push failed:", str(e)[:200])
     print("the Drive zip holds everything; push again from any session later")
-print("\n=== RECOVERY COMPLETE - send the VERDICT + error-tail lines above to Hermes ===")
+print("\n=== RECOVERY COMPLETE - keep the VERDICT + error-tail lines above for your records ===")

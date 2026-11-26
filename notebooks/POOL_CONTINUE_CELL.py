@@ -21,11 +21,11 @@ LOG = "/content/train_akan_continue.log"
 
 # 0) sanity: the rescued generator weights must exist
 if not Path(SRC_DRIVE).exists():
-    raise SystemExit("rescued weights not found at " + SRC_DRIVE + " - send this output to Hermes")
+    raise SystemExit("rescued weights not found at " + SRC_DRIVE + "")
 sz = Path(SRC_DRIVE).stat().st_size
 print("rescued generator weights:", "%.1f MB" % (sz / 1e6))
 if sz < 100e6 or sz > 400e6:
-    raise SystemExit("weight-file size out of expected range - send this output to Hermes")
+    raise SystemExit("weight-file size out of expected range")
 
 # 1) build the warm-start dir: base config + tokenizer + the 20k-step generator weights
 WARM = "/content/aka_continue_base"
@@ -45,7 +45,7 @@ ok = Path(WARM, "model.safetensors").stat().st_size == sz
 print("warm-start dir ready:", sorted(os.path.basename(x) for x in glob.glob(WARM + "/*")),
       "| weights bytes match:", ok)
 if not ok:
-    raise SystemExit("warm-start copy failed verification - send this output to Hermes")
+    raise SystemExit("warm-start copy failed verification")
 
 # 2) keep an archival copy of the break-point weights (rename the stale mirror dir first)
 try:
@@ -209,7 +209,7 @@ print("\n=== CONTINUATION EXITED rc=%s | watched %.1f min ===" % (rc, mins))
 if rc != 0:
     for l in raw[-10:]:
         print("   ", l[:180])
-    raise SystemExit("continuation failed - send the lines above to Hermes")
+    raise SystemExit("continuation failed - keep the lines above for diagnosis")
 
 # 7) convergence from tfevents + honest recovery note into the summary
 import matplotlib
@@ -287,4 +287,4 @@ try:
 except Exception as e:
     print("push failed:", str(e)[:200])
     print("the checkpoint zip is safe in Drive; push again later")
-print("\n=== POOL CONTINUATION COMPLETE - send the VERDICT lines to Hermes for the 4-way eval ===")
+print("\n=== POOL CONTINUATION COMPLETE - record the VERDICT lines for the final eval ===")
