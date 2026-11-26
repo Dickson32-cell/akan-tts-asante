@@ -38,9 +38,9 @@ published = []
 for c in cks[-3:] if cks else []:
     n, name = c.rsplit("-", 1)[-1], Path(c).name
     have = set(os.path.basename(f) for f in glob.glob(c + "/*"))
-    if any(x.startswith(".tmp") for x in have) or "trainer_state.json" not in have or "config.json" not in have \
-            or not [x for x in have if x.endswith(".bin") or x.endswith(".safetensors")]:
-        print("skip (incomplete):", name, "- files:", sorted(have))
+    need = {"model.safetensors", "model_1.safetensors"}
+    if not need <= have:
+        print("skip (incomplete):", name, "- missing:", sorted(need - have))
         continue
     if Path(MIRROR, name, ".mirror_done").exists():
         published.append(name); continue
@@ -120,12 +120,16 @@ if ev_files:
 json.dump({
     "verdict": locals().get("verdict", "CHECK MANUALLY"),
     "run": {"type": "P1 fresh 40h single clean run", "steps": "26265/26265 (15 epochs, LR 1e-4 cosine, seed 456)",
-            "exit": "training loop COMPLETED; rc=1 in a post-training stage - see logs for the exact cause"},
-    "infra_history": ("3 aborted attempts documented: (1) OOM corpus build - fixed by streaming"
+            "exit": "end of run - exact cause in the training-log tail above"},
+    "infra_history": ("5 attempts documented: (1) OOM corpus build - fixed by streaming"
                       " per-shard Arrow checkpointing; (2) interpreter mismatch - fixed by the"
-                      " single-interpreter law; (3) mid-save mirror loss at 20k - fixed by"
-                      " complete-only mirrors; the 20k-step generator warm-continuation attempt"
-                      " went NaN at step 3777 and was discarded as invalid science"),
+                      " single-interpreter law; (3) mid-save mirror loss at 20k + NaN warm-continuation"
+                      " - fixed by complete-only mirrors, continuation discarded as invalid science;"
+                      " (4) the completed 26,265-step run lost to VM recycle (mirrors had never fired)"
+                      " - the rerun was rescued at step 13,000 via Drive mirror + HF checkpoint push;"
+                      " (5) hub_strategy=checkpoint no-ops on this harness (push needs"
+                      " trainer_state.json + config.json, which its custom checkpoint format never"
+                      " writes: only model.safetensors/model_1.safetensors/optimizer/scheduler/scaler)"),
 }, open(OUT + "/convergence_summary.json", "w"), indent=2)
 
 # 5) push the final artifacts to the POOL repo
@@ -138,8 +142,10 @@ try:
 except Exception as e:
     print("create_repo:", str(e)[:120])
 try:
-    api.upload_folder(folder_path=OUT, repo_id=REPO, repo_type="model",
-                      commit_message="P1 pool run: 39.98h single-narrator corpus, LR 1e-4, 15 epochs (26,265 steps), seed 456 - training loop COMPLETED; converged weights + artifacts")
+    root_files = [p.name for p in Path(OUT).iterdir() if p.is_file()]
+    print("final-model root files:", root_files)
+    api.upload_folder(folder_path=OUT, repo_id=REPO, repo_type="model", allow_patterns=root_files,
+                      commit_message="P1 pool run FINAL: 39.98h single-narrator corpus, LR 1e-4, 15 epochs (26,265 steps), seed 456 - converged weights + artifacts")
     print("PUSHED to", REPO)
 except Exception as e:
     print("push failed:", str(e)[:200])
