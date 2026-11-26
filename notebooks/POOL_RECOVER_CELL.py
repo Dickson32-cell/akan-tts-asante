@@ -150,4 +150,14 @@ try:
 except Exception as e:
     print("push failed:", str(e)[:200])
     print("the Drive zip holds everything; push again from any session later")
+
+# 6) publish the model card as the repo README (fetched from the code repo master branch)
+try:
+    import urllib.request as _u
+    card = _u.urlopen("https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/master/model_card/README-pool-repo.md", timeout=60).read().decode("utf-8")
+    api.upload_file(path_or_fileobj=card.encode("utf-8"), path_in_repo="README.md", repo_id=REPO,
+                    repo_type="model", commit_message="Model card: AkanTwi-MMS-pool (data-scaling run)")
+    print("MODEL CARD pushed as README.md")
+except Exception as e:
+    print("card push failed:", str(e)[:160])
 print("\n=== RECOVERY COMPLETE - keep the VERDICT + error-tail lines above for your records ===")
