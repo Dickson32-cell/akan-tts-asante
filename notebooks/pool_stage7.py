@@ -23,7 +23,7 @@ def stage(n, t): print("\n" + "="*14 + f"  STAGE {n}: {t}  " + "="*14, flush=Tru
 stage(6, "Pool-run config (40h, LR 1e-4, 15 epochs, seed 456)")
 cfg = {
   "project_name": "akan_twi_tts_pool", "push_to_hub": True,
-  "hub_model_id": "Dickson32-cell/akan-twi-mms-pool", "hub_strategy": "end",
+  "hub_model_id": "Dickson32-cell/akan-twi-mms-pool", "hub_strategy": "checkpoint",  # trainer-side durability: every checkpoint is pushed to its OWN dedicated repo at save time,  # so no VM death can take the run (the oct-9 law protected SHARED repos; this one is run-private)
   "report_to": ["tensorboard"], "logging_strategy": "steps", "logging_steps": 20,
   "overwrite_output_dir": False,
   "output_dir": OUT,
@@ -220,6 +220,7 @@ def mirror_newest():
         return newest
     ok, missing = _ck_complete(newest_path)
     if not ok:
+        print("[MIRROR] SKIP", newest, "- incomplete:", sorted(missing), "(trainer-side push is the primary safety net)", flush=True)
         return newest  # mid-save or incomplete - retried on a later poll
     if not Path(MIRROR).exists():
         raise RuntimeError("Drive not mounted - run the loader cell which mounts Drive first")
@@ -249,8 +250,14 @@ def mirror_newest():
 mirrored_last = None
 last = 0
 t0 = time.time()
+_hb = time.time()
 while proc.poll() is None:
     time.sleep(25)
+    if time.time() - _hb > 1800:
+        _hb = time.time()
+        _l2 = Path(LOG).read_text(errors="replace").splitlines()
+        _m2 = [x for x in _l2 if "/26265 [" in x]
+        print("[HEARTBEAT] alive, latest step:", (_m2[-1][:80] if _m2 else "no step lines yet"), flush=True)
     try:
         lines = Path(LOG).read_text(errors="replace").splitlines()
     except FileNotFoundError:
