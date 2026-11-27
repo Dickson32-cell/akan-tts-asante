@@ -113,8 +113,21 @@ else:
     if not Path("/content/drive/MyDrive").exists():
         drive.mount("/content/drive")
     _z = "/content/drive/MyDrive/UG_TTS/tts_data_40h.zip"
-    if not Path(_z).exists():
-        raise SystemExit("Drive file missing: " + _z + " - upload E:/UG-TTS-Task/02_data/tts_data_40h.zip into the Drive folder UG_TTS, then run this cell again.")
+    if Path(_z).exists():
+        print("corpus manifest source: Drive")
+    else:
+        # Drive copy missing (cleaned or new account) - fetch the versioned copy from the repo
+        _z = "/content/work/tts_data_40h_from_repo.zip"
+        Path("/content/work").mkdir(parents=True, exist_ok=True)
+        if not Path(_z).exists():
+            _u = "https://raw.githubusercontent.com/Dickson32-cell/akan-tts-asante/_PIN_/data/tts_data_40h.zip"
+            print("[FALLBACK] Drive copy missing - fetching the versioned manifest from the repo ...")
+            urllib.request.urlretrieve(_u, _z)
+        if not Path(_z).exists() or Path(_z).stat().st_size < 1000000:
+            raise SystemExit("Manifest fetch failed (Drive empty AND repo copy unreachable) - upload "
+                             "E:/UG-TTS-Task/02_data/tts_data_40h.zip into the Drive folder UG_TTS, "
+                             "then run this cell again.")
+        print("corpus manifest source: repo (versioned copy)")
     shell("mkdir -p /content/work && unzip -o -q '" + _z + "' -d /content/work")
     _n = sum(1 for _l in open("/content/work/selected.jsonl", encoding="utf-8") if _l.strip())
     print("pool manifest rows:", _n)
