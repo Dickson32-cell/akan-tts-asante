@@ -1,0 +1,712 @@
+{
+  "purpose": "pool-freeze checkpoint selection dev set (100 clips)",
+  "rules": "single-narrator (.1461/.1861) only; NOT in the p40 training/eval manifest; NOT in the 200-clip held-out split; NOT matching demo-prompt texts; duration 2-12 s",
+  "universe_before_exclusions": 15868,
+  "after_exclusions": 1016,
+  "seed": 4242,
+  "hours": 0.17,
+  "clips": [
+    {
+      "id": "Asante_Twi_twi_00000399",
+      "source_file": "1CH.12.1461",
+      "duration": 4.86,
+      "norm": "ɔbaako akumaa koraa bɛtumi ɔha na ɔkɛseɛ bɛtumi apem",
+      "raw": "Ɔbaako, akumaa koraa bɛtumi ɔha, na ɔkɛseɛ bɛtumi apem."
+    },
+    {
+      "id": "Asante_Twi_twi_00001572",
+      "source_file": "1CH.21.1461",
+      "duration": 4.62,
+      "norm": "na lewi ne benyamin deɛ yoab ankan wɔn ɛfiri sɛ ɔhene asɛm no yɛɛ no ahi",
+      "raw": "Na Lewi ne Benyamin deɛ, Yoab ankan wɔn, ɛfiri sɛ ɔhene asɛm no yɛɛ no ahi."
+    },
+    {
+      "id": "Asante_Twi_twi_00002917",
+      "source_file": "1CH.5.1461",
+      "duration": 4.38,
+      "norm": "na apirafoɔ pii totɔe na nyankopɔn nkyɛn na ɛdɔm no firi baeɛ",
+      "raw": "Na apirafoɔ pii totɔe, na Nyankopɔn nkyɛn na ɛdɔm no firi baeɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00003716",
+      "source_file": "1CO.10.1461",
+      "duration": 3.18,
+      "norm": "paanoo a yɛbubuo no nyɛ kristo nipadua ayɔnkoyɛ anaa",
+      "raw": "Paanoo a yɛbubuo no nyɛ Kristo nipadua ayɔnkoyɛ anaa?"
+    },
+    {
+      "id": "Asante_Twi_twi_00004862",
+      "source_file": "1CO.5.1461",
+      "duration": 5.94,
+      "norm": "na morehoahoa mo ho na mo werɛ anho amma wɔanyi deɛ ɔyɛɛ saa adeɛ no amfiri mo mu",
+      "raw": "Na morehoahoa mo ho, na mo werɛ anho amma wɔanyi deɛ ɔyɛɛ saa adeɛ no amfiri mo mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00005031",
+      "source_file": "1CO.7.1461",
+      "duration": 3.12,
+      "norm": "na ɔyere wonim sɛ ebia wo na wobɛgye wo kunu nkwa",
+      "raw": "Na ɔyere, wonim sɛ, ebia wo na wobɛgye wo kunu nkwa?"
+    },
+    {
+      "id": "Asante_Twi_twi_00005710",
+      "source_file": "1JN.4.1461",
+      "duration": 5.38,
+      "norm": "na yɛn deɛ yɛahunu na yɛagye ɔdɔ a onyankopɔn wɔ no yɛn ho no adi",
+      "raw": "Na yɛn deɛ, yɛahunu na yɛagye ɔdɔ a Onyankopɔn wɔ no yɛn ho no adi."
+    },
+    {
+      "id": "Asante_Twi_twi_00005810",
+      "source_file": "1JN.5.1461",
+      "duration": 6.68,
+      "norm": "yeinom na matwerɛ mabrɛ mo na moahunu sɛ mowɔ daa nkwa na moagye nyankopɔn ba no din adi",
+      "raw": "Yeinom na matwerɛ mabrɛ mo, na moahunu sɛ mowɔ daa nkwa, na moagye Nyankopɔn Ba no din adi."
+    },
+    {
+      "id": "Asante_Twi_twi_00005939",
+      "source_file": "1KI.1.1461",
+      "duration": 4.9,
+      "norm": "na wɔhyɛnee totorobɛnto na ɔman no nyinaa kaa sɛ ɔhene salomo nkwa so",
+      "raw": "Na wɔhyɛnee totorobɛnto, na ɔman no nyinaa kaa sɛ: Ɔhene Salomo nkwa so!"
+    },
+    {
+      "id": "Asante_Twi_twi_00006599",
+      "source_file": "1KI.14.1461",
+      "duration": 7.18,
+      "norm": "na ahia tee ne nan ase sɛ ɔreba ɛpono ano no ɔkaa sɛ yeroboam yere bra",
+      "raw": "Na Ahia tee ne nan ase sɛ ɔreba ɛpono ano no, ɔkaa sɛ: Yeroboam yere, bra!"
+    },
+    {
+      "id": "Asante_Twi_twi_00009273",
+      "source_file": "1PE.4.1461",
+      "duration": 10.42,
+      "norm": "sɛ obi som a ma no nsom sɛ ɛfiri ahoɔden a onyankopɔn de ma mu na wɔnam yesu kristo so ahyɛ onyankopɔn animuonyam ade nyinaa mu",
+      "raw": "Sɛ obi som a, ma no nsom sɛ ɛfiri ahoɔden a Onyankopɔn de ma mu, na wɔnam Yesu Kristo so ahyɛ Onyankopɔn animuonyam, ade nyinaa mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00010364",
+      "source_file": "1SA.16.1461",
+      "duration": 6.06,
+      "norm": "na saulo ka kyerɛɛ ne nkoa sɛ monhwehwɛ obi a ɔnim bɔ yie mma me ɛ na momfa no mmrɛ me",
+      "raw": "Na Saulo ka kyerɛɛ ne nkoa sɛ: Monhwehwɛ obi a ɔnim bɔ yie mma me ɛ, na momfa no mmrɛ me."
+    },
+    {
+      "id": "Asante_Twi_twi_00010454",
+      "source_file": "1SA.17.1461",
+      "duration": 7.9,
+      "norm": "na filistifoɔ gyina bepɔ so ɔfa ha na israel nso gyina bepɔ so ɔfa ha na bonhwa da wɔn ntam",
+      "raw": "Na Filistifoɔ gyina bepɔ so ɔfa ha, na Israel nso gyina bepɔ so ɔfa ha, na bonhwa da wɔn ntam."
+    },
+    {
+      "id": "Asante_Twi_twi_00013530",
+      "source_file": "1TI.4.1461",
+      "duration": 11.4,
+      "norm": "na honhom no ka no pefee sɛ nna a ɛdi akyire no mu ebinom bɛfam nnaadaa ahonhom ne ahonhommɔne nkyerɛkyerɛ ho atwe wɔn ho afiri gyidie no ho atorofoɔ nkontompo nti",
+      "raw": "Na honhom no ka no pefee sɛ nna a ɛdi akyire no mu, ebinom bɛfam nnaadaa ahonhom ne ahonhommɔne nkyerɛkyerɛ ho atwe wɔn ho afiri gyidie no ho, atorofoɔ nkontompo nti."
+    },
+    {
+      "id": "Asante_Twi_twi_00013602",
+      "source_file": "1TI.5.1461",
+      "duration": 11.3,
+      "norm": "enti mepɛ sɛ akunafoɔ a wɔnnyiniiɛ no ware wo mma di efie soɔ na wɔamma ɔtamfoɔ ho kwan sɛ ɔnni atɛm ɛfiri sɛ ebinom amane akɔdi satan akyiri dada",
+      "raw": "Enti mepɛ sɛ akunafoɔ a wɔnnyiniiɛ no ware wo mma di efie soɔ, na wɔamma ɔtamfoɔ ho kwan sɛ ɔnni atɛm; ɛfiri sɛ ebinom amane akɔdi Satan akyiri dada."
+    },
+    {
+      "id": "Asante_Twi_twi_00014451",
+      "source_file": "2CH.18.1461",
+      "duration": 9.54,
+      "norm": "na mfeɛ bi akyiri no ɔsiane kɔɔ ahab nkyɛn samaria na ahab kunkumm nnwan ne anantwie bebree maa no ne nkurɔfoɔ a wɔka ne ho no",
+      "raw": "Na mfeɛ bi akyiri no, ɔsiane kɔɔ Ahab nkyɛn Samaria, na Ahab kunkumm nnwan ne anantwie bebree maa no ne nkurɔfoɔ a wɔka ne ho no."
+    },
+    {
+      "id": "Asante_Twi_twi_00015236",
+      "source_file": "2CH.24.1461",
+      "duration": 4.22,
+      "norm": "na wɔsiee no dawid kuro mu nanso wɔansie no ahemfo no asieeɛ",
+      "raw": "Na wɔsiee no Dawid kuro mu, nanso wɔansie no ahemfo no asieeɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00017696",
+      "source_file": "2CO.12.1461",
+      "duration": 2.52,
+      "norm": "ɛyɛ mo sɛ yɛreyi yɛn ho ano akyerɛ mo anaa",
+      "raw": "Ɛyɛ mo sɛ yɛreyi yɛn ho ano akyerɛ mo anaa?"
+    },
+    {
+      "id": "Asante_Twi_twi_00017920",
+      "source_file": "2CO.3.1461",
+      "duration": 2.44,
+      "norm": "paulo ahotosoɔ di n'adwuma ho adanseɛ",
+      "raw": "Paulo ahotosoɔ di n’adwuma ho adanseɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00019829",
+      "source_file": "2KI.19.1461",
+      "duration": 7.9,
+      "norm": "na yuda fie mu wɔn a wɔagye wɔn afiri mu a wɔaka no wɔn ase bɛgye nhini bio na wɔaso aba wɔ soro",
+      "raw": "Na Yuda fie mu wɔn a wɔagye wɔn afiri mu a wɔaka no, wɔn ase bɛgye nhini bio, na wɔaso aba wɔ soro."
+    },
+    {
+      "id": "Asante_Twi_twi_00020814",
+      "source_file": "2KI.3.1461",
+      "duration": 7.94,
+      "norm": "na abufuo kɛseɛ baa israel mu na wɔfirii ne ho sane baa wɔn asase so",
+      "raw": "Na abufuo kɛseɛ baa Israel mu, na wɔfirii ne ho sane baa wɔn asase so."
+    },
+    {
+      "id": "Asante_Twi_twi_00023439",
+      "source_file": "2SA.19.1461",
+      "duration": 11.54,
+      "norm": "na medɔ nyame sɛ sɛ woamfiri adi a obiara rentena wo nkyɛn anadwo yi na ɛno mmom bɛyɛ bɔne ama wo asene bɔne biara a aba wo soɔ firi wo mmeranteberɛ mu de abɛduru sɛsɛɛ",
+      "raw": "Na medɔ Nyame sɛ, sɛ woamfiri adi a, obiara rentena wo nkyɛn anadwo yi, na ɛno mmom bɛyɛ bɔne ama wo asene bɔne biara a aba wo soɔ firi wo mmeranteberɛ mu de abɛduru sɛsɛɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00023485",
+      "source_file": "2SA.19.1461",
+      "duration": 6.96,
+      "norm": "na ɔman no nyinaa twaa yordan na ɔhene nso twae na ɔhene yɛɛ no atuu na ɔhyiraa no maa ɔsane kɔɔ fie",
+      "raw": "Na ɔman no nyinaa twaa Yordan, na ɔhene nso twae; na ɔhene yɛɛ no atuu, na ɔhyiraa no maa ɔsane kɔɔ fie."
+    },
+    {
+      "id": "Asante_Twi_twi_00025487",
+      "source_file": "2TI.1.1461",
+      "duration": 10.26,
+      "norm": "enti mma w'ani nnwu yɛn awurade adansedie ne me a meyɛ ne deduani no ho na mmom hunu asɛmpa no ho amane bi sɛdeɛ nyankopɔn ahoɔden teɛ no",
+      "raw": "Enti mma w’ani nnwu yɛn Awurade adansedie ne me a meyɛ ne deduani no ho, na mmom hunu asɛmpa no ho amane bi, sɛdeɛ Nyankopɔn ahoɔden teɛ no."
+    },
+    {
+      "id": "Asante_Twi_twi_00025705",
+      "source_file": "2TI.4.1461",
+      "duration": 7.621,
+      "norm": "afei mehyɛ wo onyankopɔn ne kristo yesu a ɔbɛbu ateasefoɔ ne awufoɔ atɛn n'ahoyie ne n'ahennie mu no anim",
+      "raw": "Afei mehyɛ wo Onyankopɔn ne Kristo Yesu a ɔbɛbu ateasefoɔ ne awufoɔ atɛn n’ahoyie ne n’ahennie mu no anim."
+    },
+    {
+      "id": "Asante_Twi_twi_00027019",
+      "source_file": "ACT.18.1461",
+      "duration": 7.64,
+      "norm": "na ɔkyɛree hɔ kakra no ɔfirii hɔ kɔkyinii galatia ne frigia nkuro nyinaa mu hyɛɛ asuafoɔ no nyinaa den",
+      "raw": "Na ɔkyɛree hɔ kakra no, ɔfirii hɔ kɔkyinii Galatia ne Frigia nkuro nyinaa mu hyɛɛ asuafoɔ no nyinaa den."
+    },
+    {
+      "id": "Asante_Twi_twi_00028725",
+      "source_file": "ACT.5.1461",
+      "duration": 6.78,
+      "norm": "na ɔka kyerɛɛ wɔn sɛ israel mmarima monhwɛ mo ho yie nnipa yi ho wɔ deɛ mo ne wɔn rebɛdie yi ho",
+      "raw": "Na ɔka kyerɛɛ wɔn sɛ: Israel mmarima, monhwɛ mo ho yie nnipa yi ho wɔ deɛ mo ne wɔn rebɛdie yi ho."
+    },
+    {
+      "id": "Asante_Twi_twi_00030469",
+      "source_file": "AMO.7.1461",
+      "duration": 6.98,
+      "norm": "na awurade faa me firii nnwan akyiridie na awurade ka kyerɛɛ me sɛ kɔ na kɔhyɛ nkɔm kyerɛ me man israel",
+      "raw": "Na AWURADE faa me firii nnwan akyiridie, na AWURADE ka kyerɛɛ me sɛ: Kɔ na kɔhyɛ nkɔm kyerɛ me man Israel."
+    },
+    {
+      "id": "Asante_Twi_twi_00030470",
+      "source_file": "AMO.7.1461",
+      "duration": 6.38,
+      "norm": "na afei tie awurade asɛm wo deɛ woka sɛ nhyɛ nkɔm ntia israel",
+      "raw": "Na afei tie AWURADE asɛm: Wo deɛ, woka sɛ: Nhyɛ nkɔm ntia Israel."
+    },
+    {
+      "id": "Asante_Twi_twi_00031164",
+      "source_file": "COL.4.1461",
+      "duration": 6.5,
+      "norm": "awuranom momfa deɛ ɛtene na ɛyɛ pɛ mma nkoa ɛfiri sɛ monim sɛ mo nso mowɔ owura wɔ ɔsoro",
+      "raw": "Awuranom, momfa deɛ ɛtene, na ɛyɛ pɛ mma nkoa, ɛfiri sɛ monim sɛ mo nso mowɔ owura wɔ ɔsoro."
+    },
+    {
+      "id": "Asante_Twi_twi_00031389",
+      "source_file": "DAN.11.1861",
+      "duration": 9.58,
+      "norm": "na wɔde abasa a ɛte sɛ nsuyire bɛpia wɔn akɔ na wɔabubu wɔn ne apam berempɔn no nso wɔ n'anim",
+      "raw": "Na wɔde abasa a ɛte sɛ nsuyire bɛpia wɔn akɔ na wɔabubu wɔn ne apam berempɔn no nso wɔ n’anim."
+    },
+    {
+      "id": "Asante_Twi_twi_00031638",
+      "source_file": "DAN.3.1861",
+      "duration": 10.681,
+      "norm": "hwɛ yɛn nyankopɔn a yɛsom no no bɛtumi ayi yɛn afiri ogya a ɛrefranam fononoo no mu na ɔbɛgye yɛn afiri wo ɔhene nsam",
+      "raw": "Hwɛ, yɛn Nyankopɔn a yɛsom no no bɛtumi ayi yɛn afiri ogya a ɛrefranam fononoo no mu, na ɔbɛgye yɛn afiri wo, ɔhene, nsam."
+    },
+    {
+      "id": "Asante_Twi_twi_00033907",
+      "source_file": "DEU.28.1461",
+      "duration": 11.12,
+      "norm": "na w'akoma mu suro a wobɛsuro ne w'ani so adeɛ a wobɛhunu nti anɔpa wobɛka sɛ sɛ ɛyɛ anwummerɛ ɛ na anwummerɛ nso wobɛka sɛ sɛ ɛyɛ anɔpa ɛ",
+      "raw": "Na w’akoma mu suro a wobɛsuro ne w’ani so adeɛ a wobɛhunu nti, anɔpa wobɛka sɛ: Sɛ ɛyɛ anwummerɛ ɛ, na anwummerɛ nso wobɛka sɛ: Sɛ ɛyɛ anɔpa ɛ!"
+    },
+    {
+      "id": "Asante_Twi_twi_00034303",
+      "source_file": "DEU.31.1461",
+      "duration": 10.38,
+      "norm": "momma mo mmusuakuo mu mpanimfoɔ nyinaa ne mo ahwɛfoɔ mmɛbɔ me nkyɛn dwa na menka nsɛm yi nyinaa ngu wɔn aso mu na memfrɛ ɔsoro ne asase nni wɔn adanseɛ",
+      "raw": "Momma mo mmusuakuo mu mpanimfoɔ nyinaa ne mo ahwɛfoɔ mmɛbɔ me nkyɛn dwa, na menka nsɛm yi nyinaa ngu wɔn aso mu, na memfrɛ ɔsoro ne asase nni wɔn adanseɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00036247",
+      "source_file": "ECC.4.1461",
+      "duration": 6.82,
+      "norm": "bio sɛ baanu da a wɔn ho yɛ wɔn hye na ɔbaakofoɔ deɛ ne ho bɛyɛ no hye sɛn",
+      "raw": "Bio, sɛ baanu da a, wɔn ho yɛ wɔn hye, na ɔbaakofoɔ deɛ, ne ho bɛyɛ no hye sɛn?"
+    },
+    {
+      "id": "Asante_Twi_twi_00036661",
+      "source_file": "ECC.8.1461",
+      "duration": 8.82,
+      "norm": "sɛ nneyɛɛ bɔne ho afobusɛm mma mu ntɛmntɛm nti na nnipa mma bɔne ho atirimpɔ ayɛ wɔn akoma ma",
+      "raw": "Sɛ nneyɛɛ bɔne ho afobusɛm mma mu ntɛmntɛm nti na nnipa mma bɔne ho atirimpɔ ayɛ wɔn akoma ma."
+    },
+    {
+      "id": "Asante_Twi_twi_00037069",
+      "source_file": "EPH.5.1461",
+      "duration": 7.02,
+      "norm": "mommma obi mmfa nsɛnhunu nnnaadaa mo na saa nnoɔma no nti na nyankopɔn abufuhyeɛ ba wɔn a wɔyɛ asoɔden soɔ",
+      "raw": "Mommma obi mmfa nsɛnhunu nnnaadaa mo; na saa nnoɔma no nti na Nyankopɔn abufuhyeɛ ba wɔn a wɔyɛ asoɔden soɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00037075",
+      "source_file": "EPH.5.1461",
+      "duration": 8.7,
+      "norm": "na nnoɔma no nyinaa sɛ wɔma ɛda adi a hann yi no adi ɛfiri sɛ deɛ wɔyi adi nyinaa yɛ hann",
+      "raw": "Na nnoɔma no nyinaa, sɛ wɔma ɛda adi a, hann yi no adi; ɛfiri sɛ deɛ wɔyi adi nyinaa yɛ hann."
+    },
+    {
+      "id": "Asante_Twi_twi_00037584",
+      "source_file": "EST.5.1461",
+      "duration": 2.86,
+      "norm": "ɛduru ahennie no fa mpo a wɔde bɛma wo",
+      "raw": "Ɛduru ahennie no fa mpo a, wɔde bɛma wo."
+    },
+    {
+      "id": "Asante_Twi_twi_00037658",
+      "source_file": "EST.6.1461",
+      "duration": 2.1,
+      "norm": "nnya deɛ woaka no nyinaa mu biara",
+      "raw": "Nnya deɛ woaka no nyinaa mu biara."
+    },
+    {
+      "id": "Asante_Twi_twi_00038643",
+      "source_file": "EXO.15.1461",
+      "duration": 4.4,
+      "norm": "hwan na ɔte sɛ woɔ kronkronyɛ mu onimuonyamfoɔ",
+      "raw": "Hwan na ɔte sɛ woɔ, kronkronyɛ mu onimuonyamfoɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00039093",
+      "source_file": "EXO.19.1461",
+      "duration": 4.88,
+      "norm": "na ɔka kyerɛɛ ɔman no sɛ monsiesie mo ho nsie da a ɛtɔ so mmiɛnsa no",
+      "raw": "Na ɔka kyerɛɛ ɔman no sɛ: Monsiesie mo ho nsie da a ɛtɔ so mmiɛnsa no."
+    },
+    {
+      "id": "Asante_Twi_twi_00043713",
+      "source_file": "EZK.20.1461",
+      "duration": 7.8,
+      "norm": "ɛnna mese mɛhwie m'anibereɛ agu wɔn so de awie m'abufuo no wɔ wɔn so misraim asase so",
+      "raw": "Ɛnna mese: Mɛhwie m’anibereɛ agu wɔn so, de awie m’abufuo no wɔ wɔn so, Misraim asase so."
+    },
+    {
+      "id": "Asante_Twi_twi_00045702",
+      "source_file": "EZK.31.1461",
+      "duration": 2.38,
+      "norm": "ɛfiri sɛ na wɔde wɔn nyinaa ama owuo",
+      "raw": "Ɛfiri sɛ, na wɔde wɔn nyinaa ama owuo."
+    },
+    {
+      "id": "Asante_Twi_twi_00048148",
+      "source_file": "EZR.1.1461",
+      "duration": 3.92,
+      "norm": "sika ne dwetɛ nnoɔma no nyinaa yɛ mpemnum ne ahanan",
+      "raw": "Sika ne dwetɛ nnoɔma no nyinaa yɛ mpemnum ne ahanan."
+    },
+    {
+      "id": "Asante_Twi_twi_00048694",
+      "source_file": "EZR.6.1461",
+      "duration": 8.36,
+      "norm": "na wɔsisii na wɔwiee sɛdeɛ israel nyankopɔn ahyɛdeɛ ne persiahene kores ne dario ne artasasta mmara no teɛ no",
+      "raw": "Na wɔsisii na wɔwiee, sɛdeɛ Israel Nyankopɔn ahyɛdeɛ ne Persiahene Kores ne Dario ne Artasasta mmara no teɛ no."
+    },
+    {
+      "id": "Asante_Twi_twi_00049310",
+      "source_file": "GAL.4.1461",
+      "duration": 2.24,
+      "norm": "akoa ismael ne ɔdehyeɛ isak",
+      "raw": "Akoa Ismael ne ɔdehyeɛ Isak."
+    },
+    {
+      "id": "Asante_Twi_twi_00049419",
+      "source_file": "GAL.5.1461",
+      "duration": 6.88,
+      "norm": "mo a mopɛ sɛ wɔbu mo bem mmara no mu no wɔatete mo afiri kristo ho moafiri adom mu ahwe ase",
+      "raw": "Mo a mopɛ sɛ wɔbu mo bem mmara no mu no, wɔatete mo afiri Kristo ho, moafiri adom mu ahwe ase."
+    },
+    {
+      "id": "Asante_Twi_twi_00052985",
+      "source_file": "GEN.34.1461",
+      "duration": 8.04,
+      "norm": "yakob mmammarima no baa atɔfoɔ no so bɛfom kuro no mu nnoɔma fae ɛfiri sɛ wɔagu wɔn nua no ho fi",
+      "raw": "Yakob mmammarima no baa atɔfoɔ no so bɛfom kuro no mu nnoɔma fae, ɛfiri sɛ wɔagu wɔn nua no ho fi."
+    },
+    {
+      "id": "Asante_Twi_twi_00054452",
+      "source_file": "GEN.44.1461",
+      "duration": 6.42,
+      "norm": "na wosee wo nkoa sɛ sɛ mo nua kumaa no anka mo ho amma a monnsi m'anim bio",
+      "raw": "Na wosee wo nkoa sɛ: Sɛ mo nua kumaa no anka mo ho amma a, monnsi m’anim bio."
+    },
+    {
+      "id": "Asante_Twi_twi_00056080",
+      "source_file": "HAB.2.1461",
+      "duration": 2.48,
+      "norm": "na woma no borɔ na woahwɛ n'adagya mu",
+      "raw": "na woma no borɔ na woahwɛ n’adagya mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00056257",
+      "source_file": "HAB.3.1461",
+      "duration": 4.16,
+      "norm": "woayɛ wo tadua krado na woaka ntam wɔ w'agyan no toɔ ho",
+      "raw": "Woayɛ wo tadua krado; na woaka ntam wɔ w’agyan no toɔ ho."
+    },
+    {
+      "id": "Asante_Twi_twi_00056817",
+      "source_file": "HEB.11.1461",
+      "duration": 4.62,
+      "norm": "gyidie nti na yeriko afasuo a wɔtwaa ho hyiaa nnanson no dwiriiɛ",
+      "raw": "Gyidie nti na Yeriko afasuo a wɔtwaa ho hyiaa nnanson no dwiriiɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00057434",
+      "source_file": "HEB.5.1461",
+      "duration": 7.1,
+      "norm": "na ɛno nti ɛsɛ sɛ ɔbɔ bɔne ho afɔdeɛ ma ne ho sɛdeɛ ɔbɔ ma ɔman no",
+      "raw": "Na ɛno nti, ɛsɛ sɛ ɔbɔ bɔne ho afɔdeɛ ma ne ho, sɛdeɛ ɔbɔ ma ɔman no."
+    },
+    {
+      "id": "Asante_Twi_twi_00058188",
+      "source_file": "HOS.12.1461",
+      "duration": 3.66,
+      "norm": "na ɔdi apueeɛ ahum akyi daa nyinaa",
+      "raw": "na ɔdi apueeɛ ahum akyi; daa nyinaa."
+    },
+    {
+      "id": "Asante_Twi_twi_00058305",
+      "source_file": "HOS.13.1461",
+      "duration": 9.06,
+      "norm": "ne wɔn nhunumu ano adwinhoni ɛyɛ adwumfoɔ adwuma ara nko wɔka no wɔ wɔn ho sɛ",
+      "raw": "ne wɔn nhunumu ano adwinhoni; ɛyɛ adwumfoɔ adwuma ara nko; wɔka no wɔ wɔn ho sɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00061312",
+      "source_file": "ISA.17.1461",
+      "duration": 3.2,
+      "norm": "aman a wɔyɛ hoo sɛ nsuo bebree hooyɛ",
+      "raw": "Aman a wɔyɛ hoo sɛ nsuo bebree hooyɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00063355",
+      "source_file": "ISA.29.1461",
+      "duration": 3.58,
+      "norm": "na wɔn akoma deɛ wɔayi afiri me nkyɛn kɔ akyirikyiri",
+      "raw": "na wɔn akoma deɛ, wɔayi afiri me nkyɛn kɔ akyirikyiri."
+    },
+    {
+      "id": "Asante_Twi_twi_00072018",
+      "source_file": "JAS.4.1461",
+      "duration": 3.581,
+      "norm": "enti na atwerɛ no se onyankopɔn si ahantanfoɔ kwan",
+      "raw": "Enti na atwerɛ no se: Onyankopɔn si ahantanfoɔ kwan."
+    },
+    {
+      "id": "Asante_Twi_twi_00072027",
+      "source_file": "JAS.4.1461",
+      "duration": 2.3,
+      "norm": "wɔbara bu a wɔbu afoforɔ atɛn",
+      "raw": "Wɔbara bu a wɔbu afoforɔ atɛn."
+    },
+    {
+      "id": "Asante_Twi_twi_00073232",
+      "source_file": "JDG.18.1461",
+      "duration": 10.56,
+      "norm": "na ɔgyefoɔ biara amma ɛfiri sɛ ɛne sidon ware na na wɔne obiara biara nni twaka na ɛda bonhwa a ɛde kɔ bet-rehob no mu",
+      "raw": "Na ɔgyefoɔ biara amma, ɛfiri sɛ ɛne Sidon ware, na na wɔne obiara biara nni twaka; na ɛda bonhwa a ɛde kɔ Bet-rehob no mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00073341",
+      "source_file": "JDG.19.1461",
+      "duration": 7.42,
+      "norm": "na ne mpena no firii n'akyi kɔbɔɔ adwaman na ɔfirii ne nkyɛn kɔɔ n'agya fie betlehem yuda na ɔkɔdii hɔ nna bi abosome nnan",
+      "raw": "Na ne mpena no firii n’akyi kɔbɔɔ adwaman, na ɔfirii ne nkyɛn kɔɔ n’agya fie Betlehem Yuda na ɔkɔdii hɔ nna bi, abosome nnan."
+    },
+    {
+      "id": "Asante_Twi_twi_00079698",
+      "source_file": "JER.4.1461",
+      "duration": 3.26,
+      "norm": "mehwɛe na hwɛ na onipa biara nni hɔ",
+      "raw": "Mehwɛe, na hwɛ, na onipa biara nni hɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00083413",
+      "source_file": "JER.8.1461",
+      "duration": 3.44,
+      "norm": "firi akyirikyiri asase so awurade nni sion",
+      "raw": "firi akyirikyiri asase so: AWURADE nni Sion."
+    },
+    {
+      "id": "Asante_Twi_twi_00085711",
+      "source_file": "JHN.3.1461",
+      "duration": 8.18,
+      "norm": "na yei mmom ne atemmuo no sɛ hann no aba wiase na nnipa dɔ esum sene hann no ɛfiri sɛ wɔn nnwuma yɛ bɔne",
+      "raw": "Na yei mmom ne atemmuo no, sɛ hann no aba wiase na nnipa dɔ esum sene hann no; ɛfiri sɛ wɔn nnwuma yɛ bɔne."
+    },
+    {
+      "id": "Asante_Twi_twi_00085992",
+      "source_file": "JHN.5.1461",
+      "duration": 3.58,
+      "norm": "na onipa bi wɔ hɔ a wadi mfirinhyia aduasa nwɔtwe n'ahoɔmmerɛ mu",
+      "raw": "Na onipa bi wɔ hɔ a wadi mfirinhyia aduasa nwɔtwe n’ahoɔmmerɛ mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00090017",
+      "source_file": "JOB.30.1461",
+      "duration": 2.86,
+      "norm": "madane ɛserɛ so akraman nua",
+      "raw": "Madane ɛserɛ so akraman nua."
+    },
+    {
+      "id": "Asante_Twi_twi_00092060",
+      "source_file": "JOB.41.1461",
+      "duration": 3.68,
+      "norm": "na woasa no ahoma ama wo mmabaa anaa",
+      "raw": "na woasa no ahoma ama wo mmabaa anaa?"
+    },
+    {
+      "id": "Asante_Twi_twi_00093358",
+      "source_file": "JOL.2.1461",
+      "duration": 2.92,
+      "norm": "na n'akyiri nso ebi renyɛ sɛ ɛno",
+      "raw": "na n’akyiri nso ebi renyɛ sɛ ɛno."
+    },
+    {
+      "id": "Asante_Twi_twi_00093396",
+      "source_file": "JOL.2.1461",
+      "duration": 3.22,
+      "norm": "monsane mmra me nkyɛn mo akoma nyinaa",
+      "raw": "monsane mmra me nkyɛn mo akoma nyinaa."
+    },
+    {
+      "id": "Asante_Twi_twi_00094402",
+      "source_file": "JOS.11.1461",
+      "duration": 7.72,
+      "norm": "na ahemfo yi nyinaa bɛhyiae na wɔba bɛkyekyeree nsraban faako merom asuo ho sɛ wɔne israel rebɛko",
+      "raw": "Na ahemfo yi nyinaa bɛhyiae, na wɔba bɛkyekyeree nsraban faako, Merom asuo ho sɛ wɔne Israel rebɛko."
+    },
+    {
+      "id": "Asante_Twi_twi_00094561",
+      "source_file": "JOS.13.1461",
+      "duration": 6.0,
+      "norm": "wɔde maa manase ba makir mma sɛ ɛnyɛ makir mma fa dea sɛdeɛ wɔn mmusua teɛ",
+      "raw": "Wɔde maa Manase ba Makir mma, sɛ ɛnyɛ Makir mma fa dea, sɛdeɛ wɔn mmusua teɛ."
+    },
+    {
+      "id": "Asante_Twi_twi_00097599",
+      "source_file": "LAM.4.1461",
+      "duration": 2.12,
+      "norm": "teneneefoɔ mogya wɔn mfimfini",
+      "raw": "teneneefoɔ mogya wɔn mfimfini."
+    },
+    {
+      "id": "Asante_Twi_twi_00097830",
+      "source_file": "LAM.5.1461",
+      "duration": 2.16,
+      "norm": "yeinom ho na yɛn ani so ayɛ kusuu",
+      "raw": "yeinom ho na yɛn ani so ayɛ kusuu."
+    },
+    {
+      "id": "Asante_Twi_twi_00098219",
+      "source_file": "LEV.13.1461",
+      "duration": 2.96,
+      "norm": "lewitikɔs dummiɛnsa",
+      "raw": "LEWITIKƆS 13."
+    },
+    {
+      "id": "Asante_Twi_twi_00098569",
+      "source_file": "LEV.16.1461",
+      "duration": 5.98,
+      "norm": "na ɔmfa mpapo mmienu no mmɛgyina awurade anim ahyiaeɛ ntomadan no ano",
+      "raw": "Na ɔmfa mpapo mmienu no mmɛgyina AWURADE anim, ahyiaeɛ ntomadan no ano."
+    },
+    {
+      "id": "Asante_Twi_twi_00102023",
+      "source_file": "LUK.18.1461",
+      "duration": 10.92,
+      "norm": "na ɔtogyeni no deɛ ɔgyinaa akyirikyiri na wampɛ sɛ ɔma n'ani so kyerɛ soro mpo na mmom ɔbɔɔ ne koko so kaa sɛ onyankopɔn hu me debɔneyɛni mmɔbɔ",
+      "raw": "Na ɔtogyeni no deɛ, ɔgyinaa akyirikyiri, na wampɛ sɛ ɔma n’ani so kyerɛ soro mpo, na mmom ɔbɔɔ ne koko so kaa sɛ: Onyankopɔn, hu me debɔneyɛni mmɔbɔ!"
+    },
+    {
+      "id": "Asante_Twi_twi_00104472",
+      "source_file": "LUK.9.1461",
+      "duration": 9.98,
+      "norm": "na obiara a n'ani bɛwu me ne me nsɛm ho no ɔno nso ho bɛyɛ onipa ba no aniwu ɛda a ɔde ɔno ne n'agya ne n'abɔfoɔ kronkron animuonyam bɛba no",
+      "raw": "Na obiara a n’ani bɛwu me ne me nsɛm ho no, ɔno nso ho bɛyɛ Onipa Ba no aniwu ɛda a ɔde ɔno ne n’agya ne n’abɔfoɔ kronkron animuonyam bɛba no."
+    },
+    {
+      "id": "Asante_Twi_twi_00104663",
+      "source_file": "MAL.1.1461",
+      "duration": 3.14,
+      "norm": "na mobisa sɛ ɛdeɛn mu na yɛbu wo din animtia",
+      "raw": "Na mobisa sɛ: Ɛdeɛn mu na yɛbu wo din animtia?"
+    },
+    {
+      "id": "Asante_Twi_twi_00104772",
+      "source_file": "MAL.2.1461",
+      "duration": 5.42,
+      "norm": "enti monhwɛ mo ho yie mo honhom ho na ntwa wo mmeranteberɛ mu yerɛ nkontompo",
+      "raw": "Enti monhwɛ mo ho yie mo honhom ho, na ntwa wo mmeranteberɛ mu yerɛ nkontompo."
+    },
+    {
+      "id": "Asante_Twi_twi_00106517",
+      "source_file": "MAT.2.1461",
+      "duration": 9.82,
+      "norm": "na wɔka kyerɛɛ no sɛ betlehem a ɛwɔ yudea na saa ara na odiyifoɔ no atwerɛ sɛ na wo betlehem yuda asase",
+      "raw": "Na wɔka kyerɛɛ no sɛ: Betlehem a ɛwɔ Yudea; na saa ara na odiyifoɔ no atwerɛ sɛ: Na wo Betlehem, Yuda asase."
+    },
+    {
+      "id": "Asante_Twi_twi_00108451",
+      "source_file": "MAT.5.1461",
+      "duration": 5.56,
+      "norm": "enti monyɛ pɛ sɛdeɛ mo agya a ɔwɔ soro yɛ pɛ no",
+      "raw": "Enti monyɛ pɛ, sɛdeɛ mo Agya a ɔwɔ soro yɛ pɛ no."
+    },
+    {
+      "id": "Asante_Twi_twi_00109362",
+      "source_file": "MIC.2.1461",
+      "duration": 2.92,
+      "norm": "mika mmienu",
+      "raw": "MIKA 2."
+    },
+    {
+      "id": "Asante_Twi_twi_00109388",
+      "source_file": "MIC.2.1461",
+      "duration": 3.64,
+      "norm": "nanso mosɔre tia me man sɛ ɔtamfoɔ",
+      "raw": "Nanso mosɔre tia me man sɛ ɔtamfoɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00111264",
+      "source_file": "MRK.14.1461",
+      "duration": 6.48,
+      "norm": "na wɔte hɔ redidie no yesu kaa sɛ nokorɛ mese mo sɛ mo a mone me redidie yi mu baako bɛyi me ama",
+      "raw": "Na wɔte hɔ redidie no, Yesu kaa sɛ: Nokorɛ mese mo sɛ, mo a mone me redidie yi mu baako bɛyi me ama."
+    },
+    {
+      "id": "Asante_Twi_twi_00112547",
+      "source_file": "MRK.7.1461",
+      "duration": 9.04,
+      "norm": "na ɔbaa no bua see no sɛ awurade ɛwom saa deɛ nanso nkraman a wɔwɔ ɛpono ase no nso di mmɔfra no mporoporowa no bi",
+      "raw": "Na ɔbaa no bua see no sɛ: Awurade, ɛwom saa deɛ; nanso nkraman a wɔwɔ ɛpono ase no nso di mmɔfra no mporoporowa no bi!"
+    },
+    {
+      "id": "Asante_Twi_twi_00113024",
+      "source_file": "NAM.1.1461",
+      "duration": 3.8,
+      "norm": "awurade no ahum ne kyinhyia mframa mu na ne kwan wɔ",
+      "raw": "AWURADE no, ahum ne kyinhyia mframa mu na ne kwan wɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00113383",
+      "source_file": "NAM.3.1461",
+      "duration": 4.92,
+      "norm": "w'animuonyamfoɔ deda hɔ wɔabɔ wo man apete mmepɔ so",
+      "raw": "w’animuonyamfoɔ deda hɔ; wɔabɔ wo man apete mmepɔ so."
+    },
+    {
+      "id": "Asante_Twi_twi_00114509",
+      "source_file": "NEH.7.1461",
+      "duration": 2.12,
+      "norm": "nehemia ɛnson",
+      "raw": "NEHEMIA 7."
+    },
+    {
+      "id": "Asante_Twi_twi_00114857",
+      "source_file": "NEH.9.1461",
+      "duration": 7.76,
+      "norm": "na wɔdii na wɔmee na wɔyeyɛɛ akɛseɛ na wɔn bo tɔɔ wɔn yam wo papa kɛseɛ no mu",
+      "raw": "Na wɔdii, na wɔmee, na wɔyeyɛɛ akɛseɛ, na wɔn bo tɔɔ wɔn yam, wo papa kɛseɛ no mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00115380",
+      "source_file": "NUM.12.1461",
+      "duration": 3.279,
+      "norm": "na ɔman no antu kɔsii sɛ wɔde miriam baa mu bio",
+      "raw": "Na ɔman no antu kɔsii sɛ wɔde Miriam baa mu bio."
+    },
+    {
+      "id": "Asante_Twi_twi_00115743",
+      "source_file": "NUM.16.1461",
+      "duration": 9.82,
+      "norm": "na ɔkasa kyerɛɛ asafo no sɛ montwe mo ho mfiri nnipa abɔnefoɔ yi ntomadan ho ɛ na monnka wɔn biribiara na wɔampra mo ne wɔn bɔne nyinaa ankɔ",
+      "raw": "Na ɔkasa kyerɛɛ asafo no sɛ: Montwe mo ho mfiri nnipa abɔnefoɔ yi ntomadan ho ɛ, na monnka wɔn biribiara, na wɔampra mo ne wɔn bɔne nyinaa ankɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00119340",
+      "source_file": "PHP.2.1461",
+      "duration": 9.72,
+      "norm": "na ɛwom sɛ ɔyaree owuyadeɛ deɛ nanso onyankopɔn hunuu no mmɔbɔ na ɛnyɛ ɔno nko ara na me nso bi na m'awerɛhoɔ annɔɔso",
+      "raw": "Na ɛwom sɛ ɔyaree owuyadeɛ deɛ, nanso Onyankopɔn hunuu no mmɔbɔ, na ɛnyɛ ɔno nko ara, na me nso bi, na m’awerɛhoɔ annɔɔso."
+    },
+    {
+      "id": "Asante_Twi_twi_00119549",
+      "source_file": "PHP.4.1461",
+      "duration": 9.28,
+      "norm": "biribiara ne nnoɔma nyinaa akokwa me ɔmeeɛ ne ɛkɔm ne akonkosɛm ne hiadie metumi ade nyinaa yɛ deɛ ɔhyɛ me den no mu",
+      "raw": "Biribiara ne nnoɔma nyinaa akokwa me, ɔmeeɛ ne ɛkɔm ne akonkosɛm ne hiadie; metumi ade nyinaa yɛ, deɛ ɔhyɛ me den no mu."
+    },
+    {
+      "id": "Asante_Twi_twi_00119878",
+      "source_file": "PRO.10.1461",
+      "duration": 2.32,
+      "norm": "na ɛyɛ ɔsɛeɛ ma amumuyɛfoɔ",
+      "raw": "na ɛyɛ ɔsɛeɛ ma amumuyɛfoɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00121961",
+      "source_file": "PRO.21.1461",
+      "duration": 2.12,
+      "norm": "na ɛyɛ hu ma amumuyɛfoɔ",
+      "raw": "na ɛyɛ hu ma amumuyɛfoɔ."
+    },
+    {
+      "id": "Asante_Twi_twi_00126030",
+      "source_file": "PSA.105.1461",
+      "duration": 2.36,
+      "norm": "ne mmɛbɛ a wɔn dodoɔ nni ano",
+      "raw": "ne mmɛbɛ a wɔn dodoɔ nni ano."
+    },
+    {
+      "id": "Asante_Twi_twi_00133603",
+      "source_file": "PSA.31.1461",
+      "duration": 3.02,
+      "norm": "de wɔn hunta firi nnipa a wɔabɔ kyenku anim",
+      "raw": "de wɔn hunta firi nnipa a wɔabɔ kyenku anim."
+    },
+    {
+      "id": "Asante_Twi_twi_00142800",
+      "source_file": "REV.11.1461",
+      "duration": 10.22,
+      "norm": "na wɔn afunu bɛdeda kuro kɛseɛ no abɔntene so kuro a honhom mu wɔfrɛ no sodom ne misraim deɛ wɔbɔɔ wɔn awurade nso asɛnnua mu no",
+      "raw": "Na wɔn afunu bɛdeda kuro kɛseɛ no abɔntene so, kuro a honhom mu wɔfrɛ no Sodom ne Misraim, deɛ wɔbɔɔ wɔn Awurade nso asɛnnua mu no."
+    },
+    {
+      "id": "Asante_Twi_twi_00142825",
+      "source_file": "REV.11.1461",
+      "duration": 5.2,
+      "norm": "na wɔhinii nyankopɔn asɔredan no ɔsoro na wɔhunuu n'apam adaka no n'asɔredan no mu",
+      "raw": "Na wɔhinii Nyankopɔn asɔredan no ɔsoro, na wɔhunuu n’apam adaka no n’asɔredan no mu."
+    }
+  ],
+  "universe_source": "committed manifest copy 02_data/processed_43h/selected.jsonl (Oct-13 generation). Its single-narrator (.1461/.1861) rows minus the p40 manifest, the 200-clip held-out split and demo-prompt texts = 1,016 usable rows; funnel arithmetic puts the exact single-narrator remainder at ~1,982 rows, so this dev draw is a verified subset of the true remainder (a fresh Corpus scan would enumerate the rest). 100 clips drawn, seed 4242.",
+  "universe_after_exclusions": 1016
+}
