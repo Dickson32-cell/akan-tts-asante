@@ -27,9 +27,9 @@ tags:
 
 Single-speaker Asante Twi (Akan) TTS: VITS checkpoint fine-tuned from `facebook/mms-tts-aka` on the **full 40-hour single-narrator slice** of the same corpus, answering the one open question left by the 9-hour runs: **does more training data close the fine-tune-to-base gap?** Same recipe as the submitted gentle model — only the data amount changes (28,234 training clips / 39.98 h vs 6,360 / 9.09 h), which makes the comparison a controlled data-scale experiment.
 
-- Base model (unmodified): CER 0.088 / WER 0.319 at noise 0.667 (validated judge, seed 33); base re-measured on the 200-clip held-out split at 0.086 CER / 0.342 WER (n=200).
-- Submitted 9-hour model ([akan-twi-mms-gentle](https://huggingface.co/Dickson32-cell/akan-twi-mms-gentle)): CER 0.232 / WER 0.662.
-- **This run: [evaluation pending — the table below is filled on completion of training and the 4-way held-out evaluation]**.
+- Base model (unmodified): CER 0.080 / WER 0.305 (the same-session four-way measurement below; the earlier-session published value was 0.088 / 0.319 — session variance is documented).
+- Submitted 9-hour model ([akan-twi-mms-gentle](https://huggingface.co/Dickson32-cell/akan-twi-mms-gentle)): CER 0.228 / WER 0.635 (same-session).
+- **This run: CER 0.188 / WER 0.543** — a measured improvement over every fine-tune in the family; the base model still leads (details below).
 
 Mid-run health (logged during training, not an evaluation): at roughly half the schedule the summed training losses moved from a start band around 29 to a median near 23 (band 16.9–28.3), with zero NaN and zero training interruptions inside the loop — the same contrast direction the 9-hour run showed at the same relative point, recorded here as process evidence only.
 
@@ -56,19 +56,23 @@ Same harness (`ylacombe/finetune-hf-vits`), same loss weights (mel 35 / KL 1.5 /
 
 **Judge (unchanged across the family):** MMS-1b-all + Akan adapter (loaded before use, finiteness guard), `src/eval_asr.py --engine mms_aka`; mismatched-text controls 0.92–1.04 (judge proven discriminative); base-model floor on 110 real narrator recordings 0.088–0.089 CER (judge near-lossless, so fine-tune scores ≈ real model error). Final numbers for this run are produced on the same 10 unseen prompts, the 200-clip held-out split, and the same seed discipline as every published comparison.
 
-| Model (noise 0.667) | CER | WER |
-|---|---|---|
-| Base `facebook/mms-tts-aka` | 0.088 | 0.319 |
-| Original 9 h fine-tune (11,940 steps) | 0.324 | 0.769 |
-| Gentle 9 h retrain (7,960 steps) | 0.232 | 0.662 |
-| **This 40 h run (26,265 steps)** | **0.188** | **0.543** |
+All four rows measured in **one session** (same day, same machine, same 10 unseen prompts, same judge, seed 33, noise 0.667; mismatched-prompt controls 0.853–0.880):
 
-**Held-out row (200 clips, added after training):** *[pending]*
+| Model (noise 0.667) | CER | WER | mismatch control |
+|---|---|---|---|
+| Base `facebook/mms-tts-aka` | 0.080 | 0.305 | 0.875 |
+| Original 9 h fine-tune (11,940 steps) | 0.319 | 0.730 | 0.880 |
+| Gentle 9 h retrain (7,960 steps) | 0.228 | 0.635 | 0.853 |
+| **This 40 h run (26,265 steps)** | **0.188** | **0.543** | **0.875** |
 
-The 40-hour numbers are in: **CER 0.188 / WER 0.543** (same 10 unseen prompts, same judge, same seed 33 and noise 0.667; mismatched-prompt control 0.875 — judge trustworthy). Two findings, stated plainly:
+Earlier published family values (different eval sessions) differ by ≤ 0.008 CER / ≤ 0.038 WER per row — session variance, documented; that is why this card uses one consistent session rather than mixing sessions.
 
-1. **The data-scaling hypothesis is confirmed as a real lever:** with the same recipe as the gentle model, 40 h instead of 9 h moved CER 0.232 → 0.188 and WER 0.635 → 0.543. Measured gap-closure to base: the 9-hour gentle run covered ~39% and this run covers (0.324 − 0.188) / (0.324 − 0.088) = **55%** across the family.
-2. **The base model still leads (0.088).** Fine-tuning has improved with data scale but has not beaten the base; the remaining 0.100 CER is the honest ceiling this family documents, with freeze-text-encoder, further data growth and tone modelling as the recorded next levers.
+**Held-out evaluation (200 clips, never trained on): running — the row is added with the measured value on completion.**
+
+The 40-hour numbers: **CER 0.188 / WER 0.543**. Two findings, stated plainly:
+
+1. **The data-scaling hypothesis is confirmed as a real lever:** with the same recipe as the gentle model, 40 h instead of 9 h moved CER 0.228 → 0.188 and WER 0.635 → 0.543. Measured gap-closure to base, same-session arithmetic: (0.319 − 0.188) / (0.319 − 0.080) = 0.131 / 0.239 ≈ **55%** of the fine-tune-to-base distance closed across the family (the 9-hour gentle run covered ~39%).
+2. **The base model still leads (0.080).** Fine-tuning has improved with data scale but has not beaten the base; the remaining ~0.11 CER is the honest ceiling this family documents, with freeze-text-encoder, further data growth and tone modelling as the recorded next levers.
 
 The mid-run loss contrast (median 23 vs the 9-hour run's 29–39 band) is recorded above as process evidence. Eval JSONs with per-clip numbers: `06_samples/4way/pool40h/asr_eval.json` in the code repo.
 
@@ -85,7 +89,8 @@ The mid-run loss contrast (median 23 vs the 9-hour run's 29–39 band) is record
 
 - Single speaker, single register (scripture reading); general conversational Akan is out of distribution — reported the same way in the family baseline.
 - Tone is unmarked in the orthography and was not modelled directly; prosodic errors are expected on tone-minimal pairs. ASR-judge-measured; no human-listener panel result belongs to this run yet.
-- If this run does not beat the base model, its value is methodological (the documented data-scaling negative result), not production quality.
+- Fine-tuning value: this run improves on every fine-tune in the family (CER 0.188 vs 0.228/0.319) but remains above the base model (0.080) — its value to the family is the measured data-scaling result and the honest residual-gap documentation, not production-quality Akan TTS.
+- The Hub's auto-generated quick-start snippet may reference `AutoModelForPreTraining`; use the explicit `VitsModel` example below (the recommended, verified API for this checkpoint).
 
 ## Intended / Out-of-Scope Use
 
