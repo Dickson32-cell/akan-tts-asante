@@ -1,0 +1,22 @@
+{
+  "base": {
+    "cer": 0.08,
+    "wer": 0.305,
+    "mismatch": 0.875
+  },
+  "original": {
+    "cer": 0.319,
+    "wer": 0.73,
+    "mismatch": 0.88
+  },
+  "gentle": {
+    "cer": 0.228,
+    "wer": 0.635,
+    "mismatch": 0.853
+  },
+  "pool40h": {
+    "cer": 0.188,
+    "wer": 0.543,
+    "mismatch": 0.875
+  }
+}

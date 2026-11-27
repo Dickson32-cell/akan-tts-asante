@@ -61,11 +61,16 @@ Same harness (`ylacombe/finetune-hf-vits`), same loss weights (mel 35 / KL 1.5 /
 | Base `facebook/mms-tts-aka` | 0.088 | 0.319 |
 | Original 9 h fine-tune (11,940 steps) | 0.324 | 0.769 |
 | Gentle 9 h retrain (7,960 steps) | 0.232 | 0.662 |
-| **This 40 h run (26,265 steps)** | *[pending final evaluation]* | *[pending final evaluation]* |
+| **This 40 h run (26,265 steps)** | **0.188** | **0.543** |
 
 **Held-out row (200 clips, added after training):** *[pending]*
 
-The verdict this run delivers is written here once the numbers land: either the data-scaling hypothesis is confirmed (CER moves materially toward the base floor from the 9-hour 0.232) or it is not (and the negative result is reported with the same loss curves that back all other claims in this family). Either way the mid-run loss contrast (median 23 vs the 9-hour run's 29–39 band) is already recorded above as process evidence.
+The 40-hour numbers are in: **CER 0.188 / WER 0.543** (same 10 unseen prompts, same judge, same seed 33 and noise 0.667; mismatched-prompt control 0.875 — judge trustworthy). Two findings, stated plainly:
+
+1. **The data-scaling hypothesis is confirmed as a real lever:** with the same recipe as the gentle model, 40 h instead of 9 h moved CER 0.232 → 0.188 and WER 0.635 → 0.543. Measured gap-closure to base: the 9-hour gentle run covered ~39% and this run covers (0.324 − 0.188) / (0.324 − 0.088) = **55%** across the family.
+2. **The base model still leads (0.088).** Fine-tuning has improved with data scale but has not beaten the base; the remaining 0.100 CER is the honest ceiling this family documents, with freeze-text-encoder, further data growth and tone modelling as the recorded next levers.
+
+The mid-run loss contrast (median 23 vs the 9-hour run's 29–39 band) is recorded above as process evidence. Eval JSONs with per-clip numbers: `06_samples/4way/pool40h/asr_eval.json` in the code repo.
 
 ## Environmental Impact (estimate)
 
