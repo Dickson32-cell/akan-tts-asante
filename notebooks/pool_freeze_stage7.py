@@ -168,13 +168,15 @@ else:
                 print("video.py unpatchable AND broken:", str(_e)[:200])
                 raise SystemExit("video.py needs manual attention - keep the output above for diagnosis")
 
-# FREEZE INSERT (this run only): after model construction the frozen modules are protected.
+# FREEZE INSERT (this run only): upstream removed the old model.eval() line (drift verified 27 Nov),
+# so the insert anchors to the optimizer creation line - after weight-norm + vocab resize, i.e. the
+# frozen tensors are the FINAL training tensors; AdamW skips params whose grads stay None.
 _s = open(_h, encoding="utf-8").read()
 if "# POOL-FREEZE INSERT" not in _s:
-    _m = [i for i, l in enumerate(_s.splitlines()) if l.strip() == "model.eval()"]
-    assert _m, "model.eval() not found in harness - paste the harness grep output above for diagnosis"
-    _i = _m[0]
     _lines = _s.splitlines()
+    _m = [i for i, l in enumerate(_lines) if l.strip().startswith("gen_optimizer = torch.optim.AdamW(")]
+    assert _m, "gen_optimizer anchor not found in harness - paste the harness grep output above for diagnosis"
+    _i = _m[0]
     _ind = _lines[_i][: len(_lines[_i]) - len(_lines[_i].lstrip())]
     _blk = (
         _ind + "# POOL-FREEZE INSERT: protect base phoneme path; flow + decoder adapt (LR 5e-5)\n"
@@ -186,10 +188,10 @@ if "# POOL-FREEZE INSERT" not in _s:
         + _ind + "_kept = sum(1 for _n, _p in model.named_parameters() if _p.requires_grad)\n"
         + _ind + 'print(f"[FREEZE] text_encoder + duration_predictor frozen: {_frozen} tensors frozen / {_kept} trainable")\n'
     )
-    _s = "\n".join(_lines[:_i + 1]) + "\n" + _blk + "\n".join(_lines[_i + 1:])
+    _s = "\n".join(_lines[:_i]) + "\n" + _blk + "\n".join(_lines[_i:])
     compile(_s, _h, "exec")
     open(_h, "w", encoding="utf-8").write(_s)
-    print("harness PATCHED: POOL-FREEZE insert (compile-verified)")
+    print("harness PATCHED: POOL-FREEZE insert (compile-verified, anchor = gen_optimizer line)")
 else:
     print("POOL-FREEZE insert already present")
 
@@ -329,12 +331,26 @@ if "[FREEZE]" not in Path(LOG).read_text(errors="replace"):
 stage("8a", "Frozen-tensor integrity assert (text_encoder + duration_predictor vs staged base)")
 try:
     from safetensors.torch import load_file
+    import torch as _tt
     fb = load_file(BASE + "/model.safetensors")
     fr = load_file(OUT + "/model.safetensors")
     fk = [k for k in fb if k.startswith("text_encoder.") or k.startswith("duration_predictor.")]
-    same = sum(1 for k in fk if k in fr and (fb[k] == fr[k]).all())
-    diff = [k for k in fk if k in fr and not (fb[k] == fr[k]).all()]
-    print("frozen tensors compared:", len(fk), "| byte-identical:", same, "| DIFFERING:", diff[:8])
+    same, reshaped, diff = 0, [], []
+    for k in fk:
+        if k not in fr:
+            diff.append(k + ":MISSING")
+        elif fb[k].shape == fr[k].shape:
+            if _tt.equal(fb[k], fr[k]):
+                same += 1
+            else:
+                diff.append(k + ":VALUES-DIFFER")
+        elif fr[k].shape[0] >= fb[k].shape[0] and _tt.equal(fb[k], fr[k][: fb[k].shape[0]]):
+            same += 1
+            reshaped.append(k + ":+%d rows (vocab resized, base rows preserved)" % (fr[k].shape[0] - fb[k].shape[0]))
+        else:
+            diff.append(k + ":SHAPE-MISMATCH")
+    print("frozen tensors compared:", len(fk), "| byte-identical:", same,
+          "| resized-preserved:", reshaped[:4], "| DIFFERING:", diff[:8])
     assert not diff, "frozen tensors drifted - STOP and paste this output before any push"
     print("FROZEN INTEGRITY: PASS")
 except Exception as e:
