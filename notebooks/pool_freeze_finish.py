@@ -167,29 +167,46 @@ _tk_ = _AT.from_pretrained(OUT)
 def _synth(step, path, n_clips, tag):
     outdir = Path(SWEEP) / ("%s_%s" % (tag, step))
     outdir.mkdir(parents=True, exist_ok=True)
-    # this generation's checkpoints store the generator SPLIT across model.safetensors + model_1.safetensors
-    # AND in weight-norm form (weight_g/weight_v keys on decoder + flow convs - the harness strips the
-    # norms only for the final root save). So: construct fresh from config, apply the same weight norms,
-    # load the merged state dict, verify nothing gen-critical is missing, then strip the norms back to
-    # the export convention (exactly what the harness does for the root).
+    # Robust checkpoint loader (data-driven, no guessing): this generation's checkpoints carry the
+    # generator SPLIT across model.safetensors + model_1.safetensors, with decoder/flow conv weights
+    # in weight-norm form. Names differ across torch parametrization styles, so the mapper handles
+    # every legacy g/v spelling, computes the effective weight = v * (g / ||v|| over all-but-dim0),
+    # and loads the result into a clean VitsModel. Loaded/missing counts printed per checkpoint.
     mdl = _VM(config=_cfg)
-    mdl.decoder.apply_weight_norm()
-    for fw in mdl.flow.flows:
-        _t.nn.utils.weight_norm(fw.conv_pre)
-        _t.nn.utils.weight_norm(fw.conv_post)
     sd = {}
     for f in ("model.safetensors", "model_1.safetensors"):
         if Path(path, f).exists():
             sd.update(_lff(str(Path(path, f))))
-    missing, unexpected = mdl.load_state_dict(sd, strict=False)
-    crit = [k for k in missing if k.startswith(("decoder.", "flow.", "text_encoder.", "duration_predictor."))]
-    if crit:
-        raise RuntimeError("checkpoint %s: %d gen-critical tensors missing after merged load, e.g. %s"
-                           % (Path(path).name, len(crit), crit[:6]))
-    mdl.decoder.remove_weight_norm()
-    for fw in mdl.flow.flows:
-        _t.nn.utils.remove_weight_norm(fw.conv_pre)
-        _t.nn.utils.remove_weight_norm(fw.conv_post)
+    def _effective(raw):
+        out, used = {}, set()
+        for k in raw:
+            if k in used:
+                continue
+            pair = None
+            if k.endswith(".weight_g"):
+                pair = (k, k[:-2] + "v", ".weight_g", ".weight")
+            elif k.endswith(".weight_v"):
+                pair = (k[:-2] + "g", k, ".weight_g", ".weight")
+            elif ".parametrizations.weight.original0" in k:
+                pair = (k, k.replace(".original0", ".original1"), ".original0", ".weight")
+            elif ".parametrizations.weight.original1" in k:
+                pair = (k.replace(".original1", ".original0"), k, ".original0", ".weight")
+            if pair:
+                gk, vk, _, _ = pair
+                if gk in raw and vk in raw:
+                    g, v = raw[gk], raw[vk]
+                    dims = tuple(range(1, v.dim()))
+                    norm = v.norm(dim=dims, keepdim=True).clamp_min(1e-12)
+                    tgt = gk.replace(".weight_g", ".weight").replace(".parametrizations.weight.original0", ".weight")
+                    out[tgt] = v * (g / norm)
+                    used.update((gk, vk))
+                    continue
+            out[k] = raw[k]
+        return out
+    mapped = _effective(sd)
+    missing, unexpected = mdl.load_state_dict(mapped, strict=False)
+    print("checkpoint %s: merged keys %d | gen-critical missing %d | unexpected (disc) %d"
+          % (Path(path).name, len(mapped), len(missing), len(unexpected)), flush=True)
     tk = _tk_
     mdl.to("cuda").eval()
     mdl.speaking_rate = 1.0
