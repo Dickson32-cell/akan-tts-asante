@@ -56,10 +56,16 @@ try:
 except Exception as e:
     print("integrity check error (paste for diagnosis):", str(e)[:200])
 
-# STAGE F2: convergence report (tfevents)
+# STAGE F2: convergence report (tfevents) - skips if already produced this run
 stage("F2", "Convergence report from tfevents")
 import matplotlib
-matplotlib.use("Agg")
+if Path(OUT, "losses.csv").exists() and Path(OUT, "convergence_summary.json").exists():
+    print("losses.csv + convergence_summary.json already present - F2 skip (idempotent)")
+    json_done = True
+else:
+    json_done = False
+if not json_done:
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 ev_files = sorted(glob.glob(OUT + "/**/events.out.tfevents.*", recursive=True))
 if not ev_files:
@@ -113,7 +119,7 @@ else:
     json.dump({"verdict": locals().get("verdict", "CHECK MANUALLY"), "tags": tags},
               open(OUT + "/convergence_summary.json", "w"), indent=2)
 
-# STAGE F3: end push (root weights + artifacts) to the private repo
+# STAGE F3: end push (root weights + artifacts) - SKIPS if the repo already carries them
 stage("F3", "Push pool-freeze artifacts to its OWN private repo")
 subprocess.run("zip -qr '/content/drive/MyDrive/UG_TTS/akan_tts_ckpt_pool_freeze.zip' " + OUT + " || true", shell=True)
 from huggingface_hub import HfApi
@@ -123,9 +129,13 @@ try:
 except Exception as e:
     print("create_repo:", str(e)[:140])
 try:
-    api.upload_folder(folder_path=OUT, repo_id=REPO, repo_type="model",
-                      commit_message="pool-freeze run: 40h single-narrator, LR 5e-5, text_encoder + duration_predictor frozen, seed 456")
-    print("PUSHED to " + REPO + " (weights + artifacts, private until evaluated)")
+    _existing = set(api.list_repo_files(repo_id=REPO, repo_type="model"))
+    if "model.safetensors" in _existing and "loss_curve.png" in _existing and "losses.csv" in _existing:
+        print("repo already carries the root weights + artifacts - F3 upload skip")
+    else:
+        api.upload_folder(folder_path=OUT, repo_id=REPO, repo_type="model",
+                          commit_message="pool-freeze run: 40h single-narrator, LR 5e-5, text_encoder + duration_predictor frozen, seed 456")
+        print("PUSHED to " + REPO + " (weights + artifacts, private until evaluated)")
 except Exception as e:
     print("push failed:", str(e)[:200]); print("the checkpoint zip is safe in Drive; push again later")
 
@@ -157,10 +167,29 @@ _tk_ = _AT.from_pretrained(OUT)
 def _synth(step, path, n_clips, tag):
     outdir = Path(SWEEP) / ("%s_%s" % (tag, step))
     outdir.mkdir(parents=True, exist_ok=True)
-    try:
-        mdl = _VM.from_pretrained(path)
-    except Exception:
-        mdl = _VM.from_pretrained(path, config=_cfg)
+    # this generation's checkpoints store the generator SPLIT across model.safetensors + model_1.safetensors
+    # AND in weight-norm form (weight_g/weight_v keys on decoder + flow convs - the harness strips the
+    # norms only for the final root save). So: construct fresh from config, apply the same weight norms,
+    # load the merged state dict, verify nothing gen-critical is missing, then strip the norms back to
+    # the export convention (exactly what the harness does for the root).
+    mdl = _VM(config=_cfg)
+    mdl.decoder.apply_weight_norm()
+    for fw in mdl.flow.flows:
+        _t.nn.utils.weight_norm(fw.conv_pre)
+        _t.nn.utils.weight_norm(fw.conv_post)
+    sd = {}
+    for f in ("model.safetensors", "model_1.safetensors"):
+        if Path(path, f).exists():
+            sd.update(_lff(str(Path(path, f))))
+    missing, unexpected = mdl.load_state_dict(sd, strict=False)
+    crit = [k for k in missing if k.startswith(("decoder.", "flow.", "text_encoder.", "duration_predictor."))]
+    if crit:
+        raise RuntimeError("checkpoint %s: %d gen-critical tensors missing after merged load, e.g. %s"
+                           % (Path(path).name, len(crit), crit[:6]))
+    mdl.decoder.remove_weight_norm()
+    for fw in mdl.flow.flows:
+        _t.nn.utils.remove_weight_norm(fw.conv_pre)
+        _t.nn.utils.remove_weight_norm(fw.conv_post)
     tk = _tk_
     mdl.to("cuda").eval()
     mdl.speaking_rate = 1.0
@@ -172,6 +201,7 @@ def _synth(step, path, n_clips, tag):
         if f.exists() and f.stat().st_size > 1000:
             continue
         inp = tk(c["norm"], return_tensors="pt")
+        inp = {k: v.to(mdl.device) for k, v in inp.items()}
         with _t.no_grad():
             o = mdl(input_ids=inp["input_ids"], attention_mask=inp["attention_mask"])
         wv = o.waveform[0].cpu().numpy()
